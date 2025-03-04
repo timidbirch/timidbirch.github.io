@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TimidBirch&#39;s Blog</title>
+    <link>http://localhost:1313/zh/</link>
+    <description>Recent content on TimidBirch&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 01 Feb 2025 16:10:13 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/zh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/zh/about/</link>
+      <pubDate>Sat, 01 Feb 2025 16:10:13 +0800</pubDate>
+      <guid>http://localhost:1313/zh/about/</guid>
+      <description>&lt;!-- more --&gt;</description>
+    </item>
+    <item>
+      <title>传统后端漏洞</title>
+      <link>http://localhost:1313/zh/%E4%BC%A0%E7%BB%9F%E5%90%8E%E7%AB%AF%E6%BC%8F%E6%B4%9E/</link>
+      <pubDate>Thu, 30 Jan 2025 11:41:52 +0800</pubDate>
+      <guid>http://localhost:1313/zh/%E4%BC%A0%E7%BB%9F%E5%90%8E%E7%AB%AF%E6%BC%8F%E6%B4%9E/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/puxiao/notes/blob/master/Hugo%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.md&#34;&gt;Hugo安装与使用&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;博客搭建&#34;&gt;博客搭建&lt;/h1&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://jianzhnie.github.io/post/hugo_site/&#34;&gt;Hugo + Github Pages 搭建个人博客 | Robin 的个人主页&lt;/a&gt;&#xA;&lt;a href=&#34;https://zz2summer.github.io/github-pages-hugo-%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/&#34;&gt;Github Pages + Hugo 搭建个人博客 - 渣渣的夏天&lt;/a&gt;&#xA;&lt;a href=&#34;https://gohugo.io/getting-started/quick-start/&#34;&gt;Quick start | Hugo&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>⏱ 时间轴</title>
+      <link>http://localhost:1313/archives/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/archives/</guid>
+      <description>archives</description>
+    </item>
+    <item>
+      <title>🔍 搜索</title>
+      <link>http://localhost:1313/zh/search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/search/</guid>
+      <description>search</description>
+    </item>
+  </channel>
+</rss>
