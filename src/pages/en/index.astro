@@ -1,0 +1,46 @@
+---
+import { SOCIAL_LINKS } from '~/config'
+import Layout from '~/layouts/Layout.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import SocialLink from '~/components/base/SocialLink.astro'
+import { getAllExperiences } from '~/lib/data'
+
+const experiences = (await getAllExperiences()).slice(0, 3)
+---
+
+<Layout title="Home" description="The personal website of CHEN Peihua, focused on quantitative finance, business analytics, AI systems, and information security.">
+  <div class="relative z-[1]">
+    <section class="py-12 sm:py-16 px-6 sm:px-8">
+      <p class="text-sm text-muted-foreground mb-4">QUANTITATIVE FINANCE · AI · SECURITY</p>
+      <h1 class="flex flex-col gap-3 text-balance">
+        <span class="text-5xl sm:text-6xl tracking-tight">CHEN Peihua <span class="text-3xl sm:text-4xl text-muted-foreground">陈佩桦</span></span>
+        <span class="text-muted-foreground font-light text-xl sm:text-2xl tracking-wide">Connecting financial research, data analysis, and AI engineering.</span>
+      </h1>
+      <div class="pro text-muted-foreground text-pretty max-w-2xl mt-8">
+        <p>With a background in information security and an MSc in Business Analytics at the University of Hong Kong, my experience spans asset-management trading, quantitative research, private-equity investing, and AI backend development.</p>
+      </div>
+      <div class="mt-7 flex gap-6">{SOCIAL_LINKS.map((item) => <SocialLink href={item.url} icon={item.icon} aria-label={`Link to ${item.name}`} />)}</div>
+    </section>
+    <SectionDivider />
+    <section class="py-10">
+      <div class="px-6 sm:px-8 mb-7">
+        <h2 class="text-2xl sm:text-3xl tracking-tight">Recent Experience</h2>
+        <p class="text-muted-foreground mt-1">From trade execution and investment research to quantitative system development.</p>
+      </div>
+      <div class="border-y border-border/50">
+        {experiences.map((experience, index) => (
+          <a href={`/en/experience/${experience.id}`} class:list={["group grid sm:grid-cols-[9rem_1fr_auto] gap-3 sm:gap-6 px-6 sm:px-8 py-7 hover:bg-muted/30 transition-colors", { 'border-t border-border/50': index > 0 }]}>
+            <span class="text-sm text-muted-foreground">{experience.data.period}</span>
+            <div>
+              <h3 class="text-lg font-semibold tracking-tight">{experience.data.companyEn || experience.data.company}</h3>
+              <p class="text-sm text-foreground mt-1">{experience.data.roleEn}</p>
+              <p class="text-muted-foreground mt-3 leading-relaxed max-w-2xl">{experience.data.summaryEn}</p>
+            </div>
+            <span class="text-muted-foreground group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </a>
+        ))}
+      </div>
+      <div class="px-6 sm:px-8 mt-7"><a href="/en/experience" class="inline-flex items-center gap-2 font-medium hover:text-primary transition-colors">View all experience <span>→</span></a></div>
+    </section>
+  </div>
+</Layout>

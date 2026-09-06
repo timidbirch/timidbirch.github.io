@@ -1,0 +1,35 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import { getAllExperiences } from '~/lib/data'
+
+export async function getStaticPaths() {
+  const experiences = await getAllExperiences()
+  return experiences.map((experience) => ({ params: { id: experience.id }, props: { experience } }))
+}
+
+const { experience } = Astro.props
+const meta = experience.data
+---
+
+<Layout title={`${meta.roleEn} · ${meta.companyEn || meta.company}`} description={meta.summaryEn}>
+  <article class="relative z-[1]">
+    <header class="px-6 sm:px-8 py-10 sm:py-14">
+      <a href="/en/experience" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">← Back to experience</a>
+      <div class="flex flex-wrap gap-3 text-xs uppercase tracking-wide text-muted-foreground mb-4"><span>{meta.period}</span>{meta.location && <span>{meta.location}</span>}</div>
+      <h1 class="text-3xl sm:text-5xl tracking-tight text-balance">{meta.companyEn || meta.company}</h1>
+      <p class="text-xl sm:text-2xl mt-6">{meta.roleEn}</p>
+      <p class="text-lg text-muted-foreground mt-5 max-w-2xl leading-relaxed text-pretty">{meta.summaryEn}</p>
+      <div class="flex flex-wrap gap-2 mt-7">{meta.tagsEn.map((tag) => <span class="text-xs px-2.5 py-1 rounded-full bg-tag-bg border border-tag-border text-tag-text">{tag}</span>)}</div>
+    </header>
+    <SectionDivider />
+    <div class="px-6 sm:px-8 py-10 sm:py-14 space-y-10" data-pagefind-body>
+      {meta.sectionsEn.map((section) => (
+        <section class="max-w-3xl">
+          <h2 class="text-2xl sm:text-3xl tracking-tight mb-4">{section.heading}</h2>
+          <div class="pro text-muted-foreground">{section.body.map((paragraph) => <p>{paragraph}</p>)}</div>
+        </section>
+      ))}
+    </div>
+  </article>
+</Layout>

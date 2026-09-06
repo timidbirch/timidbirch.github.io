@@ -1,0 +1,54 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+---
+
+<Layout title="关于" description="陈佩桦的教育背景、研究经历与专业能力。">
+  <div class="relative z-[1] py-8 pb-12">
+    <div class="px-6 sm:px-8"><PageTitle title="关于" introduce="金融市场实践与工程能力的交叉背景。" /></div>
+    <SectionDivider className="my-8" />
+
+    <section class="px-6 sm:px-8 grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
+      <div class="text-sm text-muted-foreground leading-relaxed">
+        <p>CHEN Peihua</p><p>Hong Kong · GMT+8</p>
+        <a class="hover:text-foreground" href="mailto:1146816430@qq.com">1146816430@qq.com</a>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl leading-relaxed text-pretty">我关注金融研究、量化分析与 AI 工程如何共同改善决策效率。</p>
+        <p class="text-muted-foreground leading-relaxed mt-5 text-pretty">本科就读于武汉大学信息安全专业，现于香港大学攻读商业分析硕士。学习与实践跨越软件安全、生成式 AI、资产管理和投资研究，习惯从问题拆解、数据验证到系统实现完整推进工作。</p>
+        <a href="/experience" class="inline-flex items-center gap-2 font-medium mt-6 hover:text-primary">查看实践经历 <span>→</span></a>
+      </div>
+    </section>
+
+    <SectionDivider className="my-10" />
+
+    <section class="px-6 sm:px-8">
+      <h2 class="text-2xl sm:text-3xl tracking-tight mb-7">教育经历</h2>
+      <div class="border-y border-border/50">
+        <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6"><div><h3 class="font-semibold">香港大学</h3><p class="text-muted-foreground mt-1">商业分析理学硕士</p></div><span class="text-sm text-muted-foreground">2026.09 — 2027.06</span></div>
+        <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6 border-t border-border/50"><div><h3 class="font-semibold">武汉大学</h3><p class="text-muted-foreground mt-1">信息安全工学学士</p></div><span class="text-sm text-muted-foreground">2022.09 — 2026.06</span></div>
+      </div>
+    </section>
+
+    <SectionDivider className="my-10" />
+
+    <section class="px-6 sm:px-8 grid sm:grid-cols-2 gap-10">
+      <div>
+        <h2 class="text-2xl tracking-tight mb-5">研究与获奖</h2>
+        <h3 class="font-semibold">剑桥大学交流项目 · AI 方向</h3>
+        <p class="text-sm text-muted-foreground mt-1">Grade A · 2023.07 — 2023.09</p>
+        <p class="text-muted-foreground leading-relaxed mt-4">参与 PIMoG 抗屏幕录制水印网络研究，设计模拟噪声层、梯度掩码与边缘掩码方法，提升鲁棒性与嵌入质量。</p>
+        <p class="text-muted-foreground leading-relaxed mt-4">RAGFUZZ 获全国大学生信息安全竞赛国家级三等奖，并部署于武汉大学。</p>
+      </div>
+      <div>
+        <h2 class="text-2xl tracking-tight mb-5">专业能力</h2>
+        <dl class="space-y-4 text-muted-foreground">
+          <div><dt class="text-foreground font-medium">编程与工程</dt><dd class="mt-1">Python、C、MySQL；Go、Gin；熟悉汇编、Verilog 与 HTML。</dd></div>
+          <div><dt class="text-foreground font-medium">量化与金融</dt><dd class="mt-1">WindPy、因子研究、横截面收益分析、组合调仓与交易信号构建。</dd></div>
+          <div><dt class="text-foreground font-medium">语言</dt><dd class="mt-1">中文、英文（IELTS 7.0）。</dd></div>
+        </dl>
+      </div>
+    </section>
+  </div>
+</Layout>

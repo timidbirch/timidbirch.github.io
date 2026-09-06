@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets'
+import Layout from '~/layouts/Layout.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import { getAllProjects } from '~/lib/data'
+
+const projects = await getAllProjects()
+---
+
+<Layout title="Projects" description="Technical projects by CHEN Peihua.">
+  <div class="relative z-[1] py-8 pb-10">
+    <div class="px-6 sm:px-8"><PageTitle title="Projects" introduce="From LLM-based security testing to digital-human generation, documenting the problem, approach, and outcome." /></div>
+    <SectionDivider className="my-8" />
+    <div class="grid grid-cols-1 gap-0">
+      {projects.map((project, index) => (
+        <article>
+          <a href={`/en/projects/${project.id}`} class="group grid sm:grid-cols-[minmax(0,1fr)_12rem] gap-6 px-6 sm:px-8 py-7 hover:bg-muted/30 transition-colors">
+            <div class="min-w-0">
+              <div class="flex gap-3 items-center text-xs uppercase tracking-wide text-muted-foreground mb-3">
+                {project.data.year && <span>{project.data.year}</span>}{project.data.roleEn.length > 0 && <span>{project.data.roleEn.join(' · ')}</span>}
+              </div>
+              <h2 class="text-2xl font-semibold tracking-tight group-hover:text-primary transition-colors">{project.data.nameEn}</h2>
+              <p class="text-muted-foreground mt-2 leading-relaxed max-w-2xl">{project.data.descriptionEn}</p>
+            </div>
+            {project.data.cover && <div class="order-first sm:order-last overflow-hidden rounded-lg border border-border/50 aspect-[16/10] sm:aspect-auto"><Image src={project.data.cover} alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" /></div>}
+          </a>
+          {index < projects.length - 1 && <SectionDivider />}
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>

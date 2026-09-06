@@ -1,0 +1,34 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import { getAllExperiences } from '~/lib/data'
+
+const experiences = await getAllExperiences()
+---
+
+<Layout title="实践经历" description="陈佩桦在资产管理、量化研究、私募股权与 AI 工程领域的实践经历。">
+  <div class="relative z-[1] py-8 pb-10">
+    <div class="px-6 sm:px-8"><PageTitle title="实践经历" introduce="交易执行、投资研究、量化分析与 AI 工程。" /></div>
+    <SectionDivider className="my-8" />
+    <div class="border-y border-border/50">
+      {experiences.map((experience, index) => (
+        <article>
+          <a href={`/experience/${experience.id}`} class="group grid sm:grid-cols-[10rem_1fr_auto] gap-3 sm:gap-7 px-6 sm:px-8 py-7 hover:bg-muted/30 transition-colors">
+            <div><p class="text-sm text-muted-foreground">{experience.data.period}</p><p class="text-sm mt-1">{experience.data.role}</p></div>
+            <div>
+              <h2 class="text-xl font-semibold tracking-tight group-hover:text-primary transition-colors">{experience.data.company}</h2>
+              {experience.data.companyEn && <p class="text-sm text-muted-foreground mt-1">{experience.data.companyEn}</p>}
+              <p class="text-muted-foreground leading-relaxed mt-4 max-w-2xl">{experience.data.summary}</p>
+              <div class="flex flex-wrap gap-2 mt-4">
+                {experience.data.tags.map((tag) => <span class="text-xs px-2.5 py-1 rounded-full bg-tag-bg border border-tag-border text-tag-text">{tag}</span>)}
+              </div>
+            </div>
+            <span class="text-muted-foreground group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </a>
+          {index < experiences.length - 1 && <SectionDivider />}
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>

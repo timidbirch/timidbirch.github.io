@@ -1,0 +1,45 @@
+---
+name: 'RAGFUZZ'
+nameEn: 'RAGFUZZ'
+description: '基于大语言模型与 Google OSS-Fuzz 的第三方库自动化模糊测试系统。'
+descriptionEn: 'An LLM-based automated fuzz testing system for third-party libraries, built on Google OSS-Fuzz.'
+summary: '让大语言模型学习第三方库的调用方式，并自动生成可执行的模糊测试驱动模块。'
+summaryEn: 'Using large language models to understand third-party library APIs and generate executable fuzzing drivers.'
+year: 2025
+role: ['系统设计', 'LLM 应用', '安全测试']
+roleEn: ['System Design', 'LLM Application', 'Security Testing']
+sectionsEn:
+  - heading: 'Background'
+    body:
+      - 'The security of third-party libraries affects many downstream applications. Writing effective fuzzing drivers requires detailed knowledge of APIs, data structures, and invocation constraints, making the process labor-intensive.'
+      - 'RAGFUZZ combines large language models with Google OSS-Fuzz to explore how an LLM can understand a third-party library and generate drivers that reach meaningful execution paths.'
+  - heading: 'Approach'
+    body:
+      - 'The system organizes library information into model-readable context, guides the model to learn API usage and input constraints, and then generates and iterates on fuzzing drivers.'
+      - 'The workflow connects library understanding, driver generation, test execution, and feedback-based refinement into a repeatable automated process.'
+  - heading: 'Outcome'
+    body:
+      - 'The project won Third Prize at the National College Student Information Security Competition and was subsequently deployed at Wuhan University. It ran from September 2024 to August 2025.'
+cover: './cover.png'
+draft: false
+---
+
+## 项目背景
+
+第三方库的安全性直接影响大量下游应用，但为不同库编写有效的模糊测试驱动模块通常需要理解接口、数据结构与调用约束，人工投入较高。
+
+RAGFUZZ 是一个基于大语言模型的自动化模糊测试系统。项目结合 Google OSS-Fuzz 的测试体系，探索如何利用大语言模型理解第三方库，并生成能够触达有效执行路径的 fuzzing driver。
+
+## 方法
+
+系统将第三方库相关信息组织成可供模型理解的上下文，引导模型学习接口使用方式、输入约束与典型调用关系，再生成并迭代模糊测试驱动模块。
+
+整个流程围绕“理解库、生成驱动、执行测试、根据反馈修正”展开，把一次性的人工编写过程转化为可重复运行的自动化工作流。
+
+## 结果
+
+项目获得全国大学生信息安全竞赛国家级三等奖，并在后续部署于武汉大学。项目周期为 2024 年 9 月至 2025 年 8 月。
+
+## 关键词
+
+`LLM` · `Google OSS-Fuzz` · `Fuzz Testing` · `Software Security`

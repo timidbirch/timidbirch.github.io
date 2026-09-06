@@ -1,0 +1,49 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+---
+
+<Layout title="About" description="CHEN Peihua's education, research background, and professional capabilities.">
+  <div class="relative z-[1] py-8 pb-12">
+    <div class="px-6 sm:px-8"><PageTitle title="About" introduce="A cross-disciplinary background in financial markets and engineering." /></div>
+    <SectionDivider className="my-8" />
+    <section class="px-6 sm:px-8 grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
+      <div class="text-sm text-muted-foreground leading-relaxed">
+        <p>CHEN Peihua</p><p>Hong Kong · GMT+8</p>
+        <a class="hover:text-foreground" href="mailto:1146816430@qq.com">1146816430@qq.com</a>
+      </div>
+      <div>
+        <p class="text-xl sm:text-2xl leading-relaxed text-pretty">I am interested in how financial research, quantitative analysis, and AI engineering can work together to improve decision-making.</p>
+        <p class="text-muted-foreground leading-relaxed mt-5 text-pretty">I hold a BEng background in Information Security from Wuhan University and am pursuing an MSc in Business Analytics at the University of Hong Kong. My studies and practice span software security, generative AI, asset management, and investment research.</p>
+        <a href="/en/experience" class="inline-flex items-center gap-2 font-medium mt-6 hover:text-primary">View experience <span>→</span></a>
+      </div>
+    </section>
+    <SectionDivider className="my-10" />
+    <section class="px-6 sm:px-8">
+      <h2 class="text-2xl sm:text-3xl tracking-tight mb-7">Education</h2>
+      <div class="border-y border-border/50">
+        <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6"><div><h3 class="font-semibold">The University of Hong Kong</h3><p class="text-muted-foreground mt-1">MSc in Business Analytics</p></div><span class="text-sm text-muted-foreground">Sep 2026 — Jun 2027</span></div>
+        <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6 border-t border-border/50"><div><h3 class="font-semibold">Wuhan University</h3><p class="text-muted-foreground mt-1">BEng in Information Security</p></div><span class="text-sm text-muted-foreground">Sep 2022 — Jun 2026</span></div>
+      </div>
+    </section>
+    <SectionDivider className="my-10" />
+    <section class="px-6 sm:px-8 grid sm:grid-cols-2 gap-10">
+      <div>
+        <h2 class="text-2xl tracking-tight mb-5">Research and Awards</h2>
+        <h3 class="font-semibold">University of Cambridge Exchange Program · AI Track</h3>
+        <p class="text-sm text-muted-foreground mt-1">Grade A · Jul 2023 — Sep 2023</p>
+        <p class="text-muted-foreground leading-relaxed mt-4">Contributed to research on a deep-learning-based PIMoG watermarking network robust to screen recording, designing simulated noise, gradient masking, and edge masking methods.</p>
+        <p class="text-muted-foreground leading-relaxed mt-4">RAGFUZZ won Third Prize at the National College Student Information Security Competition and was subsequently deployed at Wuhan University.</p>
+      </div>
+      <div>
+        <h2 class="text-2xl tracking-tight mb-5">Capabilities</h2>
+        <dl class="space-y-4 text-muted-foreground">
+          <div><dt class="text-foreground font-medium">Programming and Engineering</dt><dd class="mt-1">Python, C, MySQL, Go, and Gin; familiar with Assembly, Verilog, and HTML.</dd></div>
+          <div><dt class="text-foreground font-medium">Quantitative Finance</dt><dd class="mt-1">WindPy, factor research, cross-sectional return analysis, portfolio rebalancing, and trading-signal construction.</dd></div>
+          <div><dt class="text-foreground font-medium">Languages</dt><dd class="mt-1">Chinese and English · IELTS 7.0.</dd></div>
+        </dl>
+      </div>
+    </section>
+  </div>
+</Layout>

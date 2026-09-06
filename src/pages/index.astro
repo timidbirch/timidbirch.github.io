@@ -1,0 +1,52 @@
+---
+import { SITE, SOCIAL_LINKS } from '~/config'
+import Layout from '~/layouts/Layout.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import SocialLink from '~/components/base/SocialLink.astro'
+import { getAllExperiences } from '~/lib/data'
+
+const experiences = (await getAllExperiences()).slice(0, 3)
+---
+
+<Layout title="首页" description={SITE.description}>
+  <div class="relative z-[1]">
+    <section class="py-12 sm:py-16 px-6 sm:px-8">
+      <p class="text-sm text-muted-foreground mb-4">QUANTITATIVE FINANCE · AI · SECURITY</p>
+      <h1 class="flex flex-col gap-3 text-balance">
+        <span class="text-5xl sm:text-6xl tracking-tight">陈佩桦 <span class="text-3xl sm:text-4xl text-muted-foreground">CHEN Peihua</span></span>
+        <span class="text-muted-foreground font-light text-xl sm:text-2xl tracking-wide">连接金融研究、数据分析与 AI 工程。</span>
+      </h1>
+      <div class="pro text-muted-foreground text-pretty max-w-2xl mt-8">
+        <p>信息安全本科背景，现于香港大学攻读商业分析硕士。实践经历覆盖资产管理交易、量化研究、私募股权投资与 AI 后端开发。</p>
+      </div>
+      <div class="mt-7 flex gap-6">
+        {SOCIAL_LINKS.map((item) => <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} />)}
+      </div>
+    </section>
+
+    <SectionDivider />
+
+    <section class="py-10">
+      <div class="px-6 sm:px-8 mb-7">
+        <h2 class="text-2xl sm:text-3xl tracking-tight">最近的实践经历</h2>
+        <p class="text-muted-foreground mt-1">从交易执行、投资研究到量化系统开发。</p>
+      </div>
+      <div class="border-y border-border/50">
+        {experiences.map((experience, index) => (
+          <a href={`/experience/${experience.id}`} class:list={["group grid sm:grid-cols-[9rem_1fr_auto] gap-3 sm:gap-6 px-6 sm:px-8 py-7 hover:bg-muted/30 transition-colors", { 'border-t border-border/50': index > 0 }]}>
+            <span class="text-sm text-muted-foreground">{experience.data.period}</span>
+            <div>
+              <h3 class="text-lg font-semibold tracking-tight">{experience.data.company}</h3>
+              <p class="text-sm text-foreground mt-1">{experience.data.role}</p>
+              <p class="text-muted-foreground mt-3 leading-relaxed max-w-2xl">{experience.data.summary}</p>
+            </div>
+            <span class="text-muted-foreground group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </a>
+        ))}
+      </div>
+      <div class="px-6 sm:px-8 mt-7">
+        <a href="/experience" class="inline-flex items-center gap-2 font-medium hover:text-primary transition-colors">查看全部实践经历 <span>→</span></a>
+      </div>
+    </section>
+  </div>
+</Layout>

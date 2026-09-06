@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets'
+import Layout from '~/layouts/Layout.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import { SITE } from '~/config'
+import { getAllProjects } from '~/lib/data'
+
+export async function getStaticPaths() {
+  const projects = await getAllProjects()
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }))
+}
+
+const { project } = Astro.props
+const meta = project.data
+---
+
+<Layout title={meta.nameEn} description={meta.summaryEn || meta.descriptionEn} image={meta.cover?.src ? `${SITE.website}${meta.cover.src}` : SITE.ogImage}>
+  <article class="relative z-[1]">
+    <header class="px-6 sm:px-8 py-10 sm:py-14">
+      <a href="/en/projects" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">← Back to projects</a>
+      <div class="flex flex-wrap gap-3 text-xs uppercase tracking-wide text-muted-foreground mb-4">
+        {meta.year && <span>{meta.year}</span>}{meta.roleEn.length > 0 && <span>{meta.roleEn.join(' · ')}</span>}
+      </div>
+      <h1 class="text-4xl sm:text-6xl tracking-tight text-balance">{meta.nameEn}</h1>
+      <p class="text-lg sm:text-xl text-muted-foreground mt-5 max-w-2xl leading-relaxed text-pretty">{meta.summaryEn || meta.descriptionEn}</p>
+    </header>
+    {meta.cover && <div class="px-6 sm:px-8 pb-10"><div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.nameEn} project cover`} class="w-full h-auto" /></div></div>}
+    <SectionDivider />
+    <div class="px-6 sm:px-8 py-10 sm:py-14 space-y-10" data-pagefind-body>
+      {meta.sectionsEn.map((section) => (
+        <section class="max-w-3xl">
+          <h2 class="text-2xl sm:text-3xl tracking-tight mb-4">{section.heading}</h2>
+          <div class="pro text-muted-foreground">{section.body.map((paragraph) => <p>{paragraph}</p>)}</div>
+        </section>
+      ))}
+    </div>
+  </article>
+</Layout>

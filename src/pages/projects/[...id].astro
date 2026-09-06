@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets'
+import { render } from 'astro:content'
+import Layout from '~/layouts/Layout.astro'
+import Prose from '~/components/posts/base/Prose.astro'
+import SectionDivider from '~/components/base/SectionDivider.astro'
+import { SITE } from '~/config'
+import { getAllProjects } from '~/lib/data'
+
+export async function getStaticPaths() {
+  const projects = await getAllProjects()
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }))
+}
+
+const { project } = Astro.props
+const { Content } = await render(project)
+const meta = project.data
+---
+
+<Layout title={meta.name} description={meta.summary || meta.description} image={meta.cover?.src ? `${SITE.website}${meta.cover.src}` : SITE.ogImage}>
+  <article class="relative z-[1]">
+    <header class="px-6 sm:px-8 py-10 sm:py-14">
+      <a href="/projects" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">← 返回项目</a>
+      <div class="flex flex-wrap gap-3 text-xs uppercase tracking-wide text-muted-foreground mb-4">
+        {meta.year && <span>{meta.year}</span>}
+        {meta.role.length > 0 && <span>{meta.role.join(' · ')}</span>}
+      </div>
+      <h1 class="text-4xl sm:text-6xl tracking-tight text-balance">{meta.name}</h1>
+      <p class="text-lg sm:text-xl text-muted-foreground mt-5 max-w-2xl leading-relaxed text-pretty">{meta.summary || meta.description}</p>
+      {(meta.website || meta.githubUrl) && (
+        <div class="flex gap-5 mt-7 text-sm font-medium">
+          {meta.website && <a href={meta.website} target="_blank" rel="noreferrer" class="hover:text-primary">访问项目 ↗</a>}
+          {meta.githubUrl && <a href={meta.githubUrl} target="_blank" rel="noreferrer" class="hover:text-primary">查看源码 ↗</a>}
+        </div>
+      )}
+    </header>
+    {meta.cover && (
+      <div class="px-6 sm:px-8 pb-10">
+        <div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.name} 项目封面`} class="w-full h-auto" /></div>
+      </div>
+    )}
+    <SectionDivider />
+    <div class="px-6 sm:px-8 py-10 sm:py-14">
+      <Prose class="max-w-none"><Content /></Prose>
+    </div>
+  </article>
+</Layout>

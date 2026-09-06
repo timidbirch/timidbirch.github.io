@@ -1,0 +1,59 @@
+---
+import '~/styles/global.css'
+import '~/styles/markdown.css'
+import '~/styles/lqip.css'
+import '~/styles/github-card.css'
+import { SITE } from '~/config'
+import Head from '~/components/base/Head.astro'
+import Header from './Header.astro'
+import Footer from './Footer.astro'
+
+type Props = {
+  title: string
+  description: string
+  image?: string
+  disableViewTransition?: boolean
+}
+
+const { title, description, image, disableViewTransition }: Props = Astro.props
+const isEnglish = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
+const pageLanguage = isEnglish ? 'en' : 'zh-CN'
+---
+
+<!doctype html>
+<html lang={pageLanguage} transition:name="root" transition:animate={SITE.transition && !disableViewTransition ? 'fade' : 'none'}>
+  <head>
+    <Head title={`${title} | ${SITE.title}`} {description} {image} />
+    <script is:inline>
+      (() => {
+        const path = window.location.pathname
+        const isEnglishPath = path === '/en' || path.startsWith('/en/')
+        let preference = localStorage.getItem('site-language')
+        if (preference !== 'zh' && preference !== 'en') {
+          preference = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en'
+          localStorage.setItem('site-language', preference)
+        }
+        if (preference === 'en' && !isEnglishPath) {
+          const target = path === '/' ? '/en' : `/en${path}`
+          window.location.replace(target + window.location.search + window.location.hash)
+        } else if (preference === 'zh' && isEnglishPath) {
+          const target = path.replace(/^\/en(?=\/|$)/, '') || '/'
+          window.location.replace(target + window.location.search + window.location.hash)
+        }
+      })()
+    </script>
+  </head>
+  <body class="flex flex-col">
+    <Header />
+    <div class="grow flex">
+      <main class="relative border-x border-border/50 global-layout-width mx-auto grow min-w-0">
+        <slot />
+      </main>
+    </div>
+    <Footer />
+    <div
+      class="safari-hidden pointer-events-none bg-white dark:bg-black fixed z-50 bottom-0 left-0 h-28 [mask-image:linear-gradient(transparent,#000000)] w-full"
+    >
+    </div>
+  </body>
+</html>
