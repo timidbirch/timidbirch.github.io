@@ -1,0 +1,14 @@
+---
+// Film assets and design adapted from Floating Astronaut (MIT).
+// License: /licenses/floating-astronaut.txt
+const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
+---
+<div class="film-background" aria-hidden="true">
+  <video muted playsinline preload="none" tabindex="-1" poster="/media/film/film-poster.jpg"
+    data-film data-src-desktop="/media/film/film-scrub-1080.mp4" data-src-mobile="/media/film/film-scrub-540.mp4"></video>
+  <div class="film-grade"></div><div class="film-grain"></div>
+</div>
+<button class="motion-toggle glass" data-motion-toggle aria-pressed="false"
+  data-pause-label={en ? 'Pause motion' : '暂停动效'} data-resume-label={en ? 'Resume motion' : '开启动效'}>
+  {en ? 'Pause motion' : '暂停动效'}
+</button>

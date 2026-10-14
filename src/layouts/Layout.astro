@@ -3,6 +3,8 @@ import '~/styles/global.css'
 import '~/styles/markdown.css'
 import '~/styles/lqip.css'
 import '~/styles/github-card.css'
+import '~/styles/portfolio.css'
+import FilmBackground from '~/components/portfolio/FilmBackground.astro'
 import { SITE } from '~/config'
 import Head from '~/components/base/Head.astro'
 import Header from './Header.astro'
@@ -43,17 +45,19 @@ const pageLanguage = isEnglish ? 'en' : 'zh-CN'
       })()
     </script>
   </head>
-  <body class="flex flex-col">
+  <body class="portfolio flex flex-col">
+    <a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳转到正文'}</a>
+    <FilmBackground />
     <Header />
-    <div class="grow flex">
-      <main class="relative border-x border-border/50 global-layout-width mx-auto grow min-w-0">
+    <div class="site-content grow flex">
+      <main id="main-content" class="portfolio-main global-layout-width mx-auto min-w-0" tabindex="-1">
         <slot />
       </main>
     </div>
     <Footer />
-    <div
-      class="safari-hidden pointer-events-none bg-white dark:bg-black fixed z-50 bottom-0 left-0 h-28 [mask-image:linear-gradient(transparent,#000000)] w-full"
-    >
-    </div>
   </body>
 </html>
+
+<script>
+  import '~/scripts/portfolio'
+</script>

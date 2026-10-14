@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content'
+type Props = { experiences: CollectionEntry<'experiences'>[]; en?: boolean; timeline?: boolean }
+const { experiences, en = false, timeline = false } = Astro.props
+---
+<div class:list={['experience-cards', { timeline }]}>
+  {experiences.map((item, i) => (
+    <a class="experience-card glass reveal" data-tilt href={`${en ? '/en' : ''}/experience/${item.id}`}>
+      <div class="card-topline"><span class="card-number">0{i + 1}</span><span>{item.data.period}</span><span class="card-arrow" aria-hidden="true">↗</span></div>
+      <p class="experience-role">{en ? item.data.roleEn : item.data.role}</p>
+      <h3>{en ? item.data.companyEn || item.data.company : item.data.company}</h3>
+      <p class="card-summary">{en ? item.data.summaryEn : item.data.summary}</p>
+      <div class="card-tags">{(en ? item.data.tagsEn : item.data.tags).map(tag => <span>{tag}</span>)}</div>
+      <span class="card-read">{en ? 'Explore experience' : '了解这段经历'} <span aria-hidden="true">→</span></span>
+    </a>
+  ))}
+</div>

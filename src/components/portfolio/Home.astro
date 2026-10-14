@@ -1,0 +1,51 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import ExperienceCards from './ExperienceCards.astro'
+import { getAllExperiences, getAllProjects } from '~/lib/data'
+const { en = false } = Astro.props
+const experiences = await getAllExperiences()
+const projects = await getAllProjects()
+const prefix = en ? '/en' : ''
+const skills = ['Python', 'Quantitative Research', 'LLM Systems', 'Data Analytics', 'Information Security', 'Go / Gin']
+---
+<Layout title={en ? 'Home' : '首页'} description={en ? 'CHEN Peihua — financial research, quantitative analysis, and AI engineering.' : '陈佩桦的个人网站：连接金融研究、量化分析与 AI 工程。'}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-meta"><span class="status-dot"></span><span>HONG KONG · HKU BUSINESS ANALYTICS</span><span class="hero-edition">PERSONAL PORTFOLIO / 2026</span></div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow reveal">QUANTITATIVE FINANCE / AI / SECURITY</p>
+        <h1 id="hero-title" class="hero-name reveal">{en ? 'CHEN' : '陈佩桦'}<br /><span>{en ? 'Peihua.' : 'CHEN Peihua.'}</span></h1>
+        <p class="hero-tagline reveal">{en ? 'Where financial thinking' : '以金融的视角思考，'}<br />{en ? 'meets engineering.' : '以工程的方式实现。'}</p>
+        <p class="hero-description reveal">{en ? 'Studying Business Analytics at HKU, with a background in Information Security. Exploring better decisions through financial research, data, and AI.' : '香港大学商业分析硕士在读，武汉大学信息安全本科。探索金融研究、数据分析与 AI 工程的交汇处，让想法走向真实应用。'}</p>
+        <div class="hero-actions reveal"><a class="btn btn-primary" href="#recent-experience">{en ? 'Explore my experience' : '探索实践经历'} <span aria-hidden="true">↗</span></a><a class="btn btn-ghost" href={`${prefix}/about`}>{en ? 'A little about me' : '更多关于我'} <span aria-hidden="true">→</span></a></div>
+      </div>
+      <div class="hero-art reveal" aria-hidden="true">
+        <div class="orb-orbit orbit-one"></div><div class="orb-orbit orbit-two"></div><div class="orb-core"></div>
+        <span class="orb-coordinate">22°17′ N / 114°09′ E</span>
+        <div class="orb-label glass"><span class="status-dot"></span> FINANCE × ENGINEERING</div>
+        <span class="orb-caption">RESEARCH. BUILD. ITERATE.</span>
+      </div>
+    </div>
+    <div class="hero-proof reveal">
+      <a href={`${prefix}/experience`} class="proof-item"><strong>{String(experiences.length).padStart(2, '0')}</strong><span>{en ? 'Industry experiences' : '跨领域实践经历'}</span><span aria-hidden="true">↗</span></a>
+      <a href={`${prefix}/projects`} class="proof-item"><strong>{String(projects.length).padStart(2, '0')}</strong><span>{en ? 'Technical projects' : '技术研究与项目'}</span><span aria-hidden="true">↗</span></a>
+      <a href={`${prefix}/about`} class="proof-item"><strong>HKU</strong><span>{en ? 'MSc · Business Analytics' : 'MSc · 商业分析'}</span><span aria-hidden="true">↗</span></a>
+    </div>
+    <a class="scroll-cue" href="#recent-experience"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span></a>
+  </section>
+  <div class="skills-marquee" aria-label={en ? 'Areas of focus' : '研究与技术方向'}><div>{[0, 1].map(copy => <div aria-hidden={copy === 1 ? 'true' : undefined}>{skills.map(skill => <span>{skill}<i aria-hidden="true">✳</i></span>)}</div>)}</div></div>
+  <section id="recent-experience" class="portfolio-section">
+    <div class="section-heading reveal"><div><p class="eyebrow">01 / {en ? 'RECENT EXPERIENCE' : 'RECENT EXPERIENCE · 最近实践'}</p><h2>{en ? 'Learning by' : '深入真实问题，'}<br /><span>{en ? 'doing real work.' : '积累实践经验。'}</span></h2></div><a class="text-link" href={`${prefix}/experience`}>{en ? 'All experience' : '全部实践经历'} ↗</a></div>
+    <ExperienceCards experiences={experiences.slice(0, 3)} {en} />
+  </section>
+  <section class="portfolio-section focus-section">
+    <div class="section-heading reveal"><div><p class="eyebrow">02 / {en ? 'MY PERSPECTIVE' : 'MY PERSPECTIVE · 我的视角'}</p><h2>{en ? 'Three disciplines.' : '跨越领域，'}<br /><span>{en ? 'One curious mind.' : '连接新的可能。'}</span></h2></div><p class="section-lede">{en ? 'From understanding markets to building systems, curiosity connects the dots.' : '从理解市场到构建系统，以好奇心驱动探索，以数据和实践验证想法。'}</p></div>
+    <div class="focus-grid">
+      {[
+        { n: '01', icon: '↗', title: en ? 'Financial markets' : '金融市场', sub: 'FINANCE', text: en ? 'Trading execution, investment research, and quantitative strategies rooted in real market practice.' : '从交易执行、投资研究到量化策略，在市场实践中理解风险与收益。' },
+        { n: '02', icon: '✳', title: en ? 'Intelligent systems' : '智能系统', sub: 'INTELLIGENCE', text: en ? 'Turning LLMs and generative AI into useful tools and repeatable research workflows.' : '将大模型与生成式 AI 转化为实用工具，构建可复用的研究工作流。' },
+        { n: '03', icon: '⌘', title: en ? 'Secure engineering' : '安全工程', sub: 'ENGINEERING', text: en ? 'An information-security foundation, with attention to reliability, testing, and implementation.' : '以信息安全为基础，关注系统可靠性、测试验证与工程实现。' },
+      ].map(item => <div class="focus-card glass reveal" data-tilt><div class="card-topline"><span>{item.n} / {item.sub}</span><span class="focus-icon" aria-hidden="true">{item.icon}</span></div><h3>{item.title}</h3><p class="card-summary">{item.text}</p></div>)}
+    </div>
+  </section>
+</Layout>

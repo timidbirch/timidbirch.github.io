@@ -1,0 +1,18 @@
+---
+import { Image } from 'astro:assets'
+import Layout from '~/layouts/Layout.astro'
+import { getAllProjects } from '~/lib/data'
+const { en = false } = Astro.props
+const projects = await getAllProjects()
+---
+<Layout title={en ? 'Projects' : '项目'} description={en ? 'Technical projects by CHEN Peihua.' : '陈佩桦的技术研究与项目。'}>
+  <section class="portfolio-section listing-section">
+    <div class="section-heading reveal"><div><p class="eyebrow">SELECTED WORK / {String(projects.length).padStart(2, '0')}</p><h1>{en ? 'Ideas, made' : '让想法，'}<br /><span>{en ? 'into something real.' : '成为真实。'}</span></h1></div><p class="section-lede">{en ? 'From LLM security testing to digital-human generation. A closer look at the problems, the process, and the results.' : '从大模型安全测试到数字人生成，记录每个问题背后的思考、方法与结果。'}</p></div>
+    <div class="project-grid">
+      {projects.map((project, i) => <a class="project-card glass reveal" data-tilt href={`${en ? '/en' : ''}/projects/${project.id}`}>
+        <div class="project-image">{project.data.cover ? <Image src={project.data.cover} alt={en ? project.data.nameEn : project.data.name} widths={[480, 800]} sizes="(max-width: 700px) 90vw, 45vw" /> : <span class="project-placeholder">0{i + 1}</span>}<span class="project-open" aria-hidden="true">↗</span></div>
+        <div class="project-copy"><div class="card-topline"><span>PROJECT / 0{i + 1}</span><span>{project.data.year}</span></div><h2>{en ? project.data.nameEn : project.data.name}</h2><p class="card-summary">{en ? project.data.descriptionEn : project.data.description}</p><div class="card-tags">{(en ? project.data.roleEn : project.data.role).map(role => <span>{role}</span>)}</div><span class="card-read">{en ? 'Read the case study' : '阅读项目详情'} →</span></div>
+      </a>)}
+    </div>
+  </section>
+</Layout>

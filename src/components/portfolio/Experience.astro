@@ -1,0 +1,13 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import ExperienceCards from './ExperienceCards.astro'
+import { getAllExperiences } from '~/lib/data'
+const { en = false } = Astro.props
+const experiences = await getAllExperiences()
+---
+<Layout title={en ? 'Experience' : '实践经历'} description={en ? 'Experience across asset management, quantitative research, private equity, and AI engineering.' : '资产管理、量化研究、私募股权与 AI 工程领域的实践经历。'}>
+  <section class="portfolio-section listing-section">
+    <div class="section-heading reveal"><div><p class="eyebrow">THE JOURNEY / {String(experiences.length).padStart(2, '0')}</p><h1>{en ? 'Experience' : '在实践中，'}<br /><span>{en ? 'shapes perspective.' : '形成自己的视角。'}</span></h1></div><p class="section-lede">{en ? 'Trade execution, investment research, quantitative analysis, and AI engineering. Every role adds a new lens.' : '交易执行、投资研究、量化分析与 AI 工程。每一段经历，都带来一种观察问题的新方式。'}</p></div>
+    <ExperienceCards {experiences} {en} timeline />
+  </section>
+</Layout>
