@@ -4,6 +4,7 @@ import Layout from '~/layouts/Layout.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import { SITE } from '~/config'
 import { getAllProjects } from '~/lib/data'
+import ProjectGallery from '~/components/portfolio/ProjectGallery.astro'
 
 export async function getStaticPaths() {
   const projects = await getAllProjects()
@@ -34,5 +35,6 @@ const meta = project.data
         </section>
       ))}
     </div>
+    <ProjectGallery images={meta.gallery} en />
   </article>
 </Layout>

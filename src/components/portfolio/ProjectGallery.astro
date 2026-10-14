@@ -1,0 +1,16 @@
+---
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+type Props = { images: CollectionEntry<'projects'>['data']['gallery']; en?: boolean }
+const { images, en = false } = Astro.props
+---
+{images.length > 0 && <section class="project-gallery px-6 sm:px-8 py-10" aria-labelledby="gallery-title">
+  <p class="eyebrow">IN THE GAME</p>
+  <h2 id="gallery-title" class="text-2xl mt-3 mb-7">{en ? 'A closer look' : '游戏画面'}</h2>
+  <div class="space-y-8">
+    {images.map(item => <figure>
+      <div class="overflow-hidden rounded-xl border border-border/50"><Image src={item.image} alt={en ? item.captionEn : item.caption} widths={[640, 1200, 1920]} sizes="(max-width: 700px) 90vw, 850px" class="w-full h-auto" loading="lazy" /></div>
+      <figcaption class="text-sm text-muted-foreground mt-3 leading-relaxed">{en ? item.captionEn : item.caption}</figcaption>
+    </figure>)}
+  </div>
+</section>}

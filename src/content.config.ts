@@ -55,6 +55,11 @@ const projects = defineCollection({
       type: z.string().default('image'),
       cover: image().optional(),
       icon: image().optional(),
+      gallery: z.array(z.object({
+        image: image(),
+        caption: z.string(),
+        captionEn: z.string(),
+      })).default([]),
       imageClass: z.string().optional(),
       star: z.number().optional(),
       fork: z.number().optional(),
