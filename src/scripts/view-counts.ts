@@ -27,7 +27,7 @@ async function recordPageView() {
   activeRequest?.abort()
   const controller = new AbortController()
   activeRequest = controller
-  const timeout = window.setTimeout(() => controller.abort(), 8000)
+  const timeout = window.setTimeout(() => controller.abort(), 15000)
   const url = new URL(path, location.origin).href
 
   // Match the provider's host-scoped anonymous visitor marker so a future
@@ -45,9 +45,9 @@ async function recordPageView() {
       body: JSON.stringify({ url, isNewUv }),
       signal: controller.signal,
       credentials: 'omit',
-      referrerPolicy: 'no-referrer',
+      referrerPolicy: 'strict-origin',
     })
-    if (!response.ok) throw new Error('Counter unavailable')
+    if (!response.ok) throw new Error(`Counter returned HTTP ${response.status}`)
     const result = await response.json()
     if (result.status === 'error') throw new Error('Counter rejected request')
     const counts = result.data ?? result
@@ -65,9 +65,12 @@ async function recordPageView() {
       if (key === 'site_pv' || key === 'page_pv') element.textContent = format.format(counts[key])
     })
     message(en ? 'Page view statistics updated.' : '浏览量已更新。')
-  } catch {
+  } catch (error) {
     // An earlier page's cancelled request must not update the new page's UI.
-    if (container.isConnected) message(en ? 'Statistics are temporarily unavailable.' : '浏览量暂时无法获取。')
+    if (container.isConnected) {
+      message(en ? 'Statistics are temporarily unavailable.' : '浏览量暂时无法获取。')
+      console.warn('[View counts]', error instanceof Error ? error.message : 'Request failed')
+    }
   } finally {
     clearTimeout(timeout)
     if (activeRequest === controller) activeRequest = undefined
