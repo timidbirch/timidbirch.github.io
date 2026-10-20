@@ -149,6 +149,11 @@ html[lang='zh-CN'] .hero-name span { font-size: .65em; letter-spacing: -.055em; 
 .footer-pill { border-radius: 100px; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 11px; color: var(--soft-ink); }
 .footer-pill > div { display: flex; gap: 22px; }
 .footer-pill a:hover { color: var(--signal); }
+.view-counts { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 14px; padding: 0 16px 22px; color: var(--soft-ink); font-size: 11px; }
+.view-count-item { display: inline-flex; gap: 7px; align-items: center; }
+.view-count-item > [class*='icon-'] { width: 14px; height: 14px; }
+.view-count-value { color: var(--color-foreground); font-family: var(--font-mono); font-variant-numeric: tabular-nums; min-width: 1ch; }
+.view-count-divider { opacity: .4; }
 /* Restyle existing biography and MDX detail pages without changing their content. */
 .portfolio-main > article, .portfolio-main > .legacy-content { max-width: 960px; margin-inline: auto; border-radius: 28px; background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(22px); overflow: hidden; }
 .portfolio-main > article > header { padding: 46px clamp(24px, 6vw, 72px); }

@@ -85,11 +85,6 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
   )
 }
 {
-  ANALYTICS_CONFIG.vercount?.enabled && (
-    <script is:inline defer src="https://events.vercount.one/js" data-astro-rerun></script>
-  )
-}
-{
   ANALYTICS_CONFIG.google?.enabled && (
     <>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_CONFIG.google.id}`}></script>

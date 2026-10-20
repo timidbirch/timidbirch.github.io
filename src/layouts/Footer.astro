@@ -1,4 +1,6 @@
 ---
+import { ANALYTICS_CONFIG } from '~/config'
+import ViewCounts from '~/components/base/ViewCounts.astro'
 const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
 ---
 <footer class="portfolio-footer">
@@ -7,6 +9,7 @@ const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
     <h2>{en ? 'A good conversation' : '新的想法，'}<br /><span>{en ? 'starts with hello.' : '从一次交流开始。'}</span></h2>
     <a class="btn btn-primary" href="mailto:1146816430@qq.com">{en ? 'Get in touch' : '与我联系'} <span aria-hidden="true">↗</span></a>
   </div>
+  {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
   <div class="footer-pill glass">
     <span>© {new Date().getFullYear()} CHEN Peihua</span><span class="footer-location">Hong Kong · GMT+8</span>
     <div><a href="https://github.com/timidbirch" target="_blank" rel="noreferrer">GitHub ↗</a><a href={en ? '/en/about' : '/about'}>{en ? 'About' : '关于'} ↗</a></div>

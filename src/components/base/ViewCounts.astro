@@ -1,0 +1,16 @@
+---
+import { SITE } from '~/config'
+const { en = false } = Astro.props
+---
+<div class="view-counts" data-view-counts data-site-host={new URL(SITE.website).host}
+  data-locale={en ? 'en' : 'zh-CN'} aria-label={en ? 'Page view statistics' : '浏览量统计'}>
+  <span class="view-count-item"><span class="icon-[ri--eye-line]" aria-hidden="true"></span>
+    <span>{en ? 'Site views' : '全站浏览'}</span><span class="view-count-value" data-view-count="site_pv">—</span>
+  </span>
+  <span class="view-count-divider" aria-hidden="true">/</span>
+  <span class="view-count-item"><span>{en ? 'This page' : '本页浏览'}</span><span class="view-count-value" data-view-count="page_pv">—</span></span>
+  <span class="sr-only" data-view-count-status role="status"></span>
+</div>
+<script>
+  import '~/scripts/view-counts'
+</script>
