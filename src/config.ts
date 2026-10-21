@@ -18,6 +18,7 @@ export const SITE: Site = {
 export const HEADER_LINKS: Link[] = [
   { name: '项目', url: '/projects' },
   { name: '实践经历', url: '/experience' },
+  { name: '博客', url: '/blog' },
   { name: '关于', url: '/about' },
 ]
 
@@ -25,6 +26,7 @@ export const FOOTER_LINKS: Link[] = [
   { name: '首页', url: '/' },
   { name: '项目', url: '/projects' },
   { name: '实践经历', url: '/experience' },
+  { name: '博客', url: '/blog' },
   { name: '关于', url: '/about' },
 ]
 

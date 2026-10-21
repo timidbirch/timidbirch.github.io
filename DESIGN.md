@@ -54,7 +54,23 @@ or site credentials are sent. Failed requests leave an em dash with an
 unavailable status rather than a fabricated number. The provider's auto-counting
 script must not be enabled alongside this handler, or views would be doubled.
 
-## Publishing
+## Blog and Obsidian
+
+The `/blog` and `/en/blog` pages share the `posts` content collection. Blog cards
+support combined title/description/tag search and tag filtering; article pages
+include a heading-based table of contents. The interface is bilingual, but note
+bodies retain their declared original language. No existing vault notes were
+published with the initial blog scaffold.
+
+`npm run blog:sync` selectively exports notes with `publish: true` from the local
+Obsidian vault. It never modifies the source vault, follows symlinks, copies
+unselected notes, or recursively publishes linked notes. Only referenced raster
+images are exported. `--dry-run` previews without writing. Generated files are
+tracked in `scripts/obsidian-manifest.json`; unpublishing requires another sync
+and deployment. CI builds only committed exports and never reads the vault.
+See `BLOG_GUIDE.md` for the full writing and publishing workflow.
+
+## Publishing the website
 
 Run `npm run build`, commit changes, and push `main`. The workflow at
 `.github/workflows/deploy.yml` builds and deploys to GitHub Pages automatically.

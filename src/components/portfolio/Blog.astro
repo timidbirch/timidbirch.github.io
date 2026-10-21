@@ -1,0 +1,142 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import { getAllPosts } from '~/lib/data'
+import '~/styles/blog.css'
+const { en = false } = Astro.props
+const posts = await getAllPosts()
+const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort()
+const prefix = en ? '/en' : ''
+---
+
+<Layout
+  title={en ? 'Blog' : '个人博客'}
+  description={en ? 'Notes on technology, markets, and the things I am learning.' : '记录技术探索、市场观察与学习过程中的思考。'}
+>
+  <section class="portfolio-section listing-section blog-section" data-blog>
+    <div class="section-heading reveal">
+      <div>
+        <p class="eyebrow">FIELD NOTES / {String(posts.length).padStart(2, '0')}</p><h1>
+          {en ? 'A place to think' : '把思考，'}<br /><span>{en ? 'out loud.' : '慢慢写下来。'}</span>
+        </h1>
+      </div>
+      <p class="section-lede">
+        {
+          en
+            ? 'Between building things and understanding them. Notes on technology, markets, and what I learn along the way.'
+            : '在动手构建与理解世界之间，记录技术探索、市场观察，以及学习途中值得留下的想法。'
+        }
+      </p>
+    </div>
+    <div class="blog-toolbar reveal">
+      <label class="blog-search glass"
+        ><span class="icon-[ri--search-line]" aria-hidden="true"></span><span class="sr-only">{en ? 'Search notes' : '搜索文章'}</span
+        ><input type="search" placeholder={en ? 'Find a thought…' : '搜索标题、摘要或标签…'} data-blog-search autocomplete="off" /></label
+      >
+      <span class="blog-count" data-blog-count data-unit={en ? 'notes' : '篇文章'} data-unit-one={en ? 'note' : '篇文章'} aria-live="polite"
+        >{posts.length} {en ? (posts.length === 1 ? 'note' : 'notes') : '篇文章'}</span
+      >
+      {
+        posts.length > 0 && (
+          <a class="text-link" href="/rss.xml">
+            RSS ↗
+          </a>
+        )
+      }
+    </div>
+    {
+      tags.length > 0 && (
+        <div class="blog-filters" role="group" aria-label={en ? 'Filter by tag' : '按标签筛选'}>
+          <button type="button" data-blog-tag="" aria-pressed="true">
+            {en ? 'All notes' : '全部文章'}
+          </button>
+          {tags.map((tag) => (
+            <button type="button" data-blog-tag={tag} aria-pressed="false">
+              {tag}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    {
+      posts.length > 0 ? (
+        <div class="blog-grid">
+          {posts.map((post, index) => (
+            <a
+              class="blog-card glass reveal"
+              href={`${prefix}/blog/${post.id}`}
+              data-blog-card
+              data-search={`${post.data.title} ${post.data.description} ${(post.data.tags || []).join(' ')}`}
+              data-tags={JSON.stringify(post.data.tags || [])}
+            >
+              <div class="card-topline">
+                <span>
+                  {String(index + 1).padStart(2, '0')} / {post.data.category}
+                </span>
+                <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0, 10)}</time>
+              </div>
+              <h2>{post.data.title}</h2>
+              <p class="card-summary">{post.data.description}</p>
+              <div class="card-tags">
+                {post.data.tags?.map((tag) => (
+                  <span>{tag}</span>
+                ))}
+              </div>
+              <span class="card-read">
+                {en ? 'Read the note' : '阅读全文'} <span aria-hidden="true">↗</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="blog-empty glass reveal">
+          <div class="notebook-art" aria-hidden="true">
+            <>
+              <span class="notebook-orbit" />
+              <div class="notebook-page">
+                <>
+                  <span>FIELD NOTES</span>
+                  <i />
+                  <i />
+                  <i />
+                  <b>✳</b>
+                  <small>CHEN / PEIHUA</small>
+                </>
+              </div>
+              <span class="notebook-spark">+</span>
+            </>
+          </div>
+          <div class="blog-empty-copy">
+            <>
+              <p class="eyebrow">A NOTEBOOK, IN THE MAKING</p>
+              <h2>{en ? 'Good thoughts take time.' : '好想法，值得整理。'}</h2>
+              <p>
+                {en
+                  ? 'This is where my notes will become essays. The first entries are still being put together — see you here soon.'
+                  : '这里将收录从个人笔记中整理出的文章。第一批内容还在酝酿中，等想法成熟，再与你分享。'}
+              </p>
+              <div class="blog-topics">
+                <>
+                  <span>{en ? 'Technology' : '技术探索'}</span>
+                  <span>{en ? 'Markets' : '市场观察'}</span>
+                  <span>{en ? 'Learning' : '学习与思考'}</span>
+                </>
+              </div>
+              <a class="text-link" href={`${prefix}/projects`}>
+                {en ? 'Explore my projects in the meantime' : '先看看我在做的项目'} ↗
+              </a>
+            </>
+          </div>
+        </div>
+      )
+    }
+    <p class="blog-no-results" data-blog-no-results hidden>
+      {en ? 'No matching notes. Try another word or tag.' : '没有匹配的文章，试试其他关键词或标签。'}
+    </p>
+    <div class="blog-colophon">
+      <span>THINK / WRITE / CONNECT</span><span>{en ? 'A personal notebook by CHEN Peihua' : '陈佩桦的个人思考笔记'}</span>
+    </div>
+  </section>
+</Layout>
+<script>
+  import '~/scripts/blog'
+</script>

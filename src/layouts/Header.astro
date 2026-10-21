@@ -6,6 +6,7 @@ const prefix = en ? '/en' : ''
 const links = [
   { name: en ? 'Experience' : '实践经历', url: `${prefix}/experience` },
   { name: en ? 'Projects' : '项目', url: `${prefix}/projects` },
+  { name: en ? 'Blog' : '博客', url: `${prefix}/blog` },
   { name: en ? 'About' : '关于', url: `${prefix}/about` },
 ]
 const languageHref = en ? pathname.replace(/^\/en(?=\/|$)/, '') || '/' : pathname === '/' ? '/en' : `/en${pathname}`

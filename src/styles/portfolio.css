@@ -190,8 +190,8 @@ html[lang='zh-CN'] .hero-name span { font-size: .65em; letter-spacing: -.055em; 
   .float-header, .float-header[data-scrolled] { top: 12px; width: calc(100% - 24px); padding: 10px 13px; gap: 8px; }
   .brand-mark { font-size: 24px; }
   .primary-nav { gap: 0; }
-  .primary-nav a { font-size: 11px; padding: 10px 8px; }
-  .nav-tools { gap: 12px; }
+  .primary-nav a { font-size: 10px; padding: 10px 5px; }
+  .nav-tools { gap: 8px; }
   .nav-contact { display: none; }
   .nav-tools > button { min-width: 28px; min-height: 36px; }
   .hero-meta { font-size: 8px; }
@@ -228,6 +228,13 @@ html[lang='zh-CN'] .hero-name span { font-size: .65em; letter-spacing: -.055em; 
   .portfolio-main > .legacy-content > section { padding-inline: 24px; }
   .listing-section { padding-top: 20px; }
   .skills-marquee span { font-size: 18px; }
+}
+@media (max-width: 370px) {
+  .float-header { flex-wrap: wrap; border-radius: 22px; }
+  .float-header .brand { margin-right: auto; }
+  .primary-nav { order: 3; flex-basis: 100%; justify-content: center; }
+  .primary-nav a { padding: 5px 13px; font-size: 11px; }
+  .portfolio-main { padding-top: 140px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

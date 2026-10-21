@@ -1,0 +1,10 @@
+---
+import BlogPost from '~/components/portfolio/BlogPost.astro'
+import { getAllPosts } from '~/lib/data'
+export async function getStaticPaths() {
+  return (await getAllPosts()).map((post) => ({ params: { id: post.id }, props: { post } }))
+}
+const { post } = Astro.props
+---
+
+<BlogPost {post} />

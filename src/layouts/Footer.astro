@@ -12,6 +12,6 @@ const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
   {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
   <div class="footer-pill glass">
     <span>© {new Date().getFullYear()} CHEN Peihua</span><span class="footer-location">Hong Kong · GMT+8</span>
-    <div><a href="https://github.com/timidbirch" target="_blank" rel="noreferrer">GitHub ↗</a><a href={en ? '/en/about' : '/about'}>{en ? 'About' : '关于'} ↗</a></div>
+    <div><a href="https://github.com/timidbirch" target="_blank" rel="noreferrer">GitHub ↗</a><a href={en ? '/en/blog' : '/blog'}>{en ? 'Blog' : '博客'} ↗</a><a href={en ? '/en/about' : '/about'}>{en ? 'About' : '关于'} ↗</a></div>
   </div>
 </footer>

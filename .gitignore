@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Private Obsidian vaults must never be committed wholesale.
+/timidbirch_obsidian/

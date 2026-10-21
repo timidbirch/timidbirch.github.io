@@ -4,6 +4,8 @@
   "version": "1.0.3",
   "license": "MIT",
   "scripts": {
+    "blog:sync": "node scripts/sync-obsidian.mjs",
+    "blog:test": "node --test scripts/sync-obsidian.test.mjs",
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
@@ -62,14 +64,19 @@
     "rehype-unwrap-images": "^1.0.0",
     "remark-directive": "^4.0.0",
     "remark-directive-sugar": "^1.1.2",
+    "remark-gfm": "^4.0.1",
     "remark-imgattr": "^1.1.1",
     "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
     "remark-smartypants": "^3.0.2",
+    "remark-stringify": "^11.0.0",
     "sharp": "^0.34.5",
     "shiki": "^3.23.0",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
+    "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
-    "vite": "7.3.6"
+    "vite": "7.3.6",
+    "yaml": "^2.9.1"
   }
 }

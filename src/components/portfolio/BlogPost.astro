@@ -1,0 +1,88 @@
+---
+import { render, type CollectionEntry } from 'astro:content'
+import Layout from '~/layouts/Layout.astro'
+import Prose from '~/components/posts/base/Prose.astro'
+import { getAllPosts } from '~/lib/data'
+import '~/styles/blog.css'
+interface Props {
+  post: CollectionEntry<'posts'>
+  en?: boolean
+}
+const { post, en = false } = Astro.props
+const { Content, headings } = await render(post)
+const posts = await getAllPosts()
+const index = posts.findIndex((item) => item.id === post.id)
+const older = posts[index + 1]
+const newer = posts[index - 1]
+const prefix = en ? '/en' : ''
+const toc = headings
+  .filter((heading) => heading.depth <= 3 && heading.slug !== 'footnote-label')
+  .map((heading) => ({ ...heading, text: heading.text.replace(new RegExp(`h${heading.depth}$`), '') }))
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article class="blog-article">
+    <header>
+      <a class="text-link" href={`${prefix}/blog`}>← {en ? 'All notes' : '返回博客'}</a>
+      <p class="eyebrow blog-post-meta">
+        {post.data.category} / <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0, 10)}</time> / {
+          post.data.language === 'zh' ? '中文原文' : 'English original'
+        }
+      </p>
+      <h1>{post.data.title}</h1><p class="blog-post-description">{post.data.description}</p>
+      {
+        post.data.updatedDate && (
+          <p class="blog-updated">
+            {en ? 'Updated' : '更新于'} {post.data.updatedDate.toISOString().slice(0, 10)}
+          </p>
+        )
+      }
+      <div class="card-tags">{post.data.tags?.map((tag) => <span>{tag}</span>)}</div>
+      {
+        en && post.data.language === 'zh' && (
+          <p class="blog-language-note">This note is written in Chinese. Switching the interface language keeps the original text.</p>
+        )
+      }
+    </header>
+    {
+      toc.length > 0 && (
+        <div class="blog-toc">
+          <details open>
+            <>
+              <summary>{en ? 'On this page' : '文章目录'}</summary>
+              <nav aria-label={en ? 'Table of contents' : '文章目录'}>
+                {toc.map((heading) => (
+                  <a class:list={{ 'toc-subheading': heading.depth === 3 }} href={`#${heading.slug}`}>
+                    {heading.text}
+                  </a>
+                ))}
+              </nav>
+            </>
+          </details>
+        </div>
+      )
+    }
+    <div class="blog-body" lang={post.data.language === 'zh' ? 'zh-CN' : 'en'}><Prose><Content /></Prose></div>
+    <div class="blog-post-navigation">
+      {
+        older && (
+          <a href={`${prefix}/blog/${older.id}`}>
+            <>
+              <small>← {en ? 'Older note' : '上一篇'}</small>
+              <span>{older.data.title}</span>
+            </>
+          </a>
+        )
+      }{
+        newer && (
+          <a href={`${prefix}/blog/${newer.id}`}>
+            <>
+              <small>{en ? 'Newer note' : '下一篇'} →</small>
+              <span>{newer.data.title}</span>
+            </>
+          </a>
+        )
+      }
+    </div>
+  </article>
+</Layout>

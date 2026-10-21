@@ -18,7 +18,7 @@ export async function getAllPosts(): Promise<CollectionEntry<'posts'>[]> {
 // 获取所有置顶文章
 export async function getPinnedPosts(): Promise<CollectionEntry<'posts'>[]> {
   const allPosts = await getCollection('posts')
-  const pinnedPosts = allPosts.filter((post) => post.data.pinned)
+  const pinnedPosts = allPosts.filter((post) => post.data.pinned && !post.data.draft)
   return postsSort(pinnedPosts)
 }
 
