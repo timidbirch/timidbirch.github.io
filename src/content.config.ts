@@ -16,7 +16,7 @@ const posts = defineCollection({
         description: z.string(),
         pubDate: z.date(),
         tags: z.array(z.string()).optional(),
-        category: z.string().default('随笔'),
+        category: z.string().default('学习与生活'),
         language: z.enum(['zh', 'en']).default('zh'),
         updatedDate: z.date().optional(),
         author: z.string().default(POSTS_CONFIG.author),

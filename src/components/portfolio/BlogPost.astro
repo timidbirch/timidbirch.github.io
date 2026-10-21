@@ -3,6 +3,7 @@ import { render, type CollectionEntry } from 'astro:content'
 import Layout from '~/layouts/Layout.astro'
 import Prose from '~/components/posts/base/Prose.astro'
 import { getAllPosts } from '~/lib/data'
+import { getBlogCategory } from '~/lib/blog-categories'
 import '~/styles/blog.css'
 interface Props {
   post: CollectionEntry<'posts'>
@@ -15,6 +16,7 @@ const index = posts.findIndex((item) => item.id === post.id)
 const older = posts[index + 1]
 const newer = posts[index - 1]
 const prefix = en ? '/en' : ''
+const category = getBlogCategory(post.data.category)
 const toc = headings
   .filter((heading) => heading.depth <= 3 && heading.slug !== 'footnote-label')
   .map((heading) => ({ ...heading, text: heading.text.replace(new RegExp(`h${heading.depth}$`), '') }))
@@ -23,11 +25,11 @@ const toc = headings
 <Layout title={post.data.title} description={post.data.description}>
   <article class="blog-article">
     <header>
-      <a class="text-link" href={`${prefix}/blog`}>← {en ? 'All notes' : '返回博客'}</a>
+      <a class="text-link" href={`${prefix}/blog/category/${category.id}`}>← {en ? category.nameEn : category.name}</a>
       <p class="eyebrow blog-post-meta">
-        {post.data.category} / <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0, 10)}</time> / {
-          post.data.language === 'zh' ? '中文原文' : 'English original'
-        }
+        {en ? category.nameEn : category.name} / <time datetime={post.data.pubDate.toISOString()}
+          >{post.data.pubDate.toISOString().slice(0, 10)}</time
+        > / {post.data.language === 'zh' ? '中文原文' : 'English original'}
       </p>
       <h1>{post.data.title}</h1><p class="blog-post-description">{post.data.description}</p>
       {

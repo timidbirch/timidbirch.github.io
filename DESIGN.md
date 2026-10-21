@@ -62,6 +62,13 @@ include a heading-based table of contents. The interface is bilingual, but note
 bodies retain their declared original language. No existing vault notes were
 published with the initial blog scaffold.
 
+Four topic sections are configured in `src/lib/blog-categories.ts`: technology,
+finance, product, and learning. `/blog/category/<id>` and the mirrored English
+routes filter published posts by their `category` frontmatter. The overview shows
+all posts; legacy labels are normalized, and unknown labels fall back to learning
+so no published post disappears. Section cards always display real counts,
+including zero, without importing vault folders.
+
 `npm run blog:sync` selectively exports notes with `publish: true` from the local
 Obsidian vault. It never modifies the source vault, follows symlinks, copies
 unselected notes, or recursively publishes linked notes. Only referenced raster

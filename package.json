@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "blog:sync": "node scripts/sync-obsidian.mjs",
-    "blog:test": "node --test scripts/sync-obsidian.test.mjs",
+    "blog:test": "node --import tsx --test scripts/sync-obsidian.test.mjs scripts/blog-categories.test.ts",
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",

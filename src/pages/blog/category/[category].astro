@@ -1,0 +1,10 @@
+---
+import Blog from '~/components/portfolio/Blog.astro'
+import { BLOG_CATEGORIES } from '~/lib/blog-categories'
+export function getStaticPaths() {
+  return BLOG_CATEGORIES.map((category) => ({ params: { category: category.id }, props: { categoryId: category.id } }))
+}
+const { categoryId } = Astro.props
+---
+
+<Blog {categoryId} />

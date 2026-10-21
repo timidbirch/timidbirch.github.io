@@ -1,31 +1,97 @@
 ---
 import Layout from '~/layouts/Layout.astro'
 import { getAllPosts } from '~/lib/data'
+import { BLOG_CATEGORIES, getBlogCategory, postsInCategory, type BlogCategoryId } from '~/lib/blog-categories'
 import '~/styles/blog.css'
-const { en = false } = Astro.props
-const posts = await getAllPosts()
+interface Props {
+  en?: boolean
+  categoryId?: BlogCategoryId
+}
+const { en = false, categoryId } = Astro.props
+const allPosts = await getAllPosts()
+const posts = postsInCategory(allPosts, categoryId)
+const activeCategory = BLOG_CATEGORIES.find((category) => category.id === categoryId)
+const categoryName = activeCategory && (en ? activeCategory.nameEn : activeCategory.name)
 const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort()
 const prefix = en ? '/en' : ''
 ---
 
 <Layout
-  title={en ? 'Blog' : '个人博客'}
-  description={en ? 'Notes on technology, markets, and the things I am learning.' : '记录技术探索、市场观察与学习过程中的思考。'}
+  title={categoryName || (en ? 'Blog' : '个人博客')}
+  description={activeCategory
+    ? en
+      ? activeCategory.descriptionEn
+      : activeCategory.description
+    : en
+      ? 'Notes on technology, markets, and the things I am learning.'
+      : '记录技术探索、市场观察与学习过程中的思考。'}
 >
   <section class="portfolio-section listing-section blog-section" data-blog>
     <div class="section-heading reveal">
       <div>
-        <p class="eyebrow">FIELD NOTES / {String(posts.length).padStart(2, '0')}</p><h1>
-          {en ? 'A place to think' : '把思考，'}<br /><span>{en ? 'out loud.' : '慢慢写下来。'}</span>
+        <p class="eyebrow">FIELD NOTES / {activeCategory?.code || String(posts.length).padStart(2, '0')}</p><h1>
+          {categoryName || (en ? 'A place to think' : '把思考，')}<br /><span
+            >{activeCategory ? (en ? 'A closer look.' : '在探索中，沉淀。') : en ? 'out loud.' : '慢慢写下来。'}</span
+          >
         </h1>
       </div>
       <p class="section-lede">
         {
-          en
-            ? 'Between building things and understanding them. Notes on technology, markets, and what I learn along the way.'
-            : '在动手构建与理解世界之间，记录技术探索、市场观察，以及学习途中值得留下的想法。'
+          activeCategory
+            ? en
+              ? activeCategory.descriptionEn
+              : activeCategory.description
+            : en
+              ? 'Between building things and understanding them. Notes on technology, markets, and what I learn along the way.'
+              : '在动手构建与理解世界之间，记录技术探索、市场观察，以及学习途中值得留下的想法。'
         }
       </p>
+    </div>
+    <nav class="blog-categories" aria-label={en ? 'Blog sections' : '博客板块'}>
+      {
+        BLOG_CATEGORIES.map((category, index) => {
+          const count = postsInCategory(allPosts, category.id).length
+          return (
+            <a
+              class="blog-category glass reveal"
+              href={`${prefix}/blog/category/${category.id}`}
+              aria-current={categoryId === category.id ? 'page' : undefined}
+            >
+              <div class="card-topline">
+                <>
+                  <span>
+                    0{index + 1} / {category.code}
+                  </span>
+                  <span class="category-icon" aria-hidden="true">
+                    {category.icon}
+                  </span>
+                </>
+              </div>
+              <h2>{en ? category.nameEn : category.name}</h2>
+              <p>{en ? category.descriptionEn : category.description}</p>
+              <div class="category-foot">
+                <>
+                  <span>
+                    {count} {en ? (count === 1 ? 'note' : 'notes') : '篇文章'}
+                  </span>
+                  <span aria-hidden="true">↗</span>
+                </>
+              </div>
+            </a>
+          )
+        })
+      }
+    </nav>
+    <div class="blog-list-heading">
+      <h2>{categoryName || (en ? 'All notes' : '全部文章')}</h2>{
+        activeCategory ? (
+          <a class="text-link" href={`${prefix}/blog`}>
+            ← {en ? 'All sections' : '全部板块'}
+          </a>
+        ) : (
+          <span>{en ? 'The latest from every section' : '各板块最新文章'}</span>
+        )
+      }
     </div>
     <div class="blog-toolbar reveal">
       <label class="blog-search glass"
@@ -70,7 +136,8 @@ const prefix = en ? '/en' : ''
             >
               <div class="card-topline">
                 <span>
-                  {String(index + 1).padStart(2, '0')} / {post.data.category}
+                  {String(index + 1).padStart(2, '0')} /{' '}
+                  {en ? getBlogCategory(post.data.category).nameEn : getBlogCategory(post.data.category).name}
                 </span>
                 <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toISOString().slice(0, 10)}</time>
               </div>
@@ -88,7 +155,7 @@ const prefix = en ? '/en' : ''
           ))}
         </div>
       ) : (
-        <div class="blog-empty glass reveal">
+        <div class:list={['blog-empty glass reveal', { 'blog-empty-category': activeCategory }]}>
           <div class="notebook-art" aria-hidden="true">
             <>
               <span class="notebook-orbit" />
@@ -108,19 +175,24 @@ const prefix = en ? '/en' : ''
           <div class="blog-empty-copy">
             <>
               <p class="eyebrow">A NOTEBOOK, IN THE MAKING</p>
-              <h2>{en ? 'Good thoughts take time.' : '好想法，值得整理。'}</h2>
+              <h2>
+                {activeCategory
+                  ? en
+                    ? 'This chapter is still being written.'
+                    : '这一页，正在酝酿。'
+                  : en
+                    ? 'Good thoughts take time.'
+                    : '好想法，值得整理。'}
+              </h2>
               <p>
-                {en
-                  ? 'This is where my notes will become essays. The first entries are still being put together — see you here soon.'
-                  : '这里将收录从个人笔记中整理出的文章。第一批内容还在酝酿中，等想法成熟，再与你分享。'}
+                {activeCategory
+                  ? en
+                    ? `Notes on ${activeCategory.nameEn.toLowerCase()} will appear here when they are ready to share.`
+                    : `关于「${activeCategory.name}」的文章还在整理中，准备好后会在这里与你分享。`
+                  : en
+                    ? 'This is where my notes will become essays. The first entries are still being put together — see you here soon.'
+                    : '这里将收录从个人笔记中整理出的文章。第一批内容还在酝酿中，等想法成熟，再与你分享。'}
               </p>
-              <div class="blog-topics">
-                <>
-                  <span>{en ? 'Technology' : '技术探索'}</span>
-                  <span>{en ? 'Markets' : '市场观察'}</span>
-                  <span>{en ? 'Learning' : '学习与思考'}</span>
-                </>
-              </div>
               <a class="text-link" href={`${prefix}/projects`}>
                 {en ? 'Explore my projects in the meantime' : '先看看我在做的项目'} ↗
               </a>

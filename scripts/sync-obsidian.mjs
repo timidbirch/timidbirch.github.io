@@ -61,7 +61,7 @@ function parseNote(text, file) {
       description: data.description || `${title}：学习与实践中的个人笔记。`,
       pubDate: new Date(`${date}T00:00:00Z`),
       tags: data.tags || [],
-      category: data.category || '随笔',
+      category: data.category || '学习与生活',
       language: data.language || 'zh',
       draft: false,
     },

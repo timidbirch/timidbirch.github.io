@@ -13,7 +13,7 @@ title: 我的第一篇文章
 slug: my-first-note
 date: 2026-10-22
 description: 一两句话介绍这篇文章。
-category: 技术探索
+category: 技术与 AI
 tags:
   - AI
   - 学习笔记
@@ -22,6 +22,21 @@ language: zh
 ```
 
 `publish: true` 和有效的 `date` 是必需的。`slug` 建议设置为固定英文短名；不设置会生成稳定哈希。修改 slug 会改变文章地址。不要在 YAML 属性里放密码或其他私人资料。只有这篇笔记的正文和被引用的图片会导出，不会复制整个笔记库。
+
+## 博客板块
+
+通过笔记属性 `category` 指定板块，**不要依赖笔记所在的目录**：
+
+| category | 板块地址 | 适合的内容 |
+| --- | --- | --- |
+| 技术与 AI | `/blog/category/technology` | AI、编程、信息安全 |
+| 金融与量化 | `/blog/category/finance` | 市场、交易、量化研究 |
+| 产品与创业 | `/blog/category/product` | 产品设计、创业实践 |
+| 学习与生活 | `/blog/category/learning` | 学习方法、生活观察、随笔 |
+
+例如 `category: 金融与量化` 的笔记同步后，会自动出现在金融板块及博客的“全部文章”中。未填写或无法识别的分类归入“学习与生活”，不会遗漏文章。旧分类“技术探索”“市场观察”“随笔”也兼容。目录变化不会改变文章板块，也不会让未标记发布的笔记公开。
+
+板块名称、说明、顺序和兼容分类统一在 `src/lib/blog-categories.ts` 维护。每个板块都有对应的 `/en/blog/category/...` 英文界面。
 
 ## 同步与预览
 
