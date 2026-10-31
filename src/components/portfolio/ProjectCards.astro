@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+
+type Props = { projects: CollectionEntry<'projects'>[]; en?: boolean; headingLevel?: 'h2' | 'h3' }
+const { projects, en = false, headingLevel: Heading = 'h2' } = Astro.props
+const previewLabels: Record<string, [string, string]> = {
+  'ncc-bus': ['班车交互演示', 'BROWSER DEMO'],
+  'pimog': ['真实实验对比', 'REAL EXPERIMENT'],
+  'tradingagents': ['报告交互演示', 'REPORT DEMO'],
+  'python-rat': ['界面与防护模拟', 'INTERFACE STUDY'],
+  'ragfuzz': ['源码流程导览', 'SOURCE EXPLORER'],
+  'mimic-talker': ['数字人流程导览', 'PIPELINE EXPLORER'],
+  'holdem': ['开发版本实录', 'GAME / DEV BUILD'],
+}
+---
+
+<div class="project-grid">
+  {
+    projects.map((project, i) => (
+      <a class="project-card glass reveal" data-tilt href={`${en ? '/en' : ''}/projects/${project.id}`}>
+        <div class:list={['project-image', project.data.imageClass]}>
+          {project.data.cover ? (
+            <Image
+              src={project.data.cover}
+              alt={en ? project.data.nameEn : project.data.name}
+              widths={[480, 800]}
+              sizes="(max-width: 700px) 90vw, 45vw"
+            />
+          ) : (
+            <span class="project-placeholder">{String(i + 1).padStart(2, '0')}</span>
+          )}
+          {previewLabels[project.id] && <span class="project-preview-label">{previewLabels[project.id][en ? 1 : 0]}</span>}
+          <span class="project-open" aria-hidden="true">
+            ↗
+          </span>
+        </div>
+        <div class="project-copy">
+          <>
+            <div class="card-topline">
+              <span>PROJECT / {String(i + 1).padStart(2, '0')}</span>
+              {project.data.year && <span>{project.data.year}</span>}
+            </div>
+            <Heading class="project-card-title">{en ? project.data.nameEn : project.data.name}</Heading>
+            <p class="card-summary">{en ? project.data.descriptionEn : project.data.description}</p>
+            <div class="card-tags">
+              {(en ? project.data.roleEn : project.data.role).map((role) => (
+                <span>{role}</span>
+              ))}
+            </div>
+            <span class="card-read">{en ? 'Read the case study' : '阅读项目详情'} →</span>
+          </>
+        </div>
+      </a>
+    ))
+  }
+</div>

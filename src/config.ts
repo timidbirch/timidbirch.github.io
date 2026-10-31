@@ -69,7 +69,7 @@ export const COMMENT_CONFIG: CommentConfig = {
 }
 
 export const TAGS_CONFIG: TagsConfig = { title: '标签', description: '文章标签', introduce: '按主题浏览文章。' }
-export const PROJECTS_CONFIG: ProjectConfig = { title: '项目', description: '陈佩桦的技术项目。', introduce: '从大模型安全测试到数字人生成，记录问题、方法与结果。' }
+export const PROJECTS_CONFIG: ProjectConfig = { title: '项目', description: '陈佩桦的技术项目与研究实践。', introduce: '安全研究、金融 AI、校园服务与交互系统：记录实现方法、开源基础与实践思考。' }
 export const PHOTOS_CONFIG: PhotosConfig = { title: '照片', description: '日常影像。', introduce: '一些生活中的观察。' }
 export const ANALYTICS_CONFIG: AnalyticsConfig = {
   vercount: { enabled: true },

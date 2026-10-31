@@ -1,0 +1,75 @@
+---
+name: PIMoG 屏幕拍摄鲁棒水印
+nameEn: PIMoG · Screen-shooting Watermarking
+description: 基于 PIMoG 开源网络的图像水印研究实践，结合拍摄噪声模拟、梯度掩码与边缘掩码。
+descriptionEn: A watermarking research study based on the open-source PIMoG network, combining capture-noise simulation and mask-guided image losses.
+summary: 研究图像经过屏幕显示与相机拍摄后，如何兼顾水印可恢复性与图像视觉质量。
+summaryEn: Studying watermark recovery and visual quality when a displayed image is captured by a camera.
+year: 2023
+role:
+  - PyTorch
+  - 计算机视觉
+  - 鲁棒水印
+  - 研究实践
+roleEn:
+  - PyTorch
+  - Computer Vision
+  - Robust Watermarking
+  - Research Study
+cover: ./showcase.jpg
+imageClass: project-preview-cover
+references:
+  - label: 论文作者开源实现：PIMoG（ACM MM 2022）
+    labelEn: 'Authors’ implementation: PIMoG (ACM MM 2022)'
+    url: https://github.com/FangHanNUS/PIMoG-An-Effective-Screen-shooting-Noise-Layer-Simulation-for-Deep-Learning-Based-Watermarking-Netw
+sectionsEn:
+  - heading: Research Context
+    body:
+      - 'This study connects to my AI-track exchange experience at the University of Cambridge in July–September 2023. It examines deep-learning-based watermarking under screen-shooting distortions: an image is displayed on a screen and then photographed.'
+      - The code is based on the PIMoG implementation released by Fang et al. for ACM Multimedia 2022. The network, noise-layer design, and mask-guided losses are credited to that work.
+  - heading: An Encoder–Noise–Decoder Pipeline
+    body:
+      - A U-Net-style encoder injects a 30-bit watermark into image features at multiple scales. The embedded image passes through a simulated noise layer before a residual convolutional decoder recovers the message. A separate discriminator supplies an adversarial image-quality objective.
+  - heading: Simulating Screen Capture
+    body:
+      - The ScreenShooting layer combines perspective distortion, illumination variation, moiré patterns, and Gaussian noise. This approximates the main distortions of camera capture within the training pipeline.
+      - The archive also includes MATLAB perspective-correction utilities for photographed images before watermark extraction.
+  - heading: Balancing Recovery and Image Quality
+    body:
+      - The training objective combines message reconstruction, image reconstruction, and adversarial losses. A gradient-derived mask reweights image reconstruction according to message-loss sensitivity, while an externally supplied edge mask provides additional spatial weighting.
+      - Training, watermark embedding, and extraction-accuracy evaluation have separate entry points. A trained checkpoint, watermark matrix, and sample outputs provide starting materials for further replication and inspection.
+  - heading: Technology
+    body:
+      - Python · PyTorch · torchvision · Kornia · OpenCV · NumPy · SciPy · MATLAB
+draft: false
+---
+
+## 研究背景
+
+这一实践对应 2023 年 7 月至 9 月剑桥大学 AI 方向交流中的水印研究，关注图像经过“屏幕显示 → 相机拍摄”后，嵌入的信息能否被恢复，以及原图的视觉质量如何得到保留。
+
+代码基于 Fang 等人在 ACM Multimedia 2022 发表的 PIMoG 论文开源实现。网络结构、噪声层与掩码损失方法均沿用该研究基础，在此作为研究与实验实践展示。
+
+## 编码器、噪声层与解码器
+
+网络采用 U-Net 风格编码器，将 30 位二进制水印映射到特征图，并在多个尺度与图像特征融合。含水印图像经过噪声层后，由残差卷积解码器恢复消息；独立判别器提供对抗训练信号，约束图像质量。
+
+## 模拟屏幕拍摄中的失真
+
+`ScreenShooting` 噪声层组合透视变化、光照变化、摩尔纹与高斯噪声，把拍摄中主要的失真因素纳入训练流程。
+
+目录还保留了 MATLAB 透视矫正工具，用于实际拍摄图像在提取水印前的几何校正。这一场景针对屏幕拍摄，关注的是显示设备与相机共同引入的图像变化。
+
+## 用掩码平衡恢复效果与视觉质量
+
+训练目标组合消息重建损失、图像重建损失和对抗损失。代码根据消息损失对输入图像的梯度构建掩码，对不同区域施加不同的图像重建权重；同时读取外部提供的边缘掩码，进一步进行空间加权。
+
+训练、嵌入与提取准确率评估分别设置入口，便于区分模型学习、图像输出和消息恢复三个阶段。
+
+## 实验材料与范围
+
+项目保留了模型权重、示例图像、水印矩阵与输出结果，为进一步复现提供起点。研究实践关注噪声模拟、掩码加权和水印恢复之间的联系。
+
+## 技术栈
+
+`Python` · `PyTorch` · `torchvision` · `Kornia` · `OpenCV` · `NumPy` · `SciPy` · `MATLAB`

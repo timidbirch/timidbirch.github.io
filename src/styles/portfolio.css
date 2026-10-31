@@ -138,11 +138,14 @@ html[lang='zh-CN'] .hero-name span { font-size: .65em; letter-spacing: -.055em; 
 .project-card { overflow: hidden; border-radius: 24px; display: flex; flex-direction: column; }
 .project-image { position: relative; aspect-ratio: 16 / 10; background: #142b20; overflow: hidden; margin: 10px 10px 0; border-radius: 16px; }
 .project-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s; }
+.project-image.project-preview-cover { padding: 15px 15px 37px; background: #183328; }
+.project-image.project-preview-cover img { object-fit: contain; border-radius: 7px; }
+.project-preview-label { position: absolute; left: 16px; bottom: 13px; font-size: 9px; letter-spacing: .08em; color: #d7f4df; font-family: var(--font-mono); background: #10281acc; padding: 4px 8px; border-radius: 5px; }
 .project-card:hover img { transform: scale(1.045); }
 .project-open { position: absolute; right: 16px; bottom: 16px; border-radius: 100px; width: 42px; height: 42px; display: grid; place-items: center; background: #e0ffe9; color: #10281a; font-size: 23px; }
 .project-placeholder { font-size: 100px; color: #a9f7c3; display: grid; height: 100%; place-items: center; }
 .project-copy { padding: 28px; display: flex; flex-direction: column; flex: 1; }
-.project-copy h2 { margin-top: 20px; font-size: 26px; font-weight: 500; }
+.project-copy .project-card-title { margin-top: 20px; font-size: 26px; font-weight: 500; }
 .portfolio-footer { position: relative; z-index: 1; width: min(1160px, calc(100% - 64px)); margin: 0 auto; padding: 110px 0 24px; }
 .footer-contact { text-align: center; padding: 70px 0 80px; border-top: 1px solid var(--line); }
 .footer-contact h2 { margin-bottom: 28px; }

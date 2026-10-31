@@ -1,12 +1,14 @@
 ---
 import Layout from '~/layouts/Layout.astro'
 import ExperienceCards from './ExperienceCards.astro'
+import ProjectCards from './ProjectCards.astro'
 import { getAllExperiences, getAllProjects } from '~/lib/data'
 const { en = false } = Astro.props
 const experiences = await getAllExperiences()
 const projects = await getAllProjects()
+const featuredProjects = ['ragfuzz', 'ncc-bus'].flatMap(id => projects.filter(project => project.id === id))
 const prefix = en ? '/en' : ''
-const skills = ['Python', 'Quantitative Research', 'LLM Systems', 'Data Analytics', 'Information Security', 'Go / Gin']
+const skills = ['Python / PyTorch', 'Quantitative Research', 'LLM / RAG', 'LangGraph', 'Information Security', 'WeChat Mini Programs']
 ---
 <Layout title={en ? 'Home' : '首页'} description={en ? 'CHEN Peihua — financial research, quantitative analysis, and AI engineering.' : '陈佩桦的个人网站：连接金融研究、量化分析与 AI 工程。'}>
   <section class="hero" aria-labelledby="hero-title">
@@ -38,8 +40,12 @@ const skills = ['Python', 'Quantitative Research', 'LLM Systems', 'Data Analytic
     <div class="section-heading reveal"><div><p class="eyebrow">01 / {en ? 'RECENT EXPERIENCE' : 'RECENT EXPERIENCE · 最近实践'}</p><h2>{en ? 'Learning by' : '深入真实问题，'}<br /><span>{en ? 'doing real work.' : '积累实践经验。'}</span></h2></div><a class="text-link" href={`${prefix}/experience`}>{en ? 'All experience' : '全部实践经历'} ↗</a></div>
     <ExperienceCards experiences={experiences.slice(0, 3)} {en} />
   </section>
+  <section class="portfolio-section" aria-labelledby="featured-projects-title">
+    <div class="section-heading reveal"><div><p class="eyebrow">02 / SELECTED PROJECTS</p><h2 id="featured-projects-title">{en ? 'From research' : '从研究探索，'}<br /><span>{en ? 'to useful systems.' : '走向实际应用。'}</span></h2></div><a class="text-link" href={`${prefix}/projects`}>{en ? 'All projects and studies' : '全部项目与研究'} ({String(projects.length).padStart(2, '0')}) ↗</a></div>
+    <ProjectCards projects={featuredProjects} {en} headingLevel="h3" />
+  </section>
   <section class="portfolio-section focus-section">
-    <div class="section-heading reveal"><div><p class="eyebrow">02 / {en ? 'MY PERSPECTIVE' : 'MY PERSPECTIVE · 我的视角'}</p><h2>{en ? 'Three disciplines.' : '跨越领域，'}<br /><span>{en ? 'One curious mind.' : '连接新的可能。'}</span></h2></div><p class="section-lede">{en ? 'From understanding markets to building systems, curiosity connects the dots.' : '从理解市场到构建系统，以好奇心驱动探索，以数据和实践验证想法。'}</p></div>
+    <div class="section-heading reveal"><div><p class="eyebrow">03 / {en ? 'MY PERSPECTIVE' : 'MY PERSPECTIVE · 我的视角'}</p><h2>{en ? 'Three disciplines.' : '跨越领域，'}<br /><span>{en ? 'One curious mind.' : '连接新的可能。'}</span></h2></div><p class="section-lede">{en ? 'From understanding markets to building systems, curiosity connects the dots.' : '从理解市场到构建系统，以好奇心驱动探索，以数据和实践验证想法。'}</p></div>
     <div class="focus-grid">
       {[
         { n: '01', icon: '↗', title: en ? 'Financial markets' : '金融市场', sub: 'FINANCE', text: en ? 'Trading execution, investment research, and quantitative strategies rooted in real market practice.' : '从交易执行、投资研究到量化策略，在市场实践中理解风险与收益。' },

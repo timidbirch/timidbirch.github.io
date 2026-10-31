@@ -54,6 +54,11 @@ const projects = defineCollection({
       sectionsEn: z.array(z.object({ heading: z.string(), body: z.array(z.string()) })).default([]),
       githubUrl: z.string().optional(),
       website: z.string().optional(),
+      references: z.array(z.object({
+        label: z.string(),
+        labelEn: z.string(),
+        url: z.url(),
+      })).default([]),
       type: z.string().default('image'),
       cover: image().optional(),
       icon: image().optional(),

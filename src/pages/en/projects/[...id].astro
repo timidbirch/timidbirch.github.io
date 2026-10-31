@@ -5,6 +5,8 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 import { SITE } from '~/config'
 import { getAllProjects } from '~/lib/data'
 import ProjectGallery from '~/components/portfolio/ProjectGallery.astro'
+import ProjectReferences from '~/components/portfolio/ProjectReferences.astro'
+import ProjectShowcase from '~/components/portfolio/ProjectShowcase.astro'
 
 export async function getStaticPaths() {
   const projects = await getAllProjects()
@@ -24,10 +26,19 @@ const meta = project.data
       </div>
       <h1 class="text-4xl sm:text-6xl tracking-tight text-balance">{meta.nameEn}</h1>
       <p class="text-lg sm:text-xl text-muted-foreground mt-5 max-w-2xl leading-relaxed text-pretty">{meta.summaryEn || meta.descriptionEn}</p>
+      <nav class="case-nav" aria-label="Project contents"><a href="#project-preview">Explore the demo ↗</a><a href="#project-implementation">Implementation ↓</a>{meta.gallery.length > 0 && <a href="#project-materials">Screens & artifacts ↓</a>}</nav>
+      {(meta.website || meta.githubUrl) && (
+        <div class="flex gap-5 mt-7 text-sm font-medium">
+          {meta.website && <a href={meta.website} target="_blank" rel="noreferrer" class="hover:text-primary">Visit project ↗</a>}
+          {meta.githubUrl && <a href={meta.githubUrl} target="_blank" rel="noreferrer" class="hover:text-primary">View source ↗</a>}
+        </div>
+      )}
     </header>
-    {meta.cover && <div class="px-6 sm:px-8 pb-10"><div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.nameEn} project cover`} class="w-full h-auto" /></div></div>}
+    {meta.cover && project.id === 'holdem' && <div class="px-6 sm:px-8 pb-10"><div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.nameEn} project cover`} class="w-full h-auto" /></div></div>}
+    <ProjectShowcase project={project.id} en />
+    <ProjectGallery images={meta.gallery} en />
     <SectionDivider />
-    <div class="px-6 sm:px-8 py-10 sm:py-14 space-y-10" data-pagefind-body>
+    <div id="project-implementation" class="px-6 sm:px-8 py-10 sm:py-14 space-y-10" data-pagefind-body>
       {meta.sectionsEn.map((section) => (
         <section class="max-w-3xl">
           <h2 class="text-2xl sm:text-3xl tracking-tight mb-4">{section.heading}</h2>
@@ -35,6 +46,6 @@ const meta = project.data
         </section>
       ))}
     </div>
-    <ProjectGallery images={meta.gallery} en />
+    <ProjectReferences references={meta.references} en />
   </article>
 </Layout>

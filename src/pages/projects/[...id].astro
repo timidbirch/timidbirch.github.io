@@ -7,6 +7,8 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 import { SITE } from '~/config'
 import { getAllProjects } from '~/lib/data'
 import ProjectGallery from '~/components/portfolio/ProjectGallery.astro'
+import ProjectReferences from '~/components/portfolio/ProjectReferences.astro'
+import ProjectShowcase from '~/components/portfolio/ProjectShowcase.astro'
 
 export async function getStaticPaths() {
   const projects = await getAllProjects()
@@ -28,6 +30,7 @@ const meta = project.data
       </div>
       <h1 class="text-4xl sm:text-6xl tracking-tight text-balance">{meta.name}</h1>
       <p class="text-lg sm:text-xl text-muted-foreground mt-5 max-w-2xl leading-relaxed text-pretty">{meta.summary || meta.description}</p>
+      <nav class="case-nav" aria-label="项目内容"><a href="#project-preview">交互与演示 ↗</a><a href="#project-implementation">实现与思考 ↓</a>{meta.gallery.length > 0 && <a href="#project-materials">界面与材料 ↓</a>}</nav>
       {(meta.website || meta.githubUrl) && (
         <div class="flex gap-5 mt-7 text-sm font-medium">
           {meta.website && <a href={meta.website} target="_blank" rel="noreferrer" class="hover:text-primary">访问项目 ↗</a>}
@@ -35,15 +38,17 @@ const meta = project.data
         </div>
       )}
     </header>
-    {meta.cover && (
+    {meta.cover && project.id === 'holdem' && (
       <div class="px-6 sm:px-8 pb-10">
         <div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.name} 项目封面`} class="w-full h-auto" /></div>
       </div>
     )}
+    <ProjectShowcase project={project.id} />
+    <ProjectGallery images={meta.gallery} />
     <SectionDivider />
-    <div class="px-6 sm:px-8 py-10 sm:py-14">
+    <div id="project-implementation" class="px-6 sm:px-8 py-10 sm:py-14">
       <Prose class="max-w-none"><Content /></Prose>
     </div>
-    <ProjectGallery images={meta.gallery} />
+    <ProjectReferences references={meta.references} />
   </article>
 </Layout>

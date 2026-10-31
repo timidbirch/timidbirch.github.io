@@ -1,0 +1,77 @@
+---
+import BusDemo from './demos/BusDemo'
+import WatermarkDemo from './demos/WatermarkDemo'
+import ResearchDemo from './demos/ResearchDemo'
+import SecurityDemo from './demos/SecurityDemo'
+import FlowExplorer from './demos/FlowExplorer'
+import '~/styles/project-showcase.css'
+const { project, en = false } = Astro.props
+const labels: Record<string, [string, string, string, string]> = {
+  'ncc-bus': [
+    '试着预约一趟班车。',
+    'Try a shuttle reservation.',
+    '依照原小程序结构制作的浏览器演示，数据仅在本页内流转。',
+    'A browser adaptation of the mini program. Sample data stays within this page.',
+  ],
+  'pimog': [
+    '从真实图像，看懂水印。',
+    'Explore a watermark through real images.',
+    '原始实验文件的五个输出，支持切换与拖动对比。',
+    'Five outputs from an original experiment file, with an interactive comparison.',
+  ],
+  'tradingagents': [
+    '打开一张投研工作台。',
+    'Step inside a research workflow.',
+    '切换报告模块，查看预设研究材料如何组合与导出。',
+    'Choose report modules to explore how preset research material is assembled and exported.',
+  ],
+  'python-rat': [
+    '打开界面，观察行为。',
+    'Open the interface. Observe the behavior.',
+    '依据控制面板与防护原型重建的本地交互，所有会话均为模拟。',
+    'A local interface recreation based on the control panel and protection prototype. All sessions are simulated.',
+  ],
+  'ragfuzz': [
+    '跟随一个驱动的生成过程。',
+    'Follow the making of a fuzz driver.',
+    '从接口上下文到真实的驱动片段，逐步查看工具链。',
+    'Explore the toolchain from API context to a real archived driver excerpt.',
+  ],
+  'mimic-talker': [
+    '一句话，如何变成动态人物？',
+    'How does text become a talking portrait?',
+    '探索语音合成与人物动画之间的模块关系。此处为流程示意。',
+    'Explore the connection between speech synthesis and portrait animation. This is a conceptual pipeline.',
+  ],
+  'holdem': [
+    '一手牌背后的系统。',
+    'The systems behind a hand.',
+    '探索规则、联机、AI 与界面的协作方式。',
+    'Explore how rules, multiplayer, AI, and presentation work together.',
+  ],
+}
+const copy = labels[project]
+---
+
+{
+  copy && (
+    <section id="project-preview" class="case-showcase" aria-labelledby="showcase-title">
+      <div class="case-showcase-intro">
+        <>
+          <div>
+            <>
+              <p class="eyebrow">01 / EXPLORE THE PROJECT</p>
+              <h2 id="showcase-title">{copy[en ? 1 : 0]}</h2>
+            </>
+          </div>
+          <p>{copy[en ? 3 : 2]}</p>
+        </>
+      </div>
+      {project === 'ncc-bus' && <BusDemo {en} client:visible />}
+      {project === 'pimog' && <WatermarkDemo {en} client:visible />}
+      {project === 'tradingagents' && <ResearchDemo {en} client:visible />}
+      {project === 'python-rat' && <SecurityDemo {en} client:visible />}
+      {['ragfuzz', 'mimic-talker', 'holdem'].includes(project) && <FlowExplorer {project} {en} client:visible />}
+    </section>
+  )
+}

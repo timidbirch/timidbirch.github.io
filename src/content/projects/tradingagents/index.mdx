@@ -1,0 +1,87 @@
+---
+name: TradingAgents 多智能体投研实践
+nameEn: TradingAgents · Multi-agent Research Practice
+description: 基于 TradingAgents 中文增强版的金融研究实践，覆盖多角色分析、观点辩论、风险评估与报告整理。
+descriptionEn: Financial research practice with TradingAgents-CN, covering specialist analysis, bull/bear debate, risk review, and report assembly.
+summary: 探索多智能体如何把行情、基本面和新闻组织成可回顾的研究流程与报告。
+summaryEn: Exploring how multiple agents turn market data, fundamentals, and news into a reviewable research workflow and report.
+role:
+  - LangGraph
+  - 金融数据
+  - 开源实践
+  - 报告工作流
+roleEn:
+  - LangGraph
+  - Financial Data
+  - Open-source Practice
+  - Report Workflows
+cover: ./showcase.jpg
+imageClass: project-preview-cover
+gallery:
+  - image: ./interface-original.png
+    caption: '原项目 TradingAgents-CN README 中附带的真实 Streamlit 界面截图，展示分析配置与模型选择。用于说明实践所依托的开源界面，非本次新运行或个人原创界面。来源：TradingAgents-CN，Apache 2.0。'
+    captionEn: 'Original Streamlit screenshot included in the TradingAgents-CN README, showing analysis configuration and model selection. An upstream interface reference, rather than a new runtime capture or an original personal UI. Source: TradingAgents-CN, Apache 2.0.'
+references:
+  - label: 本地版本基础：TradingAgents-CN
+    labelEn: 'Local version foundation: TradingAgents-CN'
+    url: https://github.com/hsliuping/TradingAgents-CN
+  - label: 原始框架：Tauric Research / TradingAgents
+    labelEn: 'Original framework: Tauric Research / TradingAgents'
+    url: https://github.com/TauricResearch/TradingAgents
+sectionsEn:
+  - heading: An Open-source Research Practice
+    body:
+      - This practice uses the archived cn-0.1.15 version of TradingAgents-CN, which builds on Tauric Research’s TradingAgents framework. The agent architecture, model integrations, and data infrastructure are credited to those open-source projects.
+      - The practice follows the path from analysis configuration to modular research reports and Word exports. Local analysis outputs and exported documents preserve the results of that reporting workflow.
+  - heading: Specialist Analysis and Debate
+    body:
+      - LangGraph connects market, fundamentals, news, and social-media analysts with bull/bear researchers, a research manager, a trader role, and risk-review agents. Shared state carries reports and debate history between stages.
+      - Analysts call data tools through conditional graph edges. Limits on tool calls and debate rounds keep the workflow bounded. In this implementation the analyst stages run sequentially; multiple agent roles do not imply parallel execution.
+  - heading: Data Sources and Caching
+    body:
+      - The archived version integrates A-share, Hong Kong, and US-market data paths. Its Chinese-market source manager provides Tushare, AKShare, and BaoStock adapters with fallback handling when a source fails or returns unusable data.
+      - MongoDB and Redis support persisted records and faster cached reads. Model adapters connect multiple providers to the research graph. Together, these framework capabilities support the research workflow.
+  - heading: Reports That Can Be Reviewed
+    body:
+      - The Streamlit application exposes analysis configuration, progress, results, and export controls. Modular outputs separate market, news, fundamental, and investment-plan reports.
+      - The local report-assembly script combines selected Markdown files through the shared exporter into DOCX, PDF, or Markdown. Existing Word exports provide an artifact of the reporting workflow; document conversion depends on tools such as Pandoc.
+  - heading: Scope
+    body:
+      - The work focuses on research organization and report production. The generated opinions are research outputs; live execution and investment-performance evaluation sit outside this practice.
+  - heading: Technology
+    body:
+      - Python · LangChain · LangGraph · Streamlit · pandas · Tushare · AKShare · MongoDB · Redis · Pandoc · Docker
+draft: false
+---
+
+## 基于开源框架的投研实践
+
+这项实践基于 TradingAgents 中文增强版，本地归档标记为 `cn-0.1.15`，其上游为 Tauric Research 的 TradingAgents。多智能体架构、模型接入与数据基础设施均归属于对应的开源项目。
+
+实践围绕分析配置、分模块研究和报告整理展开。本地保留的分析输出与 Word 导出文件，记录了从多角色分析到文档交付的工作流。
+
+## 多角色分析与观点辩论
+
+LangGraph 将市场、基本面、新闻与社交媒体分析师，以及多空研究员、研究经理、交易员角色和风险评估角色连接成状态图。共享状态保存各阶段的报告与讨论历史。
+
+分析师通过条件边调用数据工具，并设置工具调用次数与辩论轮数上限，控制流程长度。当前图中的分析师阶段按顺序衔接，多角色协作并不意味着所有节点并行运行。
+
+## 数据源与缓存
+
+归档版本包含 A 股、港股与美股的数据路径。中国市场数据源管理器封装 Tushare、AKShare、BaoStock 等适配器，遇到异常或无效结果时尝试备用来源。
+
+MongoDB 与 Redis 支持数据持久化及缓存读取；模型适配层将多个供应商接入同一研究流程。这些能力构成实践所依托的框架基础。
+
+## 从分析结果到可回顾的报告
+
+Streamlit 界面串联参数配置、进度展示、结果查看与导出。输出按市场、新闻、基本面和投资计划拆分为 Markdown 文件，便于分别阅读和重新整理。
+
+本地 `concat_reports_to_word.py` 调用统一导出器，将选定的报告拼接为 DOCX、PDF 或 Markdown；Word 等格式的转换依赖 Pandoc 等环境工具。已有导出文件为报告工作流提供了实际材料。
+
+## 实践范围
+
+实践重点是研究组织和报告产出。模型生成的观点属于研究输出；实盘执行与投资绩效评估在这项实践之外。
+
+## 技术栈
+
+`Python` · `LangChain` · `LangGraph` · `Streamlit` · `pandas` · `Tushare` · `AKShare` · `MongoDB` · `Redis` · `Pandoc` · `Docker`

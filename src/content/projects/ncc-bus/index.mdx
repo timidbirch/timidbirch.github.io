@@ -1,0 +1,75 @@
+---
+name: NCC Bus 校园班车预约
+nameEn: NCC Bus · Campus Shuttle Booking
+description: 面向师生、司机与管理员的微信小程序前端，串联班次预约、乘车凭证、扫码核验与运营统计。
+descriptionEn: A WeChat mini-program frontend connecting shuttle bookings, boarding tokens, driver verification, and administrative statistics.
+summary: 把校园班车中的预约、上车与管理需求，组织成多角色协作的小程序体验。
+summaryEn: Connecting passenger reservations, driver boarding checks, and shuttle administration through role-specific interfaces.
+role:
+  - 微信小程序
+  - JavaScript
+  - 多角色交互
+  - API 集成
+roleEn:
+  - WeChat Mini Program
+  - JavaScript
+  - Role-based Interfaces
+  - API Integration
+cover: ./showcase.jpg
+imageClass: project-preview-cover
+sectionsEn:
+  - heading: A Campus Transport Workflow
+    body:
+      - NCC Bus is a WeChat mini-program frontend for travel between campus locations. Student and teacher passengers, drivers, and administrators use different views of the same reservation workflow. Role definitions also include temporary accounts; dedicated temporary-user components remain incomplete.
+  - heading: Passenger Booking
+    body:
+      - Passengers select a route, today or tomorrow, and a scheduled departure. The interface normalizes schedule responses, calculates or reads remaining-seat counts, filters invalid records, and sorts departures by time.
+      - The frontend supports reservation submission, reservation-history display, cancellation, and fetching a boarding token for QR-code presentation. Loading, empty, and error states accompany API calls.
+  - heading: Driver and Administrator Views
+    body:
+      - Drivers view reserved and boarded-seat information, scan a passenger code, or submit a token manually for backend verification.
+      - Administrator pages provide route and schedule views, schedule creation and deletion, activation controls, recurring-day configuration, invitation-code generation, and reservation/boarding statistics. The presence of an interface does not by itself establish server-side enforcement of permissions or capacity.
+  - heading: API and State Integration
+    body:
+      - A shared request utility selects between wx.cloud.callContainer for CloudBase hosting and wx.request for local mock endpoints. Storage utilities and app.globalData hold authentication and role-related frontend state.
+      - The frontend accommodates inconsistent response field names and reservation status formats. Schedule creation and deletion call backend APIs. An edit dialog is present, but its save action has no corresponding update handler in the archived script.
+  - heading: Implementation Scope
+    body:
+      - The supplied archive contains the mini-program frontend and API documentation. Backend source, production usage metrics, and server-side validation are outside this archive. Teacher-priority allocation, penalties, queue reordering, and notification policies remain requirements rather than verified backend capabilities.
+  - heading: Technology
+    body:
+      - JavaScript · WXML · WXSS · WeChat Mini Program APIs · CloudBase container calls · QR codes · local mock APIs
+draft: false
+---
+
+## 校园出行中的多角色协作
+
+NCC Bus 将跨校区班车的乘客预约、司机核验和管理员运营工作连接在同一个微信小程序中。首页与个人中心依据角色显示不同组件，让师生、司机和管理员进入各自的操作流程。
+
+角色定义还包括临时账号，部分专用组件仍是占位实现，因此本页聚焦已有的师生、司机与管理员流程。
+
+## 师生预约与乘车凭证
+
+乘客可以按路线、今天或明天、发车时间选择班次。前端过滤无效数据，读取或计算剩余座位，并按时间整理班次列表。
+
+预约流程包含提交、查看记录、取消与获取乘车 token，再将凭证展示为二维码。对预约状态和接口字段差异做兼容处理，配合加载、空列表和失败提示，保证界面在不同返回情况下仍能给出反馈。
+
+## 司机核验与管理员运营
+
+司机端查询班次的预约、座位和已上车信息，通过扫码或手工输入 token 向后端提交核验请求。
+
+管理员端包含路线与班次列表、班次新增和删除、启停控制、周期日期配置、邀请码生成与预约／上车统计。新增和删除班次已有接口调用；编辑弹窗已存在，但归档脚本中缺少保存按钮对应的更新处理函数，尚待补全。
+
+## 请求封装与状态衔接
+
+`utils/api.js` 统一封装请求，按环境选择微信云托管的 `wx.cloud.callContainer` 或本地 Mock 的 `wx.request`。本地存储工具与 `app.globalData` 管理登录、用户和角色相关的前端状态。
+
+实现中还处理了座位字段命名差异、预约状态的字符串／数字格式及空记录过滤，降低接口变化对界面展示的影响。
+
+## 项目范围
+
+当前归档包含小程序前端及接口说明，未包含后端源码和真实运营数据。页面上的角色判断属于前端交互；容量控制与权限校验仍需要服务端保障。教师优先分配、违约惩罚、队列重排与通知策略在需求文档中出现，本页不将其认定为已经完成的后端功能。
+
+## 技术栈
+
+`JavaScript` · `WXML` · `WXSS` · `微信小程序 API` · `CloudBase` · `QR Code` · `Mock API`
