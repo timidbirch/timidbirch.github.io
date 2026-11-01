@@ -1,87 +1,93 @@
 ---
-name: 'Project Holdem'
-nameEn: 'Project Holdem'
-description: '融合原创像素视觉、离线 AI 对战与房间码联机的桌面德州扑克游戏。'
-descriptionEn: 'A desktop Texas Hold’em game combining original pixel visuals, offline AI practice, and private room-code multiplayer.'
-summary: '从规则引擎到实时联机，从对手策略到像素牌桌，构建完整的桌面德州扑克体验。'
-summaryEn: 'Building a desktop poker experience from the rules engine and real-time multiplayer to bot strategies and pixel-art tables.'
+name: 'Vesper'
+nameEn: 'Vesper'
+description: '海岸暮色中的桌面德州扑克：2–8 人经典对局、离线策略 AI 与单人闯关挑战。'
+descriptionEn: 'Desktop poker at a coastal lodge: 2–8 player Classic games, offline strategy AI, and a solo Challenge circuit.'
+summary: '在海岸木屋围桌入座，将共享扑克规则、实时联机与单人闯关，融入一场从发牌到派奖的完整体验。'
+summaryEn: 'Take a seat at a coastal lodge, where shared poker rules, real-time multiplayer, and a solo circuit meet a complete deal-to-payout experience.'
 year: 2026
 role: ['Unity / C#', '游戏系统', '实时联机', '策略 AI']
 roleEn: ['Unity / C#', 'Game Systems', 'Real-time Multiplayer', 'Strategy AI']
-cover: './cover.png'
+cover: './cover.webp'
 gallery:
-  - image: './practice.png'
-    caption: '离线 AI 练习：行动提示、底池与边池展示，以及跟注、加注和 All-in 操作。截图来自开发版本。'
-    captionEn: 'Offline AI practice with action prompts, pot and side-pot displays, and call, raise, and all-in controls. Captured from a development build.'
-  - image: './lobby.png'
-    caption: '房间码联机大厅：座位、准备状态、起始筹码、盲注和行动计时设置。截图来自自动化测试会话。'
-    captionEn: 'Private multiplayer lobby with room codes, seats, ready states, starting stacks, blinds, and action timers. Captured from an automated test session.'
+  - image: './table-eight.webp'
+    caption: '八人经典牌桌：海岸暮色、七位围桌角色、独立席位信息与比例下注控件。2026-10-31 macOS 原生客户端实拍，来自脚本驱动的本机 WebSocket 多客户端测试。'
+    captionEn: 'Eight-player Classic table with a coastal sunset, seven seated characters, individual seat information, and pot-fraction controls. Native macOS capture from a scripted local WebSocket multi-client test, October 31, 2026.'
+  - image: './table-six.webp'
+    caption: '六人连续对局中的翻牌轮：本人视角固定在下方，本轮下注随公共牌阶段更新。来自同轮 macOS 原生脚本测试。'
+    captionEn: 'The flop in a six-player continuous-session test: the local player stays at the bottom and street contributions update with each betting round. From the same native macOS scripted test.'
+  - image: './lobby.webp'
+    caption: '八人私人联机大厅：亚麻装帧界面、房间码、公开角色外观与准备状态。来自实际客户端测试会话。'
+    captionEn: 'Eight-player private lobby with linen-bound panels, a room code, public character appearances, and ready states. Captured from an actual client test session.'
+  - image: './settlement.webp'
+    caption: '局末结算凭单：主池／边池分配与未跟注退回分开呈现，亮牌由玩家自主选择。来自八人原生测试。'
+    captionEn: 'End-of-hand receipt separates main/side-pot awards from uncalled returns; players choose whether to reveal their cards. Captured from the eight-player native test.'
 sectionsEn:
-  - heading: 'The Idea'
+  - heading: 'Vesper: Poker at a Coastal Lodge'
     body:
-      - 'Project Holdem brings together strategy, probability, game engineering, and visual interaction in a desktop No-Limit Texas Hold’em game. The goal is a coherent experience that supports both offline practice against bots and private multiplayer through room codes.'
-      - 'The game uses an original pixel-art direction: a dark teal table, cream cards, colored chips, and an adjustable CRT display treatment.'
-  - heading: 'One Shared Poker Foundation'
+      - 'Vesper, formerly Project Holdem, is a desktop No-Limit Texas Hold’em game for Windows x64 and macOS. It combines Classic play—offline AI practice and private room-code multiplayer—with a solo, run-based Challenge Mode.'
+      - 'The current art direction, Coastal Lodge, brings an open sea horizon, sunset light, a walnut table, blue baize, and a seated character ensemble into one scene. Linen-bound menus and brass details carry the same atmosphere into the surrounding interface.'
+  - heading: 'Classic: 2–8 Players'
     body:
-      - 'The pure C# Poker.Core library handles cards, decks, hand evaluation, legal actions, betting rounds, pots, side pots, and showdown settlement independently of Unity and networking. Offline play and the online server reuse the same rules foundation.'
-      - 'Poker.Protocol separates commands, events, and snapshots from transport and presentation. This keeps game rules testable and lets the Unity client focus on input, rendering, and animation.'
-  - heading: 'Real-time Multiplayer'
+      - 'Classic supports every table capacity from two to eight. Practice offers 2/3/6/8-player presets and Easy, Medium, and Hard bots. The Hard bot combines position, Monte Carlo equity, pot odds, board texture, and stack-to-pot ratio using only legitimate player-visible information.'
+      - 'Shared integer-chip sizing provides Min, 1/3, 1/2, 3/4, one pot, and Max presets plus a separate legal All-in action. The local player stays at the bottom of the table, with seat numbers, current-street contributions, turn focus, and persistent all-in states making the action readable.'
+  - heading: 'Challenge: A Four-Table Circuit'
     body:
-      - 'An ASP.NET Core backend handles room creation, joining, lobby readiness, and authoritative game sessions over WebSocket. Actions pass through a serialized per-table command queue before the rules engine updates state.'
-      - 'Public table state and private player state are delivered separately so opponents’ hidden cards are not broadcast. Reconnection and snapshot resynchronization restore the client view, while hand-history persistence supports review.'
-  - heading: 'Practice Against AI'
+      - 'Challenge Mode connects four actual poker tables through route choices, objectives, and rewards. The final heads-up opponent, The Mirror, reads recent public betting actions and adjusts its style for the next hand. It never receives the player’s hidden cards.'
+      - 'Progress is saved at safe run boundaries, with backup recovery and explicit handling of incompatible checkpoints. Classic and Challenge reuse the same cards, evaluator, poker rules, and presentation infrastructure; Challenge adds explicit run and encounter adapters.'
+  - heading: 'Shared Rules and Authoritative Multiplayer'
     body:
-      - 'Offline practice supports Easy, Medium, and Hard bots. The Hard bot combines position-dependent preflop decisions, Monte Carlo equity estimates, pot odds, board texture, and stack-to-pot ratios to select legal actions.'
-      - 'Bots receive public table information and their own private state. Their decision policies combine heuristic rules with probability estimates.'
-  - heading: 'Visuals and Product Experience'
+      - 'Pure .NET Poker.Core owns legal actions, betting rounds, hand evaluation, pots, side pots, and settlement independently of Unity. Poker.Protocol separates commands, events, and snapshots from presentation and transport.'
+      - 'ASP.NET Core and WebSocket support private rooms and serialized per-table actions. The server owns online outcomes, separates public and private information, and restores client state through reconnect snapshots. Public character choices follow room membership and seat identity.'
+  - heading: 'From the Deal to the Receipt'
     body:
-      - 'The Unity client combines uGUI, TextMeshPro, URP, procedural pixel-art cards and chips, themed controls, and animated feedback for dealing, betting, and results. Shared visual components keep the menu, lobby, table, settings, and tutorial consistent.'
-      - 'English and Simplified Chinese localization, hand history, difficulty settings, display options, and volume controls form the surrounding product experience. The same Unity project targets macOS and Windows x64.'
-  - heading: 'Current Status'
+      - 'The rebuilt presentation includes redesigned card faces and backs, a faceted table, seven characters with three static views each, and shared dealing, betting, showdown, and payout feedback. Main and side pots pay their actual winners in sequence before the final receipt appears.'
+      - 'Players choose whether to reveal cards after folding, an uncontested win, or a showdown; cards remain hidden by default. English and Simplified Chinese, tutorials, hand history, audio settings, and an independent Reduced motion option support the broader experience.'
+  - heading: 'Current Status · October 31, 2026'
     body:
-      - 'The existing implementation covers the shared rules engine, offline practice, private multiplayer, reconnect flows, hand history, and the pixel-art visual system. The project includes unit tests, multiplayer integration tests, and deterministic simulation tools.'
-      - 'macOS build and runtime acceptance are documented. The Windows x64 build is prepared, with real-machine runtime validation still pending. Steam integration and Challenge Mode remain future work.'
+      - 'Classic and the first Challenge version are implemented. The archived CH6 candidate received user-reported Windows and macOS acceptance on October 27. The latest work focuses on the coastal art rebuild, seat readability, voluntary reveals, and continuous-hand pacing.'
+      - 'AR2.21 records 137 passing Unity EditMode tests, rebuilt Windows/macOS QA packages, and scripted native Mac checks covering three consecutive hands at both six and eight players. That evidence does not replace Windows retesting or human play feedback for the latest build. Character animation is paused; Steam integration and public release remain pending.'
   - heading: 'Technology'
     body:
       - 'Unity 6.3 · C# · .NET 8 · uGUI · TextMeshPro · URP · ASP.NET Core · WebSocket · PostgreSQL / EF Core · Redis · Docker · xUnit'
 draft: false
 ---
 
-## 项目想法
+## Vesper：海岸暮色中的扑克游戏
 
-Project Holdem 将策略、概率、游戏工程与视觉交互结合在一起，构建支持离线 AI 练习和房间码私人联机的桌面无限注德州扑克游戏。
+Vesper（原 Project Holdem）是一款面向 Windows x64 与 macOS 的桌面无限注德州扑克游戏。在同一个产品里，经典模式提供离线 AI 练习与房间码私人联机，挑战模式则将扑克对局组织成有路线、目标与奖励的单人闯关。
 
-视觉采用原创像素风格：深青色牌桌、奶油色纸牌、彩色筹码，以及可调节的 CRT 复古显示效果。项目既关注牌局规则与状态一致性，也关注每一次发牌、下注和结算的操作反馈。
+当前采用「Coastal Lodge / 海岸木屋」美术方向：开阔海面、落日光线、胡桃木牌桌、深蓝织物台面和围桌人物共同构成场景。主菜单与大厅以亚麻装帧、黄铜细节延续氛围，从选角、入座到牌局结束形成统一体验。
 
-## 一套共享的扑克规则基础
+## 经典模式：从双人到八人围桌
 
-将纸牌、牌堆、牌型评估、合法行动、下注轮次、底池与边池、摊牌结算封装在纯 C# 的 `Poker.Core` 中，与 Unity 和网络传输解耦。离线对战与在线服务端复用同一套规则，减少两条玩法链路之间的行为偏差。
+经典模式支持 **2–8 人**的全部桌容量，离线练习提供 2／3／6／8 人预设，以及 Easy、Medium、Hard 三档 AI。Hard Bot 综合位置、蒙特卡洛胜率、底池赔率、公共牌结构与筹码底池比做决策，仅使用公开信息和自身底牌。
 
-通过 `Poker.Protocol` 统一命令、事件和快照结构，让规则层保持可测试性，让 Unity 客户端专注输入、渲染与动画表现。
+下注控件共享整数筹码计算，提供最小、1/3、1/2、3/4、1 底池、最大等快捷档位，以及独立的合法全下操作。本人视角固定在下方，席位编号、本轮累计下注、行动焦点与持续全下标记，让多人牌桌上的信息更容易归属。
 
-## 实时联机与状态一致性
+## 挑战模式：四张牌桌，一条闯关路线
 
-使用 ASP.NET Core 与 WebSocket 构建实时服务，串联创建房间、房间码加入、准备大厅和服务端权威牌局。每张牌桌使用串行命令队列处理玩家行动，由规则引擎校验并更新状态。
+挑战模式已实现由四张实际扑克桌串联的完整流程，在路线选择、目标达成与奖励之间推进，最终迎战单挑对手 **The Mirror**。它会读取最近已结束牌局的公开下注行为，为下一手调整风格；不会读取玩家隐藏底牌。
 
-公开桌面状态与玩家私有状态分开下发，避免广播对手未公开的底牌。断线重连与快照重同步负责恢复客户端视图，牌局历史持久化则为后续回顾提供基础。
+进度在安全的闯关边界保存，配有备份恢复和不兼容存档提示。经典与挑战共用纸牌、牌型评估、扑克规则和界面基础设施，通过明确的闯关与遭遇适配层扩展玩法。
 
-## 离线 AI 练习
+## 共享规则与服务端权威联机
 
-提供 Easy、Medium、Hard 三种难度。Hard Bot 结合位置相关的翻前决策、蒙特卡洛胜率估计、底池赔率、公共牌结构与筹码底池比，在合法行动范围内做出决策。
+纯 .NET 的 `Poker.Core` 负责合法行动、下注轮次、牌型评估、主池／边池与摊牌结算，独立于 Unity 和网络层。`Poker.Protocol` 将命令、事件与快照从传输和界面实现中分离，使核心规则能够接受确定性测试。
 
-AI 仅接收公开桌面信息和自身私有状态，避免依赖对手隐藏底牌。决策策略结合启发式规则与概率估计。
+ASP.NET Core 与 WebSocket 串联私人房间、准备大厅和牌桌串行行动队列。在线结果由服务端决定，公开状态与玩家私有信息分别下发，断线后通过快照恢复视图。公开角色外观与房间成员、实际席位身份同步。
 
-## 视觉系统与产品体验
+## 从发牌到结算的完整表现
 
-Unity 客户端使用 uGUI、TextMeshPro 与 URP，围绕程序化像素纸牌、筹码、主题化控件和发牌、下注、结算反馈，建立统一的视觉系统。主菜单、联机大厅、牌桌、设置和教程共用组件与主题。
+本轮美术重建覆盖重新设计的牌面与牌背、多边形桌体、七位角色各三个静态视角，以及共享的发牌、下注、摊牌和派奖反馈。主池与边池按实际赢家逐批派奖，最后显示结算凭单，区分真正赢得的筹码与未跟注退回。
 
-配套功能包括中英文切换、牌局历史、难度设置、显示选项和音量控制。同一个 Unity 项目面向 macOS 与 Windows x64，复用游戏逻辑与界面实现。
+弃牌、无争议获胜与摊牌参与者均可自主选择是否亮牌，默认保持不公开。中英文切换、教程、牌局历史、音量设置和独立的「减少动态」选项，补全对局之外的使用体验。
 
-## 当前进展
+## 当前进展 · 2026 年 10 月 31 日
 
-项目已实现共享规则引擎、离线练习、私人联机、重连流程、牌局历史和像素视觉系统，并配有单元测试、多客户端集成测试与确定性模拟工具。
+经典模式与挑战首版均已实现。10 月 27 日归档的 CH6 候选版本已获得用户反馈的 Windows、macOS 验收通过；近期工作聚焦海岸美术重建、席位可读性、自主亮牌和连续牌局节奏。
 
-已有 macOS 构建与运行验收记录；Windows x64 构建已准备，实机运行验收仍待完成。Steam 接入与 Challenge Mode 属于后续计划。
+最新 AR2.21 记录了 **137 项 Unity EditMode 回归通过**、Windows／macOS QA 包重建，以及 Mac 原生六人、八人各连续三手的脚本检查。该记录不替代最新版 Windows 复验和真人体验反馈。角色动态暂缓，Steam 接入与公开发行仍待推进。
 
 ## 技术栈
 

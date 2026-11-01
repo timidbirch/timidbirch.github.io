@@ -95,18 +95,18 @@ const flows: Record<string, { name: string; subtitle: [string, string]; steps: S
     ],
   },
   'holdem': {
-    name: 'Project Holdem',
-    subtitle: ['沿着一手牌，探索共享规则、联机与 AI 的关系。', 'Follow a hand through shared rules, multiplayer, and AI.'],
+    name: 'Vesper',
+    subtitle: ['从共享规则出发，探索经典联机、策略 AI 与挑战闯关。', 'Explore shared rules, Classic multiplayer, strategy AI, and the Challenge circuit.'],
     steps: [
       {
         label: ['规则引擎', 'Rules'],
         title: ['一套规则，两种玩法。', 'One foundation, two ways to play.'],
         description: [
-          '纯 C# 的 Poker.Core 管理合法行动、下注、底池和结算，供离线练习与在线服务端共同使用。',
-          'The pure C# Poker.Core manages legal actions, betting, pots, and settlement for both offline play and the online server.',
+          '纯 C# 的 Poker.Core 管理 2–8 人牌桌的合法行动、下注、主池／边池和结算。经典与挑战共用扑克基础，闯关通过独立适配层扩展。',
+          'Pure C# Poker.Core handles legal actions, betting, main/side pots, and settlement for 2–8 seats. Classic and Challenge share poker foundations, with explicit adapters for runs.',
         ],
         file: 'ARCHITECTURE / Poker.Core',
-        code: 'Cards + deck\n  ↓\nLegal actions / betting rounds\n  ↓\nPots + side pots\n  ↓\nHand evaluation / showdown',
+        code: 'Poker.Core · cards / evaluator / betting\n  ↓\nClassic · 2–8 seats\nOffline practice / private multiplayer\n  +\nPoker.Challenge · explicit adapters\nRoutes / objectives / rewards / saves',
       },
       {
         label: ['实时联机', 'Multiplayer'],
@@ -129,14 +129,14 @@ const flows: Record<string, { name: string; subtitle: [string, string]; steps: S
         code: 'Public state + own cards\n  ↓\nPosition / preflop policy\nMonte Carlo equity\nPot odds / board texture / SPR\n  ↓\nChoose a legal action',
       },
       {
-        label: ['像素界面', 'Presentation'],
-        title: ['规则之外，是每一次操作的反馈。', 'Every action deserves feedback.'],
+        label: ['挑战与呈现', 'Challenge & UI'],
+        title: ['四桌闯关，共享一张海岸牌桌。', 'Four encounters, one shared coastal table.'],
         description: [
-          'Unity 以像素纸牌、筹码、主题化控件与发牌和结算动画，呈现桌面牌局。下方展示开发版本的真实画面。',
-          'Unity presents the table through pixel-art cards, chips, themed controls, dealing, and result feedback. Actual development screenshots appear below.',
+          '四桌路线、目标与奖励通向会根据公开行动调整策略的 Mirror 对手。海岸木屋主题、围桌人物、逐池派奖与结算凭单复用同一套 Unity 表现系统。',
+          'A four-table route with objectives and rewards leads to The Mirror, which adapts to public actions. The coastal lodge, seated cast, per-pot payouts, and receipt use the shared Unity presentation.',
         ],
-        file: 'ARCHITECTURE / UNITY',
-        code: 'State snapshot\n  ↓\nCards / chips / table UI\n  ↓\nDealing and betting feedback\nResult presentation\n\nShared theme · EN / 中文',
+        file: 'ARCHITECTURE / CHALLENGE + UNITY',
+        code: 'Route → encounter → reward\n  ↓ four tables\nThe Mirror · public-action adaptation\n  ↓\nSafe-boundary checkpoint / backup\n\nShared coastal UI · EN / 中文\nPer-pot payouts · Reduced motion',
       },
     ],
   },
