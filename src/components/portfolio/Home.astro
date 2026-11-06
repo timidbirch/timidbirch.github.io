@@ -6,7 +6,7 @@ import { getAllExperiences, getAllProjects } from '~/lib/data'
 const { en = false } = Astro.props
 const experiences = await getAllExperiences()
 const projects = await getAllProjects()
-const featuredProjects = ['ragfuzz', 'ncc-bus'].flatMap(id => projects.filter(project => project.id === id))
+const featuredProjects = ['holdem', 'ragfuzz'].flatMap(id => projects.filter(project => project.id === id))
 const prefix = en ? '/en' : ''
 const skills = ['Python / PyTorch', 'Quantitative Research', 'LLM / RAG', 'LangGraph', 'Information Security', 'WeChat Mini Programs']
 ---
