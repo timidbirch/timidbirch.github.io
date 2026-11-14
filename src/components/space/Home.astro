@@ -15,8 +15,8 @@ const [latest, ...otherPosts] = posts.slice(0, 5)
 const [album] = photoAlbums
 const date = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 const description = en
-  ? 'Researching markets, building with code, and photographing everyday life.'
-  : '研究市场、用代码做东西，也给日常留下一些影像。'
+  ? 'A record of what I think about, create, and explore, and the fragments that defy categorization.'
+  : '这里记录我的思考、创造、探索，以及那些无法被归类的片段'
 const socials = [
   { href: '/rss.xml', label: 'RSS', icon: 'icon-[ri--rss-line]' },
   { href: 'mailto:1146816430@qq.com', label: en ? 'Email' : '邮件', icon: 'icon-[ri--mail-line]' },
@@ -30,8 +30,8 @@ const socials = [
       <div class="space-hello">
         <Avatar class="hero-avatar" />
         <p class="hero-byline">{SITE.title}</p>
-        <h1 id="space-title">{en ? 'Things worth ' : '多看一眼'}<em>{en ? 'a closer look.' : '的事。'}</em></h1>
-        <p class="hero-context">{en ? 'Market research, software projects, and photographs.' : '市场研究、软件项目与日常照片。'}</p>
+        <h1 id="space-title" lang="en">A Life in <em>Draft</em></h1>
+        <p class="hero-context">{description}</p>
       </div>
       <div class="space-hero-foot">
         <div class="hero-stats">
