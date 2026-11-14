@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Trigger the workflow every time you push to the `main` branch
+  # Trigger the workflow every time you push to the `personal-space` branch
   push:
-    branches: [main]
+    branches: [personal-space]
   # Allow manual deployment from the Actions tab
   workflow_dispatch:
 
