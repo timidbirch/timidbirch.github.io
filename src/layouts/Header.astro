@@ -9,11 +9,10 @@ const en = path === '/en' || path.startsWith('/en/')
 const prefix = en ? '/en' : ''
 const home = prefix || '/'
 const localizedPath = path.replace(/^\/posts(?=\/|$)/, '/blog')
-const mirrored = /^\/(?:blog|photos|projects|experience|about)(?:\/|$)/.test(localizedPath)
+const mirrored = /^\/(?:blog|projects|experience|about)(?:\/|$)/.test(localizedPath)
 const languageHref = en ? path.replace(/^\/en(?=\/|$)/, '') || '/' : mirrored ? `/en${localizedPath}` : '/en'
 const moreLinks = [
   { path: '/projects', title: en ? 'Projects' : '项目', desc: en ? 'Research and things I’ve built' : '研究与作品' },
-  { path: '/photos', title: en ? 'Photos' : '照片', desc: en ? 'An archive of everyday photographs' : '日常影像与相册' },
   { path: '/about', title: en ? 'About' : '关于', desc: en ? 'A little about me' : '关于我和这个站点' },
   { path: '/experience', title: en ? 'Experience' : '实践经历', desc: en ? 'Work and research experience' : '工作与研究经历' },
 ]

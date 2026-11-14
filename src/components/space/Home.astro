@@ -1,18 +1,15 @@
 ---
 import { SITE } from '~/config'
-import { Image } from 'astro:assets'
 import Avatar from './Avatar.astro'
 import Layout from '~/layouts/Layout.astro'
 import { getAllPosts, getAllProjects } from '~/lib/data'
 import { getBlogCategory } from '~/lib/blog-categories'
-import { photoAlbums } from '~/lib/photos'
 import '~/styles/space-home.css'
 const { en = false } = Astro.props
 const prefix = en ? '/en' : ''
 const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
 const featured = ['holdem', 'ragfuzz', 'ncc-bus'].flatMap((id) => projects.filter((project) => project.id === id))
 const [latest, ...otherPosts] = posts.slice(0, 5)
-const [album] = photoAlbums
 const date = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 const description = en
   ? 'A record of what I think about, create, and explore, and the fragments that defy categorization.'
@@ -36,8 +33,6 @@ const socials = [
       <div class="space-hero-foot">
         <div class="hero-stats">
           <a href={prefix + '/blog'}>{posts.length} {en ? 'posts' : '篇文章'}</a>
-          <span aria-hidden="true">·</span>
-          <a href={prefix + '/photos'}>{photoAlbums.length} {en ? 'albums' : '组照片'}</a>
         </div>
         <div class="hero-socials">
           {
@@ -84,25 +79,6 @@ const socials = [
         {!latest && <p>{en ? 'No posts yet.' : '暂时还没有文章。'}</p>}
       </section>
       <aside class="home-aside">
-        {
-          album && (
-            <section aria-labelledby="home-photos-title">
-              <div class="home-section-heading">
-                <>
-                  <h2 id="home-photos-title">{en ? 'Daily Frames' : '日常影像'}</h2>
-                  <a href={prefix + '/photos'}>{en ? 'Gallery' : '相册'} ↗</a>
-                </>
-              </div>
-              <a class="home-album" href={`${prefix}/photos#${album.id}`}>
-                <Image src={album.photos[0].src} alt="" widths={[300, 520, 760]} sizes="(max-width: 720px) 90vw, 390px" />
-                <span>
-                  {en ? album.title : album.titleZh}
-                  <time datetime={album.date}>{date.format(new Date(album.date))}</time>
-                </span>
-              </a>
-            </section>
-          )
-        }
         <section aria-labelledby="home-letter-title">
           <div class="home-section-heading"><h2 id="home-letter-title">{en ? 'Letters' : '来信'}</h2></div>
           <p>{en ? 'Have something to share? Write to me.' : '有想交流的事，欢迎写信。'}</p>
@@ -141,9 +117,8 @@ const socials = [
         >
       </div>
       <div class="home-shortcuts">
-        <a href={prefix + '/projects'}>{en ? 'Projects' : '项目'}</a><a href={prefix + '/photos'}>{en ? 'Photos' : '照片'}</a><a
-          href={prefix + '/about'}>{en ? 'About' : '关于'}</a
-        >
+        <a href={prefix + '/projects'}>{en ? 'Projects' : '项目'}</a>
+        <a href={prefix + '/about'}>{en ? 'About' : '关于'}</a>
       </div>
     </section>
   </div>
