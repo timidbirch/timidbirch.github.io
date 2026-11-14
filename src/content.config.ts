@@ -19,7 +19,7 @@ const posts = defineCollection({
         category: z.string().default('学习与生活'),
         language: z.enum(['zh', 'en']).default('zh'),
         updatedDate: z.date().optional(),
-        author: z.string().default(POSTS_CONFIG.author),
+        author: z.string().optional(),
         cover: image().optional(),
         ogImage: image().optional(),
         recommend: z.boolean().default(false),

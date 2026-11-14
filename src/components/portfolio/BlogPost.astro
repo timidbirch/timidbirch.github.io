@@ -6,6 +6,7 @@ import License from '~/components/posts/base/License.astro'
 import Comment from '~/components/posts/base/Comment.astro'
 import { getAllPosts } from '~/lib/data'
 import { getBlogCategory } from '~/lib/blog-categories'
+import { SITE } from '~/config'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -68,7 +69,7 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
     <div class="reading-content">
       <p class="reading-summary" lang={language}>{post.data.description}</p>
       <div data-reading-body lang={language}><Prose><Content /></Prose></div>
-      {post.data.license && <License license={post.data.license} title={post.data.title} author={post.data.author} />}
+      {post.data.license && <License license={post.data.license} title={post.data.title} author={post.data.author || SITE.author} />}
       <nav class="reading-neighbors" aria-label={en ? 'More posts' : '继续阅读'}>
         {
           neighbors.map(

@@ -4,12 +4,12 @@ import type {
 } from '~/types'
 
 export const SITE: Site = {
-  title: 'CHEN Peihua',
-  description: '陈佩桦的个人网站，聚焦量化交易、商业分析、AI 系统与信息安全。',
+  title: 'timidbirch',
+  description: 'timidbirch的个人网站，聚焦量化交易、商业分析、AI 系统与信息安全。',
   website: 'https://timidbirch.github.io',
   lang: 'zh-CN',
   base: '/',
-  author: 'CHEN Peihua',
+  author: 'timidbirch',
   ogImage: '/og-image.webp',
   transition: false,
   themeAnimation: true,
@@ -47,7 +47,7 @@ export const GITHUB_CONFIG: GithubConfig = {
 }
 
 export const POSTS_CONFIG: PostConfig = {
-  title: '文章', description: '陈佩桦的文章。', introduce: '记录项目之外的思考。', author: 'CHEN Peihua',
+  title: '文章', description: 'timidbirch的文章。', introduce: '记录项目之外的思考。', author: 'timidbirch',
   homePageConfig: { size: 2, type: 'compact' },
   postPageConfig: { size: 10, type: 'image', coverLayout: 'right' },
   tagsPageConfig: { size: 10, type: 'time-line' },
@@ -69,7 +69,7 @@ export const COMMENT_CONFIG: CommentConfig = {
 }
 
 export const TAGS_CONFIG: TagsConfig = { title: '标签', description: '文章标签', introduce: '按主题浏览文章。' }
-export const PROJECTS_CONFIG: ProjectConfig = { title: '项目', description: '陈佩桦的技术项目与研究实践。', introduce: '安全研究、金融 AI、校园服务与交互系统：记录实现方法、开源基础与实践思考。' }
+export const PROJECTS_CONFIG: ProjectConfig = { title: '项目', description: 'timidbirch的技术项目与研究实践。', introduce: '安全研究、金融 AI、校园服务与交互系统：记录实现方法、开源基础与实践思考。' }
 export const PHOTOS_CONFIG: PhotosConfig = { title: '照片', description: '日常影像。', introduce: '一些生活中的观察。' }
 export const ANALYTICS_CONFIG: AnalyticsConfig = {
   vercount: { enabled: true },

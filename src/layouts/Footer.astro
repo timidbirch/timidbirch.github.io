@@ -1,5 +1,5 @@
 ---
-import { ANALYTICS_CONFIG } from '~/config'
+import { ANALYTICS_CONFIG, SITE } from '~/config'
 import ViewCounts from '~/components/base/ViewCounts.astro'
 const en = /^\/en(?:\/|$)/.test(Astro.url.pathname)
 const prefix = en ? '/en' : ''
@@ -9,7 +9,7 @@ const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Ho
 <footer class="space-footer">
   <div class="footer-directory">
     <div class="footer-signature">
-      <a href={prefix || '/'} class="space-brand">{en ? 'Chen Peihua' : '陈佩桦'}</a>
+      <a href={prefix || '/'} class="space-brand">{SITE.title}</a>
       <p>{en ? 'Markets, code, and everyday life.' : '记录市场、代码与日常。'}</p>
       {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
     </div>
@@ -39,7 +39,7 @@ const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Ho
       <label><span>{en ? 'Background' : '背景效果'}</span><input type="checkbox" data-site-effects checked /></label>
     </div>
   </div>
-  <div class="site-colophon"><span>© {year} CHEN Peihua</span><a href="/sitemap-index.xml">{en ? 'Sitemap' : '站点地图'}</a></div>
+  <div class="site-colophon"><span>© {year} {SITE.title}</span><a href="/sitemap-index.xml">{en ? 'Sitemap' : '站点地图'}</a></div>
 </footer>
 
 <script>
