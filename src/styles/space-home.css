@@ -190,3 +190,56 @@ html[lang='zh-CN'] .personal-home h1 {
   .space-update-type { grid-column: 2 / 4; grid-row: 1; }
   .space-arrow { grid-column: 3; grid-row: 2; }
 }
+
+recent-updates { display: block; }
+
+.space-filters:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.space-filters button {
+  min-height: 36px;
+  padding: 5px 13px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--soft-ink);
+  cursor: pointer;
+  font-size: .8rem;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.space-filters button:hover, .space-filters button[aria-pressed='true'] { color: var(--signal); }
+
+.space-filters button[aria-pressed='true'] {
+  border-color: var(--line);
+  background: var(--paper-panel);
+}
+
+.space-updates a, .space-photo {
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.space-updates a { border-radius: 6px; }
+
+.space-arrow {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+
+.space-updates a:focus-visible, .space-updates a:hover {
+  background: color-mix(in srgb, var(--signal) 6%, transparent);
+}
+
+.space-updates a:focus-visible .space-arrow, .space-updates a:hover .space-arrow,
+.space-project:focus-visible .space-arrow, .space-project:hover .space-arrow {
+  transform: translate(2px, -2px);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .space-photo:hover { transform: translateY(-3px); }
+  .space-project img { transition: transform 220ms cubic-bezier(.2,.7,.25,1); }
+  .space-project:hover img { transform: translateY(-3px); }
+}

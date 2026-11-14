@@ -14,7 +14,7 @@ const aboutRoot = `${prefix}/about`
 const inExperience = pathname === `${prefix}/experience` || pathname.startsWith(`${prefix}/experience/`)
 ---
 
-<header class="space-header">
+<header class="space-header" transition:name="space-header" transition:animate="none">
   <a href={prefix || '/'} class="space-brand" aria-label={en ? 'Chen Peihua — Home' : '陈佩桦 — 首页'}>
     {en ? 'Chen Peihua' : '陈佩桦'}<span aria-hidden="true">.</span>
   </a>
@@ -23,6 +23,7 @@ const inExperience = pathname === `${prefix}/experience` || pathname.startsWith(
       links.map((link) => (
         <a
           href={link.url}
+          data-astro-prefetch="hover"
           aria-current={
             pathname === link.url
               ? 'page'

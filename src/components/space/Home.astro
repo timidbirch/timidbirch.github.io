@@ -9,7 +9,18 @@ import '~/styles/space-home.css'
 const { en = false } = Astro.props
 const prefix = en ? '/en' : ''
 const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
-const updates = getRecentUpdates(posts, projects, en).slice(0, 5)
+const updates = getRecentUpdates(posts, projects, en)
+const updateLimit = 5
+const filters = [
+  { id: 'writing', label: en ? 'Writing' : '文章' },
+  { id: 'project', label: en ? 'Projects' : '项目' },
+  { id: 'photo', label: en ? 'Photos' : '照片' },
+].filter((filter) => updates.some((update) => update.kind === filter.id))
+const firstUpdates = updates.slice(0, updateLimit)
+const filterEntries = new Set([
+  ...firstUpdates,
+  ...filters.flatMap((filter) => updates.filter((update) => update.kind === filter.id).slice(0, updateLimit)),
+])
 const featured = ['holdem', 'ragfuzz'].flatMap((id) => projects.filter((project) => project.id === id))
 const [latestAlbum] = photoAlbums
 const photo = latestAlbum?.photos[0]
@@ -74,22 +85,39 @@ const description = en
               </a>
             </div>
           </div>
-          <ul class="space-updates">
-            {updates.map((update) => (
-              <li>
-                <a href={update.href}>
-                  <time datetime={update.date}>{formatDate(update.date)}</time>
-                  <span class="space-update-title" lang={update.language}>
-                    {update.title}
-                  </span>
-                  <span class="space-update-type">{update.type}</span>
-                  <span class="space-arrow" aria-hidden="true">
-                    ↗
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <recent-updates data-limit={updateLimit} data-announcement={en ? 'Updates shown: {count}' : '显示 {count} 条更新'}>
+            {filters.length > 1 && (
+              <div class="space-filters" role="group" aria-label={en ? 'Filter recent updates' : '筛选最近更新'} hidden>
+                <button type="button" data-filter="all" aria-pressed="true" aria-controls="update-list">
+                  {en ? 'All' : '全部'}
+                </button>
+                {filters.map((filter) => (
+                  <button type="button" data-filter={filter.id} aria-pressed="false" aria-controls="update-list">
+                    {filter.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            <span class="sr-only" role="status" />
+            <ul class="space-updates" id="update-list">
+              {updates
+                .filter((update) => filterEntries.has(update))
+                .map((update) => (
+                  <li data-kind={update.kind} hidden={!firstUpdates.includes(update)}>
+                    <a href={update.href}>
+                      <time datetime={update.date}>{formatDate(update.date)}</time>
+                      <span class="space-update-title" lang={update.language}>
+                        {update.title}
+                      </span>
+                      <span class="space-update-type">{update.type}</span>
+                      <span class="space-arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </recent-updates>
         </section>
       )
     }
@@ -122,3 +150,47 @@ const description = en
     }
   </div>
 </Layout>
+
+<script>
+  class RecentUpdates extends HTMLElement {
+    connectedCallback() {
+      const filters = this.querySelector<HTMLElement>('.space-filters')
+      const list = this.querySelector('ul')
+      const status = this.querySelector('[role="status"]')
+      if (!filters || !list || !status) return
+
+      const buttons = filters.querySelectorAll<HTMLButtonElement>('button')
+      const entries = list.querySelectorAll<HTMLElement>('li')
+      const limit = Number(this.dataset.limit)
+      filters.hidden = false
+      filters.onclick = (event) => {
+        if (!(event.target instanceof HTMLButtonElement)) return
+        const selected = event.target
+        if (selected.getAttribute('aria-pressed') === 'true') return
+
+        for (const button of buttons) button.setAttribute('aria-pressed', String(button === selected))
+        const filter = selected.dataset.filter
+        let visible = 0
+        for (const entry of entries) {
+          entry.hidden = visible >= limit || (filter !== 'all' && entry.dataset.kind !== filter)
+          if (!entry.hidden) visible += 1
+        }
+        status.textContent = this.dataset.announcement?.replace('{count}', String(visible)) ?? ''
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          list.getAnimations().forEach((animation) => animation.cancel())
+          list.animate(
+            [
+              { opacity: 0.65, transform: 'translateY(3px)' },
+              { opacity: 1, transform: 'translateY(0)' },
+            ],
+            {
+              duration: 180,
+              easing: 'ease-out',
+            }
+          )
+        }
+      }
+    }
+  }
+  customElements.define('recent-updates', RecentUpdates)
+</script>
