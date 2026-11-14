@@ -1,11 +1,10 @@
 .space-hero {
-  position: relative;
   display: grid;
-  grid-template-rows: minmax(14vh, 0.72fr) auto minmax(125px, 1.28fr);
+  grid-template-rows: minmax(38px, 0.72fr) auto minmax(100px, 1.28fr);
   align-items: center;
   justify-items: center;
-  min-height: calc(100svh - 64px);
-  padding: 35px 0 42px;
+  min-height: calc(100svh - 64px - clamp(112px, 18svh, 166px));
+  padding: 22px 0;
   text-align: center;
 }
 .space-hello {
@@ -64,22 +63,20 @@
   padding: 6px;
   font-size: 1rem;
 }
-.hero-socials a:hover,
-.hero-stats a:hover {
+.guest-home a {
+  transition: color var(--space-hover-duration) ease;
+}
+.hero-socials a:is(:hover, :focus-visible),
+.hero-stats a:is(:hover, :focus-visible) {
   color: var(--signal);
 }
-.hero-down {
-  position: absolute;
-  bottom: 25px;
-  color: var(--signal);
-  padding: 8px 14px;
-}
-
 .home-digest {
   display: grid;
   grid-template-columns: 1.58fr minmax(0, 1fr);
   gap: 34px;
-  margin: 35px auto 0;
+  margin: 0 auto;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
 }
 .home-digest > section,
 .home-aside {
@@ -131,8 +128,8 @@
   color: var(--soft-ink);
   font-size: 0.91rem;
 }
-.lead-writing:hover h3,
-.digest-row:hover strong {
+.lead-writing:is(:hover, :focus-visible) h3,
+.digest-row:is(:hover, :focus-visible) strong {
   color: var(--signal);
 }
 .digest-row {
@@ -141,6 +138,21 @@
   gap: 12px;
   padding: 13px 16px;
   border-inline-start: 1px solid var(--line);
+}
+.lead-writing,
+.digest-row {
+  transition:
+    background-color var(--space-hover-duration) ease,
+    border-color var(--space-hover-duration) ease;
+}
+.lead-writing:is(:hover, :focus-visible),
+.digest-row:is(:hover, :focus-visible) {
+  background-color: color-mix(in srgb, var(--signal) 6%, transparent);
+  border-inline-start-color: var(--signal);
+}
+.lead-writing h3,
+.digest-row strong {
+  transition: color var(--space-hover-duration) ease;
 }
 .digest-row strong {
   font: 600 1rem var(--space-serif);
@@ -231,7 +243,7 @@
     padding-inline-start: 0;
   }
   .space-hero {
-    min-height: calc(100svh - 88px);
+    min-height: calc(100svh - 88px - clamp(110px, 18.5svh, 154px));
   }
   .hero-avatar {
     width: 76px;

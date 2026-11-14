@@ -1,4 +1,5 @@
 :root {
+  --space-hover-duration: 180ms;
   --layout-width: 1120px;
   --paper-panel: #fbf9f3;
   --space-serif: 'American Typewriter', 'Songti SC', 'Noto Serif CJK SC', 'STSong', Georgia, serif;
@@ -172,6 +173,11 @@ body.personal-space {
   border-radius: 60% 40% 50% 48%;
   transform: rotate(-3deg);
 }
+.space-header :is(a, summary),
+.space-footer a,
+.text-link {
+  transition: color var(--space-hover-duration) ease;
+}
 .space-header a:hover,
 .space-header summary:hover,
 .space-footer a:hover,
@@ -206,12 +212,36 @@ body.personal-space {
     0 5px 14px #0001,
     0 17px 42px #0002;
   transform-origin: 85% 0;
-  animation: menu-enter 155ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  animation: menu-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* Keep closing menus visible just long enough to fade out. */
+@supports selector(details::details-content) and (transition-behavior: allow-discrete) {
+  .space-nav details::details-content {
+    transition: content-visibility 180ms allow-discrete;
+  }
+  .space-nav details[open]::details-content {
+    transition-duration: 0ms;
+  }
+  .space-nav .space-dropdown {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+    pointer-events: none;
+    animation: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+  .space-nav details[open] .space-dropdown {
+    z-index: 3;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 .space-dropdown a {
   display: block;
   padding: 9px 12px;
   border-radius: 4px;
+  transition: color var(--space-hover-duration) ease, background-color var(--space-hover-duration) ease;
 }
 .space-dropdown a:hover,
 .space-dropdown a:focus-visible {
@@ -312,6 +342,7 @@ body.personal-space {
   color: var(--signal);
 }
 .paper-row h2 {
+  transition: color var(--space-hover-duration) ease;
   font-size: 1rem;
   font-weight: 620;
 }
@@ -417,6 +448,9 @@ body.personal-space {
   .personal-space *::before,
   .personal-space *::after {
     animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .space-nav details::details-content {
     transition-duration: 0.01ms !important;
   }
 }
