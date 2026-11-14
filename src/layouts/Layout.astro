@@ -4,7 +4,7 @@ import '~/styles/markdown.css'
 import '~/styles/lqip.css'
 import '~/styles/github-card.css'
 import '~/styles/portfolio.css'
-import FilmBackground from '~/components/portfolio/FilmBackground.astro'
+import '~/styles/space-shell.css'
 import { SITE } from '~/config'
 import Head from '~/components/base/Head.astro'
 import Header from './Header.astro'
@@ -47,7 +47,6 @@ const pageLanguage = isEnglish ? 'en' : 'zh-CN'
   </head>
   <body class="portfolio flex flex-col">
     <a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳转到正文'}</a>
-    <FilmBackground />
     <Header />
     <div class="site-content grow flex">
       <main id="main-content" class="portfolio-main global-layout-width mx-auto min-w-0" tabindex="-1">

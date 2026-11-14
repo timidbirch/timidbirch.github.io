@@ -38,6 +38,7 @@ function initializePortfolio() {
   document.querySelector<HTMLAnchorElement>('#language-toggle')?.addEventListener('click', event => {
     const link = event.currentTarget as HTMLAnchorElement
     try { localStorage.setItem('site-language', link.dataset.language || 'zh') } catch { /* Storage may be unavailable. */ }
+    link.hash = window.location.hash
   }, { signal })
 
   const resetCards = () => document.querySelectorAll<HTMLElement>('[data-tilt]').forEach(card => {

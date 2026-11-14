@@ -4,24 +4,42 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/'
 const en = pathname === '/en' || pathname.startsWith('/en/')
 const prefix = en ? '/en' : ''
 const links = [
-  { name: en ? 'Experience' : '实践经历', url: `${prefix}/experience` },
+  { name: en ? 'Writing' : '文章', url: `${prefix}/blog` },
   { name: en ? 'Projects' : '项目', url: `${prefix}/projects` },
-  { name: en ? 'Blog' : '博客', url: `${prefix}/blog` },
+  { name: en ? 'Photos' : '照片', url: `${prefix}/photos` },
   { name: en ? 'About' : '关于', url: `${prefix}/about` },
 ]
 const languageHref = en ? pathname.replace(/^\/en(?=\/|$)/, '') || '/' : pathname === '/' ? '/en' : `/en${pathname}`
+const aboutRoot = `${prefix}/about`
+const inExperience = pathname === `${prefix}/experience` || pathname.startsWith(`${prefix}/experience/`)
 ---
-<header class="float-header glass" data-float-header>
-  <a href={en ? '/en' : '/'} class="brand" aria-label={en ? 'CHEN Peihua — Home' : '陈佩桦 — 首页'}>
-    <span class="brand-mark" aria-hidden="true">cp<span>·</span></span>
-    <span class="brand-name">CHEN Peihua</span>
+
+<header class="space-header">
+  <a href={prefix || '/'} class="space-brand" aria-label={en ? 'Chen Peihua — Home' : '陈佩桦 — 首页'}>
+    {en ? 'Chen Peihua' : '陈佩桦'}<span aria-hidden="true">.</span>
   </a>
-  <nav class="primary-nav" aria-label={en ? 'Main navigation' : '主导航'}>
-    {links.map(link => <a href={link.url} aria-current={pathname === link.url || pathname.startsWith(`${link.url}/`) ? 'page' : undefined}>{link.name}</a>)}
+  <nav class="space-nav" aria-label={en ? 'Main navigation' : '主导航'}>
+    {
+      links.map((link) => (
+        <a
+          href={link.url}
+          aria-current={
+            pathname === link.url
+              ? 'page'
+              : pathname.startsWith(`${link.url}/`) || (link.url === aboutRoot && inExperience)
+                ? 'true'
+                : undefined
+          }
+        >
+          {link.name}
+        </a>
+      ))
+    }
   </nav>
-  <div class="nav-tools">
-    <a id="language-toggle" href={languageHref} data-language={en ? 'zh' : 'en'} aria-label={en ? '切换为中文' : 'Switch to English'}>{en ? '中' : 'EN'}</a>
-    <ThemeToggle client:load />
-    <a class="nav-contact" href="mailto:1146816430@qq.com">{en ? 'Say hello' : '联系我'} <span aria-hidden="true">↗</span></a>
+  <div class="space-tools">
+    <a id="language-toggle" href={languageHref} data-language={en ? 'zh' : 'en'} aria-label={en ? '切换为中文' : 'Switch to English'}
+      >{en ? '中' : 'EN'}</a
+    >
+    <ThemeToggle client:load label={en ? 'Change theme' : '切换主题'} />
   </div>
 </header>

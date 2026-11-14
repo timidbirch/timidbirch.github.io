@@ -1,6 +1,7 @@
 # Portfolio design and maintenance
 
-The website uses the floating-glass, scroll-film direction from
+The personal-space homepage uses the published content collections and photo archive.
+The project and experience pages retain styles adapted from
 [Floating Astronaut Portfolio](https://github.com/floating-astronaut/astro-portfolio-template),
 adapted to the existing Astro 6 bilingual content collections and GitHub Pages deployment.
 Reference revision: `c743aab2ab820e97d51f93142cc3a117b31f6daf`.
@@ -9,14 +10,14 @@ The original Litos license remains in `LICENSE`.
 
 ## Main files
 
-- `src/components/portfolio/Home.astro`: bilingual homepage; latest experience is loaded automatically.
+- `src/components/space/Home.astro`: bilingual homepage with recent updates, a photo from the latest album, and selected projects.
 - `src/components/portfolio/Experience.astro` and `ExperienceCards.astro`: experience listing and cards.
 - `src/components/portfolio/Projects.astro`: project listing and images.
 - `src/components/portfolio/ProjectCards.astro`: shared project cards for the homepage and listing.
 - `src/components/portfolio/ProjectReferences.astro`: bilingual upstream references, separate from personal source links.
 - `src/components/portfolio/ProjectShowcase.astro` and `demos/`: bilingual interactive project previews, source walkthroughs and experiment comparisons.
 - `src/styles/project-showcase.css`: isolated demo styles and container-based responsive layouts.
-- `src/layouts/Header.astro`: navigation order and locale-aware links.
+- `src/layouts/Header.astro`: locale-aware links for writing, projects, photos, and about. About links to the complete experience archive.
 - `src/styles/portfolio.css`: design tokens, glass surfaces, responsive layout, and reduced-motion styles.
 - `src/scripts/portfolio.ts`: scroll-film seeking, card tilt, reveals, motion pause, and ClientRouter cleanup.
 
@@ -27,8 +28,12 @@ in `src/content/experiences/<slug>/index.mdx`. Existing bilingual frontmatter an
 routes are preserved. Project and experience counts on the homepage are computed
 from published content, never hardcoded.
 
-Homepage featured projects are selected by content slug; the full listing includes
-all published entries. Unknown project dates are omitted. The current preview covers
+Homepage featured projects are selected by content slug. The recent updates list
+shows the five latest entries from published articles, photo albums, and projects
+with an explicit `updatedDate`. Use `updatedDate: YYYY-MM-DD` in project
+frontmatter when there is a substantive update to share. Photo albums come from
+`src/lib/photos.ts`, where each album has a stable ID and bilingual title.
+The current preview covers
 are browser captures of the portfolio demos; their labels identify demonstrations,
 real experiment materials, and conceptual walkthroughs. Older SVG architecture
 illustrations remain in the content folders as source assets.
@@ -49,9 +54,10 @@ explain the documented pipeline/architecture and do not run those models or game
 engines. Holdem's existing real screenshots are retained. Upstream image provenance
 and license copies are recorded in `public/licenses/project-visuals.md`.
 
-## Background film
+## Portfolio background assets
 
-The files in `public/media/film/` are the template's generated abstract demo film,
+The personal-space layout uses a static background. The retained files in
+`public/media/film/` are the template's generated abstract demo film,
 not personal footage. Desktop loads the 1080p file; coarse-pointer devices load
 the smaller 540p file. Scroll drives the paused video with a smoothed playhead and
 one seek at a time. Failed playback falls back to the poster. Reduced-motion

@@ -49,6 +49,7 @@ const projects = defineCollection({
       summary: z.string().optional(),
       summaryEn: z.string().optional(),
       year: z.number().optional(),
+      updatedDate: z.date().optional(),
       role: z.array(z.string()).default([]),
       roleEn: z.array(z.string()).default([]),
       sectionsEn: z.array(z.object({ heading: z.string(), body: z.array(z.string()) })).default([]),

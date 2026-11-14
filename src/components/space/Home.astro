@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets'
+import Layout from '~/layouts/Layout.astro'
+import { getAllPosts, getAllProjects } from '~/lib/data'
+import { photoAlbums } from '~/lib/photos'
+import { getRecentUpdates } from '~/lib/space'
+import '~/styles/space-home.css'
+
+const { en = false } = Astro.props
+const prefix = en ? '/en' : ''
+const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
+const updates = getRecentUpdates(posts, projects, en).slice(0, 5)
+const featured = ['holdem', 'ragfuzz'].flatMap((id) => projects.filter((project) => project.id === id))
+const [latestAlbum] = photoAlbums
+const photo = latestAlbum?.photos[0]
+const dateFormat = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', {
+  dateStyle: 'medium',
+  timeZone: 'UTC',
+})
+const formatDate = (date: string) => dateFormat.format(new Date(date))
+const description = en
+  ? 'I write about markets, build things with code, and take photos of everyday life.'
+  : '我研究市场，用代码做东西，也拍下日常里值得留念的片刻。'
+---
+
+<Layout title={en ? 'Personal space' : '个人空间'} {description}>
+  <div class="personal-home">
+    <section class="space-intro" aria-labelledby="space-title">
+      <div class="space-intro-copy">
+        {!en && <p class="space-nameplate">CHEN PEIHUA</p>}
+        <h1 id="space-title">{en ? 'Chen Peihua' : '陈佩桦'}</h1>
+        <p class="space-lede">{description}</p>
+        <p class="space-bio">
+          {
+            en
+              ? 'I’m studying business analytics at HKU. This is where I keep notes from my research, share projects, and collect photos.'
+              : '我在香港大学读商业分析。这里收着我的研究笔记、做过的项目和随手拍的照片。'
+          }
+        </p>
+        <div class="space-intro-links">
+          <a class="space-link" href={`${prefix}/about`}>{en ? 'About me' : '关于我'} <span aria-hidden="true">↗</span></a>
+          <a class="space-link" href="https://github.com/timidbirch">GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      {
+        latestAlbum && photo && (
+          <a class="space-photo" href={`${prefix}/photos#${latestAlbum.id}`}>
+            <figure>
+              <Image src={photo.src} alt="" widths={[320, 540, 760]} sizes="(max-width: 680px) 90vw, 380px" loading="eager" />
+              <figcaption>
+                <span>
+                  <span class="space-photo-label">{en ? 'From the photo archive' : '相册一隅'}</span>
+                  {en ? latestAlbum.title : latestAlbum.titleZh}
+                </span>
+                <span aria-hidden="true">↗</span>
+              </figcaption>
+            </figure>
+          </a>
+        )
+      }
+    </section>
+
+    {
+      updates.length > 0 && (
+        <section class="space-section" aria-labelledby="updates-title">
+          <div class="space-section-heading">
+            <h2 id="updates-title">{en ? 'Recent updates' : '最近更新'}</h2>
+            <div class="space-section-links">
+              <a class="space-link" href={`${prefix}/blog`}>
+                {en ? 'All writing' : '全部文章'} <span aria-hidden="true">↗</span>
+              </a>
+              <a class="space-link" href="/rss.xml">
+                RSS <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+          <ul class="space-updates">
+            {updates.map((update) => (
+              <li>
+                <a href={update.href}>
+                  <time datetime={update.date}>{formatDate(update.date)}</time>
+                  <span class="space-update-title" lang={update.language}>
+                    {update.title}
+                  </span>
+                  <span class="space-update-type">{update.type}</span>
+                  <span class="space-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      featured.length > 0 && (
+        <section class="space-section" aria-labelledby="featured-title">
+          <div class="space-section-heading">
+            <h2 id="featured-title">{en ? 'Selected projects' : '精选项目'}</h2>
+            <a class="space-link" href={`${prefix}/projects`}>
+              {en ? 'All projects' : '全部项目'} <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="space-projects">
+            {featured.map(({ id, data }) => (
+              <a class="space-project" href={`${prefix}/projects/${id}#project-preview`}>
+                {data.cover && <Image src={data.cover} alt="" widths={[360, 560, 900]} sizes="(max-width: 680px) 90vw, 460px" />}
+                <div class="space-project-heading">
+                  <h3>{en ? data.nameEn : data.name}</h3>
+                  <span class="space-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </div>
+                <p>{en ? data.descriptionEn : data.description}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Layout>

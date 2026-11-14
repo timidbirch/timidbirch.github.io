@@ -231,13 +231,16 @@ export interface PhotosConfig {
 export type TimelineIconType = 'emoji' | 'icon' | 'color' | 'number' | 'image'
 
 export interface PhotoData {
+  id: string
   title: string
+  titleZh: string
   icon: {
     type: TimelineIconType
     value: string // emoji | icon-name | color-class | number | image-url
     fallback?: string // 备用显示
   }
   description?: string
+  descriptionZh?: string
   date: string
   photos: Photo[]
   travel?: string

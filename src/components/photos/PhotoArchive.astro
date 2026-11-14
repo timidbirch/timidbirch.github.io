@@ -1,0 +1,34 @@
+---
+import { PHOTOS_CONFIG } from '~/config'
+import Layout from '~/layouts/Layout.astro'
+import PhotoTimeline from './PhotoTimeline.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import { photoAlbums } from '~/lib/photos'
+
+const { en = false } = Astro.props
+const title = en ? 'Photos' : PHOTOS_CONFIG.title
+const description = en ? 'Photographs from everyday life.' : PHOTOS_CONFIG.description
+const introduce = en ? 'A few things I noticed along the way.' : PHOTOS_CONFIG.introduce
+---
+
+<Layout {title} {description} disableViewTransition>
+  <div class="photo-archive py-8 pb-10">
+    <PageTitle {title} {introduce} />
+    <div class="mt-12">
+      {
+        photoAlbums.length > 0 ? (
+          <PhotoTimeline photoData={photoAlbums} {en} />
+        ) : (
+          <p class="text-sm text-muted-foreground">{en ? 'No photos yet.' : '暂时还没有照片。'}</p>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .photo-archive {
+    max-width: 960px;
+    margin-inline: auto;
+  }
+</style>

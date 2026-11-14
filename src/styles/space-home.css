@@ -1,0 +1,192 @@
+.personal-home {
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.space-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .78fr);
+  align-items: center;
+  gap: clamp(28px, 7vw, 90px);
+  padding: clamp(28px, 5vw, 68px) 0 clamp(46px, 7vw, 82px);
+}
+
+.space-nameplate {
+  color: var(--signal);
+  font: 500 .75rem/1.5 var(--font-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.personal-home h1 {
+  font-family: var(--space-serif);
+  font-size: clamp(3.35rem, 7.25vw, 6.6rem);
+  font-weight: 500;
+  letter-spacing: -.07em;
+  line-height: 1.04;
+  margin-block: 16px 24px;
+}
+
+html[lang='zh-CN'] .personal-home h1 {
+  font-size: clamp(3.6rem, 7.25vw, 6.3rem);
+  letter-spacing: -.06em;
+}
+
+.space-lede {
+  max-width: 24em;
+  font-family: var(--space-serif);
+  font-size: clamp(1.25rem, 2.25vw, 1.65rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.space-bio {
+  max-width: 30em;
+  margin-top: 14px;
+  font-size: .94rem;
+  line-height: 1.8;
+  color: var(--soft-ink);
+  text-wrap: pretty;
+}
+
+.space-intro-links, .space-section-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+}
+
+.space-intro-links { margin-top: 24px; }
+
+.space-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--signal);
+  white-space: nowrap;
+  font-size: .85rem;
+  font-weight: 550;
+}
+
+.space-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.space-photo {
+  display: block;
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper-panel);
+}
+
+.space-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.16;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+
+.space-photo figcaption {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 5px 4px;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.space-photo-label {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--soft-ink);
+  font-size: .72rem;
+}
+
+.space-photo:hover figcaption, .space-arrow, .space-photo figcaption > span:last-child {
+  color: var(--signal);
+}
+
+.space-section { padding-bottom: clamp(48px, 7vw, 78px); }
+
+.space-section-heading {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 18px;
+  padding: 22px 0 20px;
+}
+
+.space-section-heading h2 {
+  font-family: var(--space-serif);
+  font-size: clamp(1.65rem, 3.4vw, 2.55rem);
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+
+.space-updates { list-style: none; }
+
+.space-updates li { border-bottom: 1px solid var(--line); }
+
+.space-updates a {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) 7rem auto;
+  align-items: baseline;
+  gap: 8px 12px;
+  padding: 15px 0;
+}
+
+.space-updates a:hover .space-update-title,
+.space-project:hover h3 {
+  color: var(--signal);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.space-updates time, .space-update-type {
+  color: var(--soft-ink);
+  font-size: .78rem;
+}
+
+.space-updates time { font-variant-numeric: tabular-nums; }
+.space-update-type { text-align: right; }
+.space-update-title { overflow-wrap: anywhere; }
+
+.space-projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 4vw, 36px);
+}
+
+.space-project img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.space-project-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-block: 12px 6px;
+}
+
+.space-project-heading h3 { font-size: 1.15rem; font-weight: 600; }
+.space-project p { color: var(--soft-ink); font-size: .87rem; line-height: 1.65; }
+
+@media (max-width: 680px) {
+  .space-intro, .space-projects { grid-template-columns: 1fr; }
+  .space-photo img { aspect-ratio: 1.5; }
+}
+
+@media (max-width: 520px) {
+  .space-updates a { grid-template-columns: auto 1fr auto; }
+  .space-update-title { grid-column: 1 / 3; grid-row: 2; }
+  .space-update-type { grid-column: 2 / 4; grid-row: 1; }
+  .space-arrow { grid-column: 3; grid-row: 2; }
+}
