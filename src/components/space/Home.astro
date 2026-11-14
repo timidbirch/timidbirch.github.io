@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets'
+import homeAvatar from '~/assets/home-avatar.png'
 import Layout from '~/layouts/Layout.astro'
 import { getAllPosts, getAllProjects } from '~/lib/data'
 import { getBlogCategory } from '~/lib/blog-categories'
@@ -26,7 +27,9 @@ const socials = [
   <div class="guest-home">
     <section class="space-hero" aria-labelledby="space-title">
       <div class="space-hello">
-        <img src="/favicon.svg" alt="" width="96" height="96" class="hero-avatar" />
+        <div class="hero-avatar">
+          <Image src={homeAvatar} alt="" widths={[384, 640, 960]} sizes="(max-width: 720px) 251px, 317px" loading="eager" />
+        </div>
         <p class="hero-byline">{en ? 'Chen Peihua' : '陈佩桦'}</p>
         <h1 id="space-title">{en ? 'Things worth ' : '多看一眼'}<em>{en ? 'a closer look.' : '的事。'}</em></h1>
         <p class="hero-context">{en ? 'Market research, software projects, and photographs.' : '市场研究、软件项目与日常照片。'}</p>
