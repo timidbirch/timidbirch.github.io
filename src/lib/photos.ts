@@ -28,7 +28,7 @@ function getPhotos(dir: string, alt: string, variants: PolaroidVariant[]): Local
     })
 }
 
-const photosList: (PhotoData & { photos: LocalPhoto[] })[] = [
+const photosList: (Omit<PhotoData, 'photos'> & { photos: LocalPhoto[] })[] = [
   {
     id: 'botanical-garden',
     title: 'Ningbo · Botanical Garden',
@@ -38,7 +38,14 @@ const photosList: (PhotoData & { photos: LocalPhoto[] })[] = [
     descriptionZh: '初春，去植物园看樱花。',
     date: '2026-03-07',
     travel: '',
-    photos: getPhotos('2026-03-07-botanicalGarden', 'Early spring cherry blossoms at the botanical garden', ['3x4', '3x4', '3x4', '3x4', '3x4', '3x4']),
+    photos: getPhotos('2026-03-07-botanicalGarden', 'Early spring cherry blossoms at the botanical garden', [
+      '3x4',
+      '3x4',
+      '3x4',
+      '3x4',
+      '3x4',
+      '3x4',
+    ]),
   },
   {
     id: 'hometown',
@@ -58,7 +65,8 @@ const photosList: (PhotoData & { photos: LocalPhoto[] })[] = [
     icon: { type: 'emoji', value: '🎲' },
     description:
       'A classmate came to Ningbo for the weekend. We visited our old school and a board game cafe. I loved the butterfly specimens there, and even though I do not usually play board games, Salem 1692 was especially fun. We talked a lot and had a great time.',
-    descriptionZh: '同学周末来宁波。我们回了趟母校，又去了桌游店。我很喜欢店里的蝴蝶标本，平时很少玩桌游，但那天的《塞勒姆 1692》特别有意思。我们聊了很多，玩得很开心。',
+    descriptionZh:
+      '同学周末来宁波。我们回了趟母校，又去了桌游店。我很喜欢店里的蝴蝶标本，平时很少玩桌游，但那天的《塞勒姆 1692》特别有意思。我们聊了很多，玩得很开心。',
     date: '2026-01-10',
     travel: '',
     photos: getPhotos('2026-01-10-classmate', 'A day out in Ningbo with a classmate', ['4x5', '4x5', '4x5', '4x5']),
@@ -108,6 +116,4 @@ const photosList: (PhotoData & { photos: LocalPhoto[] })[] = [
   },
 ]
 
-export const photoAlbums = photosList
-  .filter(album => album.photos.length > 0)
-  .sort((a, b) => b.date.localeCompare(a.date))
+export const photoAlbums = photosList.filter((album) => album.photos.length > 0).sort((a, b) => b.date.localeCompare(a.date))

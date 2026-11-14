@@ -3,12 +3,12 @@ import '~/styles/global.css'
 import '~/styles/markdown.css'
 import '~/styles/lqip.css'
 import '~/styles/github-card.css'
-import '~/styles/portfolio.css'
 import '~/styles/space-shell.css'
 import type { TransitionDirectionalAnimations } from 'astro'
 import { SITE } from '~/config'
 import Head from '~/components/base/Head.astro'
 import Header from './Header.astro'
+import SeasonBackground from '~/components/space/SeasonBackground.astro'
 import Footer from './Footer.astro'
 
 type Props = {
@@ -34,36 +34,34 @@ const pageTransition: TransitionDirectionalAnimations = {
   <head>
     <Head title={`${title} | ${SITE.title}`} {description} {image} />
     <script is:inline>
-      (() => {
+      ;(() => {
+        try {
+          document.documentElement.dataset.effects = localStorage.getItem('site-effects') || 'on'
+        } catch {}
         const path = window.location.pathname
-        const isEnglishPath = path === '/en' || path.startsWith('/en/')
-        let preference = localStorage.getItem('site-language')
-        if (preference !== 'zh' && preference !== 'en') {
-          preference = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en'
-          localStorage.setItem('site-language', preference)
-        }
-        if (preference === 'en' && !isEnglishPath) {
-          const target = path === '/' ? '/en' : `/en${path}`
-          window.location.replace(target + window.location.search + window.location.hash)
-        } else if (preference === 'zh' && isEnglishPath) {
-          const target = path.replace(/^\/en(?=\/|$)/, '') || '/'
-          window.location.replace(target + window.location.search + window.location.hash)
-        }
+        if (path !== '/') return
+        try {
+          const preference = localStorage.getItem('site-language')
+          if (preference === 'en' || (!preference && navigator.language.toLowerCase().startsWith('en'))) {
+            window.location.replace('/en/' + window.location.search + window.location.hash)
+          }
+        } catch {}
       })()
     </script>
   </head>
-  <body class="portfolio flex flex-col">
+  <body class="personal-space flex flex-col">
     <a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳转到正文'}</a>
+    <SeasonBackground />
     <Header />
-    <div class="site-content grow flex" transition:name="space-content" transition:animate={disableViewTransition ? 'none' : pageTransition}>
-      <main id="main-content" class="portfolio-main global-layout-width mx-auto min-w-0" tabindex="-1">
+    <div
+      class="site-content grow flex"
+      transition:name="space-content"
+      transition:animate={disableViewTransition ? 'none' : pageTransition}
+    >
+      <main id="main-content" class="space-main mx-auto min-w-0" tabindex="-1">
         <slot />
       </main>
     </div>
     <Footer />
   </body>
 </html>
-
-<script>
-  import '~/scripts/portfolio'
-</script>

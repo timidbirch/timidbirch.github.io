@@ -1,13 +1,30 @@
 ---
 import Layout from '~/layouts/Layout.astro'
-import ExperienceCards from './ExperienceCards.astro'
 import { getAllExperiences } from '~/lib/data'
 const { en = false } = Astro.props
 const experiences = await getAllExperiences()
+const title = en ? 'Experience' : '实践经历'
+const prefix = en ? '/en' : ''
 ---
-<Layout title={en ? 'Experience' : '实践经历'} description={en ? 'Experience across asset management, quantitative research, private equity, and AI engineering.' : '资产管理、量化研究、私募股权与 AI 工程领域的实践经历。'}>
-  <section class="portfolio-section listing-section">
-    <div class="section-heading reveal"><div><p class="eyebrow">THE JOURNEY / {String(experiences.length).padStart(2, '0')}</p><h1>{en ? 'Experience' : '在实践中，'}<br /><span>{en ? 'shapes perspective.' : '形成自己的视角。'}</span></h1></div><p class="section-lede">{en ? 'Trade execution, investment research, quantitative analysis, and AI engineering. Every role adds a new lens.' : '交易执行、投资研究、量化分析与 AI 工程。每一段经历，都带来一种观察问题的新方式。'}</p></div>
-    <ExperienceCards {experiences} {en} timeline />
+
+<Layout {title} description={en ? 'Work and research experience.' : '工作与研究经历。'}>
+  <section class="paper-list">
+    <h1 class="paper-title">{title}</h1>
+    <div class="mt-8">
+      {
+        experiences.map(({ id, data }) => (
+          <a class="paper-row" href={`${prefix}/experience/${id}`}>
+            <div class="paper-row-top">
+              <>
+                <h2>{en ? data.companyEn || data.company : data.company}</h2>
+                <small>{data.period}</small>
+              </>
+            </div>
+            <p>{en ? data.roleEn : data.role}</p>
+            <p>{en ? data.summaryEn : data.summary}</p>
+          </a>
+        ))
+      }
+    </div>
   </section>
 </Layout>

@@ -1,34 +1,183 @@
 ---
-import { PHOTOS_CONFIG } from '~/config'
+import { Image } from 'astro:assets'
 import Layout from '~/layouts/Layout.astro'
-import PhotoTimeline from './PhotoTimeline.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
 import { photoAlbums } from '~/lib/photos'
-
 const { en = false } = Astro.props
-const title = en ? 'Photos' : PHOTOS_CONFIG.title
-const description = en ? 'Photographs from everyday life.' : PHOTOS_CONFIG.description
-const introduce = en ? 'A few things I noticed along the way.' : PHOTOS_CONFIG.introduce
+const title = en ? 'Photo Gallery' : '照片廊'
 ---
 
-<Layout {title} {description} disableViewTransition>
-  <div class="photo-archive py-8 pb-10">
-    <PageTitle {title} {introduce} />
-    <div class="mt-12">
-      {
-        photoAlbums.length > 0 ? (
-          <PhotoTimeline photoData={photoAlbums} {en} />
-        ) : (
-          <p class="text-sm text-muted-foreground">{en ? 'No photos yet.' : '暂时还没有照片。'}</p>
-        )
-      }
-    </div>
-  </div>
+<Layout {title} description={en ? 'A collection of everyday photographs.' : '用照片记下日常。'}>
+  <photo-archive class="photo-archive">
+    <h1 class="paper-title">{title}</h1>
+    <p class="paper-intro">{en ? 'Photographs from everyday life.' : '一些生活中的观察。'}</p>
+    {
+      photoAlbums.map((album) => (
+        <section id={album.id} class="album-section">
+          <div class="paper-row-top">
+            <>
+              <h2>{en ? album.title : album.titleZh}</h2>
+              <time datetime={album.date}>{album.date}</time>
+            </>
+          </div>
+          {(album.description || album.descriptionZh) && <p>{en ? album.description : album.descriptionZh}</p>}
+          <div class="album-grid">
+            {album.photos.map((photo, index) => (
+              <a
+                href={photo.src.src}
+                data-photo
+                aria-label={en ? `View photo ${index + 1}: ${album.title}` : `查看第 ${index + 1} 张照片：${album.titleZh}`}
+              >
+                <Image
+                  src={photo.src}
+                  alt={en ? photo.alt : album.titleZh}
+                  widths={[200, 360, 540]}
+                  sizes="(max-width: 540px) 45vw, 212px"
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+    <dialog class="album-viewer" aria-label={en ? 'Photo viewer' : '照片查看器'}>
+      <form method="dialog"><button aria-label={en ? 'Close viewer' : '关闭照片'}>×</button></form>
+      <button type="button" data-previous aria-label={en ? 'Previous photo' : '上一张'}>‹</button>
+      <img alt="" />
+      <button type="button" data-next aria-label={en ? 'Next photo' : '下一张'}>›</button>
+      <p role="status"></p>
+    </dialog>
+  </photo-archive>
 </Layout>
 
+<script>
+  class PhotoArchive extends HTMLElement {
+    connectedCallback() {
+      const dialog = this.querySelector('dialog')!
+      const image = dialog.querySelector('img')!
+      const status = dialog.querySelector('[role="status"]')!
+      let links: HTMLAnchorElement[] = []
+      let index = 0
+      const show = (delta: number) => {
+        index = (index + delta + links.length) % links.length
+        image.src = links[index].href
+        image.alt = links[index].querySelector('img')?.alt || ''
+        status.textContent = `${index + 1} / ${links.length}`
+      }
+      this.onclick = (event) => {
+        if (!(event.target instanceof Element) || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+        const link = event.target.closest<HTMLAnchorElement>('a[data-photo]')
+        if (!link || typeof dialog.showModal !== 'function') return
+        event.preventDefault()
+        links = Array.from(link.closest('.album-grid')!.querySelectorAll('a'))
+        index = links.indexOf(link)
+        show(0)
+        dialog.showModal()
+      }
+      dialog.querySelector<HTMLButtonElement>('[data-previous]')!.onclick = () => show(-1)
+      dialog.querySelector<HTMLButtonElement>('[data-next]')!.onclick = () => show(1)
+      dialog.onkeydown = (event) => {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault()
+          show(event.key === 'ArrowLeft' ? -1 : 1)
+        }
+      }
+      dialog.onclick = (event) => {
+        if (event.target === dialog) dialog.close()
+      }
+    }
+  }
+  customElements.define('photo-archive', PhotoArchive)
+</script>
+
 <style>
-  .photo-archive {
-    max-width: 960px;
-    margin-inline: auto;
+  photo-archive {
+    display: block;
+  }
+  .album-section {
+    border-top: 1px solid var(--line);
+    margin-top: 32px;
+    padding-top: 16px;
+  }
+  .album-section h2 {
+    font: 600 1.4rem var(--space-serif);
+  }
+  .album-section time {
+    font-size: 0.75rem;
+    color: var(--soft-ink);
+    white-space: nowrap;
+  }
+  .album-section > p {
+    margin-block: 8px;
+    color: var(--soft-ink);
+    font-size: 0.87rem;
+  }
+  .album-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .album-grid a {
+    display: block;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .album-grid img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    transition: transform 230ms;
+  }
+  .album-grid a:hover img {
+    transform: scale(1.045);
+  }
+  .album-viewer[open] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+  }
+  .album-viewer {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(96vw, 980px);
+    max-height: 95dvh;
+    padding: 12px;
+    background: var(--paper-panel);
+    color: var(--color-foreground);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .album-viewer::backdrop {
+    background: #000b;
+  }
+  .album-viewer img {
+    width: 100%;
+    height: min(74dvh, 720px);
+    object-fit: contain;
+  }
+  .album-viewer form {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+  .album-viewer button {
+    padding: 3px 10px;
+    font-size: 1.45rem;
+    cursor: pointer;
+  }
+  .album-viewer button:hover {
+    color: var(--signal);
+  }
+  .album-viewer p {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.78rem;
+  }
+  @media (max-width: 540px) {
+    .album-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 </style>

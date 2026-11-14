@@ -33,6 +33,16 @@ const ThemeToggle = ({ label = '切换主题' }: { label?: string }) => {
   const controlsSystem = useAnimation()
 
   useEffect(() => {
+    const sync = () => {
+      const stored = window.__theme?.getStoredTheme()
+      if (stored) themeStore.set(stored)
+    }
+    sync()
+    document.addEventListener('site-theme-change', sync)
+    return () => document.removeEventListener('site-theme-change', sync)
+  }, [])
+
+  useEffect(() => {
     if (theme === 'system') {
       controlsSun.start('hidden')
       controlsSystem.start('visible')

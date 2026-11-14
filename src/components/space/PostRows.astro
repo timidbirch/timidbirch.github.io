@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content'
+const { posts, base = '/blog' } = Astro.props as { posts: CollectionEntry<'posts'>[]; base?: string }
+---
+
+<div class="post-index">
+  {
+    posts.map(({ id, data }) => (
+      <a class="paper-row" href={`${base}/${id}`}>
+        <div class="paper-row-top">
+          <>
+            <h2>{data.title}</h2>
+            <time datetime={data.pubDate.toISOString()}>{data.pubDate.toISOString().slice(0, 10)}</time>
+          </>
+        </div>
+        <p>{data.description}</p>
+      </a>
+    ))
+  }
+</div>

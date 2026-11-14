@@ -1,13 +1,59 @@
 ---
-import ProjectCards from './ProjectCards.astro'
 import Layout from '~/layouts/Layout.astro'
 import { getAllProjects } from '~/lib/data'
 const { en = false } = Astro.props
 const projects = await getAllProjects()
+const title = en ? 'Projects' : '项目'
+const prefix = en ? '/en' : ''
 ---
-<Layout title={en ? 'Projects' : '项目'} description={en ? 'Technical projects by CHEN Peihua.' : '陈佩桦的技术研究与项目。'}>
-  <section class="portfolio-section listing-section">
-    <div class="section-heading reveal"><div><p class="eyebrow">PROJECTS & STUDIES / {String(projects.length).padStart(2, '0')}</p><h1>{en ? 'Ideas, made' : '让想法，'}<br /><span>{en ? 'into something real.' : '成为真实。'}</span></h1></div><p class="section-lede">{en ? 'Try a shuttle reservation, compare real experiment images, or follow a fuzz driver through the source. Explore each project through interfaces, artifacts, and interactive walkthroughs.' : '预约一趟班车，对比真实实验图像，或跟随一个测试驱动的生成过程。通过界面、材料与交互导览，走近每个项目。'}</p></div>
-    <ProjectCards {projects} {en} />
+
+<Layout {title} description={en ? 'Research and projects by Chen Peihua.' : '陈佩桦的研究与项目。'}>
+  <section class="project-index">
+    <div class="project-index-heading">
+      <h1 class="eyebrow">{title}</h1><a class="text-link" href="https://github.com/timidbirch">github.com/timidbirch ↗</a>
+    </div>
+    <div class="project-index-grid">
+      {
+        projects.map(({ id, data }) => (
+          <a class="paper-row" href={`${prefix}/projects/${id}`}>
+            <div class="paper-row-top">
+              <h2>{en ? data.nameEn : data.name}</h2>
+              {data.year && <small>{data.year}</small>}
+            </div>
+            <p>{en ? data.descriptionEn : data.description}</p>
+          </a>
+        ))
+      }
+    </div>
   </section>
 </Layout>
+
+<style>
+  .project-index {
+    max-width: 940px;
+    margin-inline: auto;
+    font-family: var(--font-mono);
+  }
+  .project-index-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .project-index-heading .text-link {
+    color: var(--soft-ink);
+  }
+  .project-index-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+  }
+  .project-index .paper-row p {
+    color: var(--color-foreground);
+  }
+  @media (max-width: 620px) {
+    .project-index-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

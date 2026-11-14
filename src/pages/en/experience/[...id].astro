@@ -13,7 +13,7 @@ const meta = experience.data
 ---
 
 <Layout title={`${meta.roleEn} · ${meta.companyEn || meta.company}`} description={meta.summaryEn}>
-  <article class="relative z-[1]">
+  <article class="case-study">
     <header class="px-6 sm:px-8 py-10 sm:py-14">
       <a href="/en/experience" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-10">← Back to experience</a>
       <div class="flex flex-wrap gap-3 text-xs uppercase tracking-wide text-muted-foreground mb-4"><span>{meta.period}</span>{meta.location && <span>{meta.location}</span>}</div>

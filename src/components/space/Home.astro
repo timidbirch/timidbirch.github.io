@@ -1,196 +1,154 @@
 ---
 import { Image } from 'astro:assets'
 import Layout from '~/layouts/Layout.astro'
-import { getAllPosts, getAllProjects } from '~/lib/data'
+import { getAllPosts } from '~/lib/data'
+import { getBlogCategory } from '~/lib/blog-categories'
 import { photoAlbums } from '~/lib/photos'
-import { getRecentUpdates } from '~/lib/space'
 import '~/styles/space-home.css'
-
 const { en = false } = Astro.props
 const prefix = en ? '/en' : ''
-const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
-const updates = getRecentUpdates(posts, projects, en)
-const updateLimit = 5
-const filters = [
-  { id: 'writing', label: en ? 'Writing' : '文章' },
-  { id: 'project', label: en ? 'Projects' : '项目' },
-  { id: 'photo', label: en ? 'Photos' : '照片' },
-].filter((filter) => updates.some((update) => update.kind === filter.id))
-const firstUpdates = updates.slice(0, updateLimit)
-const filterEntries = new Set([
-  ...firstUpdates,
-  ...filters.flatMap((filter) => updates.filter((update) => update.kind === filter.id).slice(0, updateLimit)),
-])
-const featured = ['holdem', 'ragfuzz'].flatMap((id) => projects.filter((project) => project.id === id))
-const [latestAlbum] = photoAlbums
-const photo = latestAlbum?.photos[0]
-const dateFormat = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', {
-  dateStyle: 'medium',
-  timeZone: 'UTC',
-})
-const formatDate = (date: string) => dateFormat.format(new Date(date))
+const posts = await getAllPosts()
+const [latest, ...otherPosts] = posts.slice(0, 5)
+const [album] = photoAlbums
+const date = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 const description = en
-  ? 'I write about markets, build things with code, and take photos of everyday life.'
-  : '我研究市场，用代码做东西，也拍下日常里值得留念的片刻。'
+  ? 'Researching markets, building with code, and photographing everyday life.'
+  : '研究市场、用代码做东西，也给日常留下一些影像。'
+const socials = [
+  { href: '/rss.xml', label: 'RSS', icon: 'icon-[ri--rss-line]' },
+  { href: 'mailto:1146816430@qq.com', label: en ? 'Email' : '邮件', icon: 'icon-[ri--mail-line]' },
+  { href: 'https://github.com/timidbirch', label: 'GitHub', icon: 'icon-[ri--github-line]' },
+]
 ---
 
-<Layout title={en ? 'Personal space' : '个人空间'} {description}>
-  <div class="personal-home">
-    <section class="space-intro" aria-labelledby="space-title">
-      <div class="space-intro-copy">
-        {!en && <p class="space-nameplate">CHEN PEIHUA</p>}
-        <h1 id="space-title">{en ? 'Chen Peihua' : '陈佩桦'}</h1>
-        <p class="space-lede">{description}</p>
-        <p class="space-bio">
+<Layout title={en ? 'Home' : '首页'} {description}>
+  <div class="guest-home">
+    <section class="space-hero" aria-labelledby="space-title">
+      <div class="space-hello">
+        <img src="/favicon.svg" alt="" width="96" height="96" class="hero-avatar" />
+        <h1 id="space-title">
+          {en ? 'Hi, I’m ' : '你好，我是'}<em>{en ? 'Chen Peihua' : '陈佩桦'}</em>
+          <span
+            >{en ? 'I study ' : '我研究'}<em>{en ? 'markets' : '市场'}</em>{en ? ' and build things with ' : '，也用'}<code
+              >{en ? 'code' : '代码'}</code
+            >{en ? '' : '把想法做出来'}</span
+          >
+        </h1>
+        <p>
           {
             en
-              ? 'I’m studying business analytics at HKU. This is where I keep notes from my research, share projects, and collect photos.'
-              : '我在香港大学读商业分析。这里收着我的研究笔记、做过的项目和随手拍的照片。'
+              ? 'Business analytics at HKU · Finance, engineering, and everyday observations'
+              : '香港大学商业分析 · 记录金融、工程与生活里的观察'
           }
         </p>
-        <div class="space-intro-links">
-          <a class="space-link" href={`${prefix}/about`}>{en ? 'About me' : '关于我'} <span aria-hidden="true">↗</span></a>
-          <a class="space-link" href="https://github.com/timidbirch">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="space-hero-foot">
+        <p>{description}</p>
+        <div class="hero-stats">
+          <a href={prefix + '/blog'}>{posts.length} {en ? 'posts' : '篇文章'}</a>
+          <span aria-hidden="true">·</span>
+          <a href={prefix + '/photos'}>{photoAlbums.length} {en ? 'albums' : '组照片'}</a>
+        </div>
+        <div class="hero-socials">
+          {
+            socials.map((item) => (
+              <a href={item.href} aria-label={item.label} title={item.label}>
+                <span aria-hidden="true" class={item.icon} />
+              </a>
+            ))
+          }
         </div>
       </div>
-      {
-        latestAlbum && photo && (
-          <a class="space-photo" href={`${prefix}/photos#${latestAlbum.id}`}>
-            <figure>
-              <Image src={photo.src} alt="" widths={[320, 540, 760]} sizes="(max-width: 680px) 90vw, 380px" loading="eager" />
-              <figcaption>
-                <span>
-                  <span class="space-photo-label">{en ? 'From the photo archive' : '相册一隅'}</span>
-                  {en ? latestAlbum.title : latestAlbum.titleZh}
-                </span>
-                <span aria-hidden="true">↗</span>
-              </figcaption>
-            </figure>
-          </a>
-        )
-      }
+      <a class="hero-down" href="#home-reading" aria-label={en ? 'Explore recent writing' : '浏览近期笔墨'}>↓</a>
     </section>
 
-    {
-      updates.length > 0 && (
-        <section class="space-section" aria-labelledby="updates-title">
-          <div class="space-section-heading">
-            <h2 id="updates-title">{en ? 'Recent updates' : '最近更新'}</h2>
-            <div class="space-section-links">
-              <a class="space-link" href={`${prefix}/blog`}>
-                {en ? 'All writing' : '全部文章'} <span aria-hidden="true">↗</span>
-              </a>
-              <a class="space-link" href="/rss.xml">
-                RSS <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          </div>
-          <recent-updates data-limit={updateLimit} data-announcement={en ? 'Updates shown: {count}' : '显示 {count} 条更新'}>
-            {filters.length > 1 && (
-              <div class="space-filters" role="group" aria-label={en ? 'Filter recent updates' : '筛选最近更新'} hidden>
-                <button type="button" data-filter="all" aria-pressed="true" aria-controls="update-list">
-                  {en ? 'All' : '全部'}
-                </button>
-                {filters.map((filter) => (
-                  <button type="button" data-filter={filter.id} aria-pressed="false" aria-controls="update-list">
-                    {filter.label}
-                  </button>
-                ))}
-              </div>
-            )}
-            <span class="sr-only" role="status" />
-            <ul class="space-updates" id="update-list">
-              {updates
-                .filter((update) => filterEntries.has(update))
-                .map((update) => (
-                  <li data-kind={update.kind} hidden={!firstUpdates.includes(update)}>
-                    <a href={update.href}>
-                      <time datetime={update.date}>{formatDate(update.date)}</time>
-                      <span class="space-update-title" lang={update.language}>
-                        {update.title}
-                      </span>
-                      <span class="space-update-type">{update.type}</span>
-                      <span class="space-arrow" aria-hidden="true">
-                        ↗
-                      </span>
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </recent-updates>
-        </section>
-      )
-    }
-
-    {
-      featured.length > 0 && (
-        <section class="space-section" aria-labelledby="featured-title">
-          <div class="space-section-heading">
-            <h2 id="featured-title">{en ? 'Selected projects' : '精选项目'}</h2>
-            <a class="space-link" href={`${prefix}/projects`}>
-              {en ? 'All projects' : '全部项目'} <span aria-hidden="true">↗</span>
+    <div class="home-digest" id="home-reading">
+      <section aria-labelledby="writing-title">
+        <div class="home-section-heading">
+          <h2 id="writing-title">{en ? 'Recent Writing' : '近期笔墨'}</h2><a href={prefix + '/blog'}>{en ? 'All posts' : '全部文章'} ↗</a>
+        </div>
+        {
+          latest && (
+            <a class="lead-writing" href={`${prefix}/blog/${latest.id}`}>
+              <span>
+                {en ? 'Post' : '文章'} · <time datetime={latest.data.pubDate.toISOString()}>{date.format(latest.data.pubDate)}</time>
+              </span>
+              <h3 lang={latest.data.language === 'zh' ? 'zh-CN' : 'en'}>{latest.data.title}</h3>
+              <p>{latest.data.description}</p>
             </a>
-          </div>
-          <div class="space-projects">
-            {featured.map(({ id, data }) => (
-              <a class="space-project" href={`${prefix}/projects/${id}#project-preview`}>
-                {data.cover && <Image src={data.cover} alt="" widths={[360, 560, 900]} sizes="(max-width: 680px) 90vw, 460px" />}
-                <div class="space-project-heading">
-                  <h3>{en ? data.nameEn : data.name}</h3>
-                  <span class="space-arrow" aria-hidden="true">
-                    ↗
-                  </span>
-                </div>
-                <p>{en ? data.descriptionEn : data.description}</p>
-              </a>
-            ))}
-          </div>
-        </section>
-      )
-    }
-  </div>
-</Layout>
-
-<script>
-  class RecentUpdates extends HTMLElement {
-    connectedCallback() {
-      const filters = this.querySelector<HTMLElement>('.space-filters')
-      const list = this.querySelector('ul')
-      const status = this.querySelector('[role="status"]')
-      if (!filters || !list || !status) return
-
-      const buttons = filters.querySelectorAll<HTMLButtonElement>('button')
-      const entries = list.querySelectorAll<HTMLElement>('li')
-      const limit = Number(this.dataset.limit)
-      filters.hidden = false
-      filters.onclick = (event) => {
-        if (!(event.target instanceof HTMLButtonElement)) return
-        const selected = event.target
-        if (selected.getAttribute('aria-pressed') === 'true') return
-
-        for (const button of buttons) button.setAttribute('aria-pressed', String(button === selected))
-        const filter = selected.dataset.filter
-        let visible = 0
-        for (const entry of entries) {
-          entry.hidden = visible >= limit || (filter !== 'all' && entry.dataset.kind !== filter)
-          if (!entry.hidden) visible += 1
-        }
-        status.textContent = this.dataset.announcement?.replace('{count}', String(visible)) ?? ''
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          list.getAnimations().forEach((animation) => animation.cancel())
-          list.animate(
-            [
-              { opacity: 0.65, transform: 'translateY(3px)' },
-              { opacity: 1, transform: 'translateY(0)' },
-            ],
-            {
-              duration: 180,
-              easing: 'ease-out',
-            }
           )
         }
-      }
-    }
-  }
-  customElements.define('recent-updates', RecentUpdates)
-</script>
+        {
+          otherPosts.map((post) => (
+            <a class="digest-row" href={`${prefix}/blog/${post.id}`}>
+              <div>
+                <>
+                  <strong lang={post.data.language === 'zh' ? 'zh-CN' : 'en'}>{post.data.title}</strong>
+                  <small>{en ? getBlogCategory(post.data.category).nameEn : getBlogCategory(post.data.category).name}</small>
+                </>
+              </div>
+              <time datetime={post.data.pubDate.toISOString()}>{date.format(post.data.pubDate)}</time>
+            </a>
+          ))
+        }
+        {!latest && <p>{en ? 'No posts yet.' : '暂时还没有文章。'}</p>}
+      </section>
+      <aside class="home-aside">
+        {
+          album && (
+            <section aria-labelledby="home-photos-title">
+              <div class="home-section-heading">
+                <>
+                  <h2 id="home-photos-title">{en ? 'Daily Frames' : '日常影像'}</h2>
+                  <a href={prefix + '/photos'}>{en ? 'Gallery' : '相册'} ↗</a>
+                </>
+              </div>
+              <a class="home-album" href={`${prefix}/photos#${album.id}`}>
+                <Image src={album.photos[0].src} alt="" widths={[300, 520, 760]} sizes="(max-width: 720px) 90vw, 390px" />
+                <span>
+                  {en ? album.title : album.titleZh}
+                  <time datetime={album.date}>{date.format(new Date(album.date))}</time>
+                </span>
+              </a>
+            </section>
+          )
+        }
+        <section aria-labelledby="home-letter-title">
+          <div class="home-section-heading"><h2 id="home-letter-title">{en ? 'Letters' : '来信'}</h2></div>
+          <p>{en ? 'Have something to share? Write to me.' : '有想交流的事，欢迎写信。'}</p>
+          <a class="text-link" href="mailto:1146816430@qq.com">{en ? 'Send a letter' : '给我写信'} ↗</a>
+        </section>
+      </aside>
+    </div>
+
+    <section class="home-seasons" aria-labelledby="home-seasons-title">
+      <div class="home-section-heading"><h2 id="home-seasons-title">{en ? 'Through the Seasons' : '写过的四季'}</h2></div>
+      <div class="home-months">
+        {
+          Array.from({ length: 12 }, (_, i) => {
+            const month = String(i + 1).padStart(2, '0')
+            const count = posts.filter((post) => post.data.pubDate.toISOString().slice(5, 7) === month).length
+            return (
+              <span class:list={{ 'has-posts': count > 0 }} title={en ? `${count} posts` : `${count} 篇文章`}>
+                {i + 1}
+              </span>
+            )
+          })
+        }
+      </div>
+      <a class="text-link" href={prefix + '/timeline'}>{en ? 'Explore the timeline' : '沿时间线回看'} →</a>
+    </section>
+
+    <section class="home-goodbye">
+      <h2>{en ? 'You’re welcome to write' : '欢迎来信'}</h2>
+      <div class="home-actions">
+        <a href="mailto:1146816430@qq.com">{en ? 'Say hello' : '写一封信'} ↗</a><a href="/rss.xml"
+          >{en ? 'Subscribe via RSS' : '订阅 RSS'} ↗</a>
+      </div>
+      <div class="home-shortcuts">
+        <a href={prefix + '/projects'}>{en ? 'Projects' : '项目'}</a><a href={prefix + '/photos'}>{en ? 'Photos' : '照片'}</a><a
+          href={prefix + '/about'}>{en ? 'About' : '关于'}</a>
+      </div>
+    </section>
+  </div>
+</Layout>

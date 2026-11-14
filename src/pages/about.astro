@@ -1,15 +1,14 @@
 ---
 import Layout from '~/layouts/Layout.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 ---
 
 <Layout title="关于" description="陈佩桦的教育背景、研究经历与专业能力。">
-  <div class="legacy-content relative z-[1] py-8 pb-12">
-    <div class="px-6 sm:px-8"><PageTitle title="关于" introduce="金融市场实践与工程能力的交叉背景。" /></div>
+  <div class="legacy-content">
+    <h1 class="paper-title">关于</h1>
     <SectionDivider className="my-8" />
 
-    <section class="px-6 sm:px-8 grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
+    <section class="grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
       <div class="text-sm text-muted-foreground leading-relaxed">
         <p>CHEN Peihua</p><p>Hong Kong · GMT+8</p>
         <a class="hover:text-foreground" href="mailto:1146816430@qq.com">1146816430@qq.com</a>
@@ -23,7 +22,7 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 
     <SectionDivider className="my-10" />
 
-    <section class="px-6 sm:px-8">
+    <section >
       <h2 class="text-2xl sm:text-3xl tracking-tight mb-7">教育经历</h2>
       <div class="border-y border-border/50">
         <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6"><div><h3 class="font-semibold">香港大学</h3><p class="text-muted-foreground mt-1">商业分析理学硕士</p></div><span class="text-sm text-muted-foreground">2026.09 — 2027.06</span></div>
@@ -33,7 +32,7 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 
     <SectionDivider className="my-10" />
 
-    <section class="px-6 sm:px-8 grid sm:grid-cols-2 gap-10">
+    <section class="grid sm:grid-cols-2 gap-10">
       <div>
         <h2 class="text-2xl tracking-tight mb-5">研究与获奖</h2>
         <h3 class="font-semibold">剑桥大学交流项目 · AI 方向</h3>

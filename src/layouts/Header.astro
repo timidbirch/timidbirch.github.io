@@ -1,46 +1,124 @@
 ---
 import ThemeToggle from '~/components/theme/ThemeToggle'
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/'
-const en = pathname === '/en' || pathname.startsWith('/en/')
+import { BLOG_CATEGORIES } from '~/lib/blog-categories'
+import { getAllPosts, getAllProjects } from '~/lib/data'
+import { getRecentUpdates } from '~/lib/space'
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
+const en = path === '/en' || path.startsWith('/en/')
 const prefix = en ? '/en' : ''
-const links = [
-  { name: en ? 'Writing' : '文章', url: `${prefix}/blog` },
-  { name: en ? 'Projects' : '项目', url: `${prefix}/projects` },
-  { name: en ? 'Photos' : '照片', url: `${prefix}/photos` },
-  { name: en ? 'About' : '关于', url: `${prefix}/about` },
+const home = prefix || '/'
+const localizedPath = path.replace(/^\/posts(?=\/|$)/, '/blog')
+const mirrored = /^\/(?:blog|timeline|photos|projects|experience|about)(?:\/|$)/.test(localizedPath)
+const languageHref = en ? path.replace(/^\/en(?=\/|$)/, '') || '/' : mirrored ? `/en${localizedPath}` : '/en'
+const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
+const recent = getRecentUpdates(posts, projects, en).slice(0, 4)
+const moreLinks = [
+  { path: '/projects', title: en ? 'Projects' : '项目', desc: en ? 'Research and things I’ve built' : '研究与作品' },
+  { path: '/photos', title: en ? 'Photos' : '照片', desc: en ? 'An archive of everyday photographs' : '日常影像与相册' },
+  { path: '/about', title: en ? 'About' : '关于', desc: en ? 'A little about me' : '关于我和这个站点' },
+  { path: '/experience', title: en ? 'Experience' : '实践经历', desc: en ? 'Work and research experience' : '工作与研究经历' },
 ]
-const languageHref = en ? pathname.replace(/^\/en(?=\/|$)/, '') || '/' : pathname === '/' ? '/en' : `/en${pathname}`
-const aboutRoot = `${prefix}/about`
-const inExperience = pathname === `${prefix}/experience` || pathname.startsWith(`${prefix}/experience/`)
+const current = (url: string) => (path === url || path.startsWith(`${url}/`) ? 'page' : undefined)
+const moreCurrent = moreLinks.find((link) => current(prefix + link.path))
 ---
 
-<header class="space-header" transition:name="space-header" transition:animate="none">
-  <a href={prefix || '/'} class="space-brand" aria-label={en ? 'Chen Peihua — Home' : '陈佩桦 — 首页'}>
-    {en ? 'Chen Peihua' : '陈佩桦'}<span aria-hidden="true">.</span>
-  </a>
-  <nav class="space-nav" aria-label={en ? 'Main navigation' : '主导航'}>
-    {
-      links.map((link) => (
-        <a
-          href={link.url}
-          data-astro-prefetch="hover"
-          aria-current={
-            pathname === link.url
-              ? 'page'
-              : pathname.startsWith(`${link.url}/`) || (link.url === aboutRoot && inExperience)
-                ? 'true'
-                : undefined
+<space-navigation class="space-header" transition:name="space-header" transition:animate="none">
+  <header class="space-header-inner">
+    <a href={home} class="space-brand"><img src="/favicon.svg" width="30" height="30" alt="" />{en ? 'Chen Peihua' : '陈佩桦'}</a>
+    <nav class="space-nav" aria-label={en ? 'Main navigation' : '主导航'}>
+      <a href={home} aria-current={path === home ? 'page' : undefined}>{en ? 'Home' : '首页'}</a>
+      <details name="site-menu">
+        <summary data-current={current(prefix + '/blog')}>{en ? 'Posts' : '文章'}</summary>
+        <div class="space-dropdown">
+          {BLOG_CATEGORIES.map((category) => <a href={`${prefix}/blog/category/${category.id}`}>{en ? category.nameEn : category.name}</a>)}
+          <a class="dropdown-last" href={`${prefix}/blog`}>{en ? 'All posts' : '浏览全部文章'} →</a>
+        </div>
+      </details>
+      <details name="site-menu">
+        <summary data-current={current(prefix + '/timeline')}>{en ? 'Timeline' : '时间线'}</summary>
+        <div class="space-dropdown dropdown-timeline">
+          {
+            recent.map((item) => (
+              <a href={item.href}>
+                <>
+                  <time datetime={item.date}>{item.date.slice(5)}</time>
+                  <span lang={item.language}>{item.title}</span>
+                </>
+              </a>
+            ))
           }
-        >
-          {link.name}
-        </a>
-      ))
+          <a class="dropdown-last" href={`${prefix}/timeline`}>{en ? 'View timeline' : '查看时间线'} →</a>
+        </div>
+      </details>
+      <details name="site-menu">
+        <summary data-current={moreCurrent ? 'page' : undefined}>{moreCurrent?.title || (en ? 'More' : '更多')}</summary>
+        <div class="space-dropdown">
+          {
+            moreLinks.map((link) => (
+              <a href={prefix + link.path} aria-current={current(prefix + link.path)}>
+                {link.title}
+                <small>{link.desc}</small>
+              </a>
+            ))
+          }
+        </div>
+      </details>
+    </nav>
+    <div class="space-tools">
+      <a id="language-toggle" href={languageHref} data-language={en ? 'zh' : 'en'} aria-label={en ? '切换为中文' : 'Switch to English'}
+        >{en ? '中' : 'EN'}</a
+      >
+      <ThemeToggle client:load label={en ? 'Change theme' : '切换主题'} />
+    </div>
+  </header>
+</space-navigation>
+
+<script>
+  class SpaceNavigation extends HTMLElement {
+    controller?: AbortController
+    connectedCallback() {
+      this.controller = new AbortController()
+      const { signal } = this.controller
+      const close = () => this.querySelectorAll('details[open]').forEach((menu) => menu.removeAttribute('open'))
+      document.addEventListener(
+        'pointerdown',
+        (event) => {
+          if (event.target instanceof Node && !this.contains(event.target)) close()
+        },
+        { signal }
+      )
+      this.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return
+          this.querySelector<HTMLElement>('details[open] > summary')?.focus()
+          close()
+        },
+        { signal }
+      )
+      this.querySelector('#language-toggle')?.addEventListener(
+        'click',
+        (event) => {
+          const link = event.currentTarget as HTMLAnchorElement
+          try {
+            localStorage.setItem('site-language', link.dataset.language || 'zh')
+          } catch {}
+          link.hash = location.hash
+        },
+        { signal }
+      )
+      this.addEventListener(
+        'click',
+        (event) => {
+          if (event.target instanceof Element && event.target.closest('.space-dropdown a')) close()
+        },
+        { signal }
+      )
     }
-  </nav>
-  <div class="space-tools">
-    <a id="language-toggle" href={languageHref} data-language={en ? 'zh' : 'en'} aria-label={en ? '切换为中文' : 'Switch to English'}
-      >{en ? '中' : 'EN'}</a
-    >
-    <ThemeToggle client:load label={en ? 'Change theme' : '切换主题'} />
-  </div>
-</header>
+    disconnectedCallback() {
+      this.controller?.abort()
+    }
+  }
+  customElements.define('space-navigation', SpaceNavigation)
+</script>

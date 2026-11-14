@@ -1,0 +1,169 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import { getAllPosts, getAllProjects } from '~/lib/data'
+import { getRecentUpdates } from '~/lib/space'
+
+const { en = false } = Astro.props
+const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
+const entries = getRecentUpdates(posts, projects, en)
+const years = [...new Set(entries.map((entry) => entry.date.slice(0, 4)))]
+const months = new Intl.DateTimeFormat(en ? 'en' : 'zh-CN', { month: 'long', timeZone: 'UTC' })
+const filters = [
+  { id: 'all', title: en ? 'All' : '全部' },
+  { id: 'writing', title: en ? 'Posts' : '文章' },
+  { id: 'project', title: en ? 'Projects' : '项目' },
+  { id: 'photo', title: en ? 'Photos' : '照片' },
+]
+const title = en ? 'Timeline' : '时间线'
+---
+
+<Layout {title} description={en ? 'An archive of posts, project updates, and albums.' : '按时间整理的文章、项目更新和照片。'}>
+  <space-timeline class="paper-list" data-summary={en ? '{count} entries' : '{count} 条记录'}>
+    <h1 class="eyebrow">{title}</h1>
+    <p class="timeline-count"><strong>{entries.length}</strong> <span>{en ? 'entries in the archive' : '条记录'}</span></p>
+    <div class="timeline-tools" hidden>
+      <div class="paper-chips" role="group" aria-label={en ? 'Filter by type' : '按类型筛选'}>
+        {
+          filters.map((filter) => (
+            <button type="button" data-kind={filter.id} aria-pressed={filter.id === 'all'}>
+              {filter.title}
+            </button>
+          ))
+        }
+      </div>
+      <label
+        ><span class="sr-only">{en ? 'Search timeline' : '搜索时间线'}</span><input
+          type="search"
+          placeholder={en ? 'Search…' : '搜索…'}
+        /></label
+      >
+    </div>
+    <p role="status" class="sr-only"></p>
+    {
+      years.map((year) => {
+        const matches = entries.filter((entry) => entry.date.startsWith(year))
+        const monthKeys = [...new Set(matches.map((entry) => entry.date.slice(0, 7)))]
+        return (
+          <section class="timeline-year" data-year>
+            <h2>{year}</h2>
+            {monthKeys.map((month) => (
+              <div data-month>
+                <h3>{months.format(new Date(month + '-01'))}</h3>
+                <ul>
+                  {matches
+                    .filter((entry) => entry.date.startsWith(month))
+                    .map((entry) => (
+                      <li data-entry={entry.kind}>
+                        <a href={entry.href}>
+                          <time datetime={entry.date}>{entry.date.slice(8)}</time>
+                          <span lang={entry.language}>{entry.title}</span>
+                          <small>{entry.type}</small>
+                        </a>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            ))}
+          </section>
+        )
+      })
+    }
+    <p data-empty hidden>{en ? 'No matching entries.' : '没有符合条件的记录。'}</p>
+  </space-timeline>
+</Layout>
+
+<script>
+  class SpaceTimeline extends HTMLElement {
+    connectedCallback() {
+      const tools = this.querySelector<HTMLElement>('.timeline-tools')!
+      const search = tools.querySelector('input')!
+      const buttons = Array.from(tools.querySelectorAll<HTMLButtonElement>('button'))
+      const groups = Array.from(this.querySelectorAll<HTMLElement>('[data-month], [data-year]')).reverse()
+      const rows = this.querySelectorAll<HTMLElement>('[data-entry]')
+      const empty = this.querySelector<HTMLElement>('[data-empty]')!
+      const status = this.querySelector('[role="status"]')!
+      let kind = 'all'
+      const update = () => {
+        const query = search.value.trim().normalize('NFKC').toLocaleLowerCase()
+        let count = 0
+        for (const row of rows) {
+          row.hidden =
+            (kind !== 'all' && row.dataset.entry !== kind) || !row.textContent?.normalize('NFKC').toLocaleLowerCase().includes(query)
+          if (!row.hidden) count++
+        }
+        for (const group of groups) group.hidden = !group.querySelector('[data-entry]:not([hidden])')
+        empty.hidden = count > 0
+        status.textContent = this.dataset.summary?.replace('{count}', String(count)) || ''
+      }
+      tools.hidden = false
+      search.oninput = update
+      for (const button of buttons)
+        button.onclick = () => {
+          kind = button.dataset.kind || 'all'
+          buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)))
+          update()
+        }
+    }
+  }
+  customElements.define('space-timeline', SpaceTimeline)
+</script>
+
+<style>
+  space-timeline {
+    display: block;
+    max-width: 720px;
+  }
+  .timeline-count {
+    margin-block: 8px 20px;
+    color: var(--soft-ink);
+  }
+  .timeline-count strong {
+    font-size: clamp(3.2rem, 7vw, 4.8rem);
+    font-weight: 350;
+    letter-spacing: -0.08em;
+    margin-inline-end: 12px;
+    color: var(--color-foreground);
+  }
+  .timeline-tools:not([hidden]) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+  .timeline-year {
+    margin-top: 36px;
+  }
+  .timeline-year h2 {
+    font-size: 1.85rem;
+    font-weight: 420;
+    color: var(--soft-ink);
+  }
+  .timeline-year h3 {
+    color: var(--soft-ink);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-block: 18px 6px;
+  }
+  .timeline-year a {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: 8px;
+    padding-block: 8px;
+    align-items: baseline;
+    font-size: 0.91rem;
+  }
+  .timeline-year a:hover {
+    color: var(--signal);
+  }
+  .timeline-year time,
+  .timeline-year small {
+    color: var(--soft-ink);
+    font-size: 0.74rem;
+  }
+  .timeline-year time {
+    font-family: var(--font-mono);
+  }
+</style>

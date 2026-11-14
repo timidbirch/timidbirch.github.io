@@ -1,7 +1,7 @@
 ;(function () {
   const STORAGE_KEY = 'theme'
-  const LIGHT_THEME_COLOR = '#FFFFFF'
-  const DARK_THEME_COLOR = '#09090b'
+  const LIGHT_THEME_COLOR = '#f6f3ed'
+  const DARK_THEME_COLOR = '#1b1a18'
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
   const isMobileViewport = window.matchMedia('(max-width: 767px)')
   const root = document.documentElement
@@ -27,6 +27,7 @@
 
     root.classList.toggle('dark', isDark)
     setThemeColor(document, isDark)
+    document.dispatchEvent(new Event('site-theme-change'))
   }
 
   function applyThemeWithoutTransition(theme, options) {
@@ -46,7 +47,7 @@
     const currentIsDark = root.classList.contains('dark')
 
     // 移动端跳过视图过渡，但仍保留 disable-transition 来屏蔽普通 CSS transition
-    if (!document.startViewTransition || isMobileViewport.matches || options?.disableTransition) {
+    if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches || isMobileViewport.matches || options?.disableTransition) {
       applyThemeWithoutTransition(theme, options)
       return
     }
@@ -99,6 +100,7 @@
     const isDark = resolveIsDark(theme)
 
     event.newDocument.documentElement.classList.toggle('dark', isDark)
+    event.newDocument.documentElement.dataset.effects = document.documentElement.dataset.effects || 'on'
     setThemeColor(event.newDocument, isDark)
   })
 

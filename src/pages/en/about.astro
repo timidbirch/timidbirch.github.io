@@ -1,14 +1,13 @@
 ---
 import Layout from '~/layouts/Layout.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 ---
 
 <Layout title="About" description="CHEN Peihua's education, research background, and professional capabilities.">
-  <div class="legacy-content relative z-[1] py-8 pb-12">
-    <div class="px-6 sm:px-8"><PageTitle title="About" introduce="A cross-disciplinary background in financial markets and engineering." /></div>
+  <div class="legacy-content">
+    <h1 class="paper-title">About</h1>
     <SectionDivider className="my-8" />
-    <section class="px-6 sm:px-8 grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
+    <section class="grid sm:grid-cols-[12rem_1fr] gap-6 sm:gap-12">
       <div class="text-sm text-muted-foreground leading-relaxed">
         <p>CHEN Peihua</p><p>Hong Kong · GMT+8</p>
         <a class="hover:text-foreground" href="mailto:1146816430@qq.com">1146816430@qq.com</a>
@@ -20,7 +19,7 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
       </div>
     </section>
     <SectionDivider className="my-10" />
-    <section class="px-6 sm:px-8">
+    <section >
       <h2 class="text-2xl sm:text-3xl tracking-tight mb-7">Education</h2>
       <div class="border-y border-border/50">
         <div class="grid sm:grid-cols-[1fr_auto] gap-2 py-6"><div><h3 class="font-semibold">The University of Hong Kong</h3><p class="text-muted-foreground mt-1">MSc in Business Analytics</p></div><span class="text-sm text-muted-foreground">Sep 2026 — Jun 2027</span></div>
@@ -28,7 +27,7 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
       </div>
     </section>
     <SectionDivider className="my-10" />
-    <section class="px-6 sm:px-8 grid sm:grid-cols-2 gap-10">
+    <section class="grid sm:grid-cols-2 gap-10">
       <div>
         <h2 class="text-2xl tracking-tight mb-5">Research and Awards</h2>
         <h3 class="font-semibold">University of Cambridge Exchange Program · AI Track</h3>

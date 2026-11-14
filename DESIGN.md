@@ -1,72 +1,27 @@
-# Portfolio design and maintenance
+# Personal space design and maintenance
 
-The personal-space homepage uses the published content collections and photo archive.
-The project and experience pages retain styles adapted from
-[Floating Astronaut Portfolio](https://github.com/floating-astronaut/astro-portfolio-template),
-adapted to the existing Astro 6 bilingual content collections and GitHub Pages deployment.
-Reference revision: `c743aab2ab820e97d51f93142cc3a117b31f6daf`.
-The original MIT notice is retained at `public/licenses/floating-astronaut.txt`.
-The original Litos license remains in `LICENSE`.
+The site uses a seasonal background, a centered introduction, and paper-style
+archives based on [Innei](https://innei.in/). Astro builds the Chinese and English
+pages from the same published content.
 
-## Main files
+- `src/layouts/Header.astro` contains the category and timeline menus.
+- `src/components/space/Home.astro` displays recent writing and the latest album.
+- `src/components/space/Timeline.astro` groups writing, projects, and albums by date.
+- `src/components/portfolio/BlogPost.astro` contains the reading layout and progress indicator.
+- `src/components/photos/PhotoArchive.astro` provides the gallery and keyboard-operated photo viewer.
+- `src/styles/space-shell.css` provides the shared visual styles and page transitions.
 
-- `src/components/space/Home.astro`: bilingual homepage with recent updates, a photo from the latest album, and selected projects.
-- `src/components/portfolio/Experience.astro` and `ExperienceCards.astro`: experience listing and cards.
-- `src/components/portfolio/Projects.astro`: project listing and images.
-- `src/components/portfolio/ProjectCards.astro`: shared project cards for the homepage and listing.
-- `src/components/portfolio/ProjectReferences.astro`: bilingual upstream references, separate from personal source links.
-- `src/components/portfolio/ProjectShowcase.astro` and `demos/`: bilingual interactive project previews, source walkthroughs and experiment comparisons.
-- `src/styles/project-showcase.css`: isolated demo styles and container-based responsive layouts.
-- `src/layouts/Header.astro`: locale-aware links for writing, projects, photos, and about. About links to the complete experience archive.
-- `src/styles/portfolio.css`: design tokens, glass surfaces, responsive layout, and reduced-motion styles.
-- `src/scripts/portfolio.ts`: scroll-film seeking, card tilt, reveals, motion pause, and ClientRouter cleanup.
+Project and work entries live in `src/content/projects` and
+`src/content/experiences`. Add `updatedDate: YYYY-MM-DD` to a project entry to
+include it in the timeline. Photo album titles, dates, and stable IDs live in
+`src/lib/photos.ts`.
 
-## Content
+The articles and demos still use their existing routes. Project demos, artifacts,
+and attribution are documented in `docs/WHU_PROJECT_REVIEW.md` and
+`public/licenses/project-visuals.md`.
 
-Keep writing projects in `src/content/projects/<slug>/index.mdx` and experience
-in `src/content/experiences/<slug>/index.mdx`. Existing bilingual frontmatter and
-routes are preserved. Project and experience counts on the homepage are computed
-from published content, never hardcoded.
-
-Homepage featured projects are selected by content slug. The recent updates list
-shows the five latest entries from published articles, photo albums, and projects
-with an explicit `updatedDate`. Use `updatedDate: YYYY-MM-DD` in project
-frontmatter when there is a substantive update to share. Photo albums come from
-`src/lib/photos.ts`, where each album has a stable ID and bilingual title.
-The current preview covers
-are browser captures of the portfolio demos; their labels identify demonstrations,
-real experiment materials, and conceptual walkthroughs. Older SVG architecture
-illustrations remain in the content folders as source assets.
-See `docs/WHU_PROJECT_REVIEW.md` for the source-to-portfolio review and attribution decisions.
-
-Project details lead with `#project-preview`, followed by optional original material
-in `#project-materials` and the written case study in `#project-implementation`.
-NCC Bus, research-report and remote-administration demos use local fixtures only;
-they make no cloud, model, finance or remote-endpoint requests. The bus demo shares
-its reservation/boarding state across three role views. Research reports export
-the selected preset modules as a labelled Markdown sample. The security UI simulates
-session and monitoring records without executing the source application's actions.
-
-PIMoG renders the unmodified five-panel experiment strip using CSS views, with a
-keyboard-accessible comparison slider. RAGFUZZ includes a real archived driver
-excerpt; remaining stage views are conceptual. Mimic-Talker and Holdem explorers
-explain the documented pipeline/architecture and do not run those models or game
-engines. Holdem's existing real screenshots are retained. Upstream image provenance
-and license copies are recorded in `public/licenses/project-visuals.md`.
-
-## Portfolio background assets
-
-The personal-space layout uses a static background. The retained files in
-`public/media/film/` are the template's generated abstract demo film,
-not personal footage. Desktop loads the 1080p file; coarse-pointer devices load
-the smaller 540p file. Scroll drives the paused video with a smoothed playhead and
-one seek at a time. Failed playback falls back to the poster. Reduced-motion
-visitors keep the static poster and do not download the video. The on-page motion
-control pauses the film, orb animation, marquee, and pointer tilt.
-
-To customize the film, replace the two MP4 files and poster with appropriately
-licensed footage. Encode frequent keyframes for responsive seeking. Reference
-the upstream `media-src/build-film.sh` for encoding settings.
+The footer controls the theme and background effects. Background particles are
+disabled when the visitor requests reduced motion.
 
 ## View counts
 
@@ -98,8 +53,7 @@ Four topic sections are configured in `src/lib/blog-categories.ts`: technology,
 finance, product, and learning. `/blog/category/<id>` and the mirrored English
 routes filter published posts by their `category` frontmatter. The overview shows
 all posts; legacy labels are normalized, and unknown labels fall back to learning
-so no published post disappears. Section cards always display real counts,
-including zero, without importing vault folders.
+so no published post disappears. Category links display the corresponding published posts without importing vault folders.
 
 `npm run blog:sync` selectively exports notes with `publish: true` from the local
 Obsidian vault. It never modifies the source vault, follows symlinks, copies

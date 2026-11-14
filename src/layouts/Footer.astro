@@ -1,17 +1,67 @@
 ---
 import { ANALYTICS_CONFIG } from '~/config'
 import ViewCounts from '~/components/base/ViewCounts.astro'
-const en = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
+const en = /^\/en(?:\/|$)/.test(Astro.url.pathname)
+const prefix = en ? '/en' : ''
+const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Hong_Kong' }).format(new Date())
 ---
 
 <footer class="space-footer">
-  <div class="space-footer-row">
-    <span>© {new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Hong_Kong' }).format(new Date())} CHEN Peihua</span>
+  <div class="footer-directory">
+    <div class="footer-signature">
+      <a href={prefix || '/'} class="space-brand">{en ? 'Chen Peihua' : '陈佩桦'}</a>
+      <p>{en ? 'Markets, code, and everyday life.' : '记录市场、代码与日常。'}</p>
+      {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
+    </div>
     <div>
-      <a href="mailto:1146816430@qq.com">{en ? 'Email' : '邮件'}</a>
-      <a href="https://github.com/timidbirch">GitHub</a>
-      <a href="/rss.xml">RSS</a>
+      <h2>{en ? 'Explore' : '浏览'}</h2><a href={prefix + '/blog'}>{en ? 'Posts' : '文章'}</a><a href={prefix + '/timeline'}
+        >{en ? 'Timeline' : '时间线'}</a
+      ><a href={prefix + '/photos'}>{en ? 'Photos' : '相册'}</a>
+    </div>
+    <div>
+      <h2>{en ? 'About' : '关于'}</h2><a href={prefix + '/about'}>{en ? 'About me' : '关于我'}</a><a href={prefix + '/projects'}
+        >{en ? 'Projects' : '项目'}</a
+      ><a href={prefix + '/experience'}>{en ? 'Experience' : '实践经历'}</a>
+    </div>
+    <div>
+      <h2>{en ? 'Follow & contact' : '订阅与联系'}</h2><a href="mailto:1146816430@qq.com">{en ? 'Send email' : '写邮件'} ↗</a><a
+        href="https://github.com/timidbirch">GitHub ↗</a
+      ><a href="/rss.xml">RSS ↗</a>
+    </div>
+    <div class="footer-settings">
+      <h2>{en ? 'Display' : '显示'}</h2>
+      <label
+        ><span>{en ? 'Theme' : '主题'}</span><select data-site-theme aria-label={en ? 'Theme' : '主题'}>
+          <option value="system">{en ? 'System' : '随系统'}</option><option value="light">{en ? 'Light' : '浅色'}</option><option
+            value="dark">{en ? 'Dark' : '深色'}</option
+          >
+        </select></label
+      >
+      <label><span>{en ? 'Background' : '背景效果'}</span><input type="checkbox" data-site-effects checked /></label>
     </div>
   </div>
-  {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
+  <div class="site-colophon"><span>© {year} CHEN Peihua</span><a href="/sitemap-index.xml">{en ? 'Sitemap' : '站点地图'}</a></div>
 </footer>
+
+<script>
+  function syncDisplay() {
+    const theme = document.querySelector<HTMLSelectElement>('[data-site-theme]')
+    const effects = document.querySelector<HTMLInputElement>('[data-site-effects]')
+    if (theme && window.__theme) {
+      theme.value = window.__theme.getStoredTheme()
+      theme.onchange = () => window.__theme?.setTheme(theme.value as 'system' | 'light' | 'dark')
+    }
+    if (effects) {
+      effects.checked = document.documentElement.dataset.effects !== 'off'
+      effects.onchange = () => {
+        const value = effects.checked ? 'on' : 'off'
+        document.documentElement.dataset.effects = value
+        try {
+          localStorage.setItem('site-effects', value)
+        } catch {}
+      }
+    }
+  }
+  document.addEventListener('astro:page-load', syncDisplay)
+  document.addEventListener('site-theme-change', syncDisplay)
+</script>
