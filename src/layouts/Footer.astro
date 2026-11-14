@@ -14,9 +14,8 @@ const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Ho
       {ANALYTICS_CONFIG.vercount?.enabled && <ViewCounts {en} />}
     </div>
     <div>
-      <h2>{en ? 'Explore' : '浏览'}</h2><a href={prefix + '/blog'}>{en ? 'Posts' : '文章'}</a><a href={prefix + '/timeline'}
-        >{en ? 'Timeline' : '时间线'}</a
-      ><a href={prefix + '/photos'}>{en ? 'Photos' : '相册'}</a>
+      <h2>{en ? 'Explore' : '浏览'}</h2><a href={prefix + '/blog'}>{en ? 'Posts' : '文章'}</a>
+      <a href={prefix + '/photos'}>{en ? 'Photos' : '照片'}</a>
     </div>
     <div>
       <h2>{en ? 'About' : '关于'}</h2><a href={prefix + '/about'}>{en ? 'About me' : '关于我'}</a><a href={prefix + '/projects'}

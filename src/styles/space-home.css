@@ -19,33 +19,26 @@
   margin: 0 auto 28px;
   box-shadow: 0 0 32px color-mix(in srgb, var(--signal) 16%, transparent);
 }
+.hero-byline {
+  font: 400 clamp(1rem, 2vw, 1.3rem)/1.5 var(--space-serif);
+  color: var(--soft-ink);
+  letter-spacing: 0.035em;
+}
 .space-hello h1 {
-  font: 500 clamp(1.5rem, 3.6vw, 2.45rem)/1.4 var(--font-sans);
+  margin-top: 11px;
+  font: 400 clamp(1.85rem, 5.7vw, 3.7rem)/1.21 var(--space-serif);
   letter-spacing: -0.035em;
   text-wrap: balance;
-}
-.space-hello h1 > span {
-  display: block;
-  margin-top: 3px;
 }
 .space-hello em {
   color: var(--signal);
   font-style: normal;
 }
-.space-hello code {
-  padding: 0.02em 0.3em;
-  border: 1px solid var(--line);
-  border-radius: 0.6em;
-  color: var(--signal);
-  font-size: 0.8em;
-  background: color-mix(in srgb, var(--signal) 9%, transparent);
-}
-.space-hello p {
-  margin-top: 12px;
+.hero-context {
+  margin-top: 17px;
   color: var(--soft-ink);
-  font-size: clamp(0.66rem, 1.3vw, 0.8rem);
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.055em;
 }
 .space-hero-foot {
   align-self: center;
@@ -53,8 +46,8 @@
   margin-top: 22px;
   color: var(--soft-ink);
 }
-.space-hero-foot > p {
-  font: italic 0.94rem/1.6 var(--space-serif);
+.hero-stats {
+  font-family: var(--space-typewriter);
 }
 .hero-stats,
 .hero-socials {
@@ -185,28 +178,41 @@
   margin-top: 7px;
   font-size: 0.88rem;
 }
-.home-seasons {
-  margin: clamp(60px, 9vw, 120px) auto 0;
-  width: min(100%, 780px);
-  text-align: center;
+.home-projects {
+  max-width: 880px;
+  margin: clamp(68px, 10vw, 132px) auto 0;
 }
-.home-seasons .home-section-heading {
-  justify-content: center;
+.home-project-list {
+  border-top: 1px solid var(--line);
 }
-.home-months {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  margin: 25px 0 16px;
-  padding-block: 9px;
-  border-block: 1px solid var(--line);
-  color: var(--soft-ink);
-  font: 0.77rem/1.5 var(--font-mono);
+.home-project-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  padding: 15px 4px;
+  border-bottom: 1px solid var(--line);
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
 }
-.home-months .has-posts {
+.home-project-list a:is(:hover, :focus-visible) {
   color: var(--signal);
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: color-mix(in srgb, var(--signal) 6%, transparent);
+}
+.home-project-list h3 {
+  font: 600 1.05rem var(--space-serif);
+}
+.home-project-list p {
+  color: var(--soft-ink);
+  font-size: 0.84rem;
+  margin-top: 4px;
+}
+.home-project-list a > span {
+  transition: transform 160ms ease;
+}
+.home-project-list a:is(:hover, :focus-visible) > span {
+  transform: translate(2px, -2px);
 }
 .home-goodbye {
   margin-top: clamp(65px, 12vw, 146px);

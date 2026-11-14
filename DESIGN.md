@@ -4,9 +4,8 @@ The site uses a seasonal background, a centered introduction, and paper-style
 archives based on [Innei](https://innei.in/). Astro builds the Chinese and English
 pages from the same published content.
 
-- `src/layouts/Header.astro` contains the category and timeline menus.
+- `src/layouts/Header.astro` contains the category and more menus.
 - `src/components/space/Home.astro` displays recent writing and the latest album.
-- `src/components/space/Timeline.astro` groups writing, projects, and albums by date.
 - `src/components/portfolio/BlogPost.astro` contains the reading layout and progress indicator.
 - `src/components/photos/PhotoArchive.astro` provides the gallery and keyboard-operated photo viewer.
 - `src/styles/space-shell.css` provides the shared visual styles and page transitions.
@@ -21,7 +20,7 @@ and attribution are documented in `docs/WHU_PROJECT_REVIEW.md` and
 `public/licenses/project-visuals.md`.
 
 The footer controls the theme and background effects. Background particles are
-disabled when the visitor requests reduced motion.
+shown without animation when the visitor requests reduced motion.
 
 ## View counts
 

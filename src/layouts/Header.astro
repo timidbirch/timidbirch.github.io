@@ -1,18 +1,14 @@
 ---
 import ThemeToggle from '~/components/theme/ThemeToggle'
 import { BLOG_CATEGORIES } from '~/lib/blog-categories'
-import { getAllPosts, getAllProjects } from '~/lib/data'
-import { getRecentUpdates } from '~/lib/space'
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/'
 const en = path === '/en' || path.startsWith('/en/')
 const prefix = en ? '/en' : ''
 const home = prefix || '/'
 const localizedPath = path.replace(/^\/posts(?=\/|$)/, '/blog')
-const mirrored = /^\/(?:blog|timeline|photos|projects|experience|about)(?:\/|$)/.test(localizedPath)
+const mirrored = /^\/(?:blog|photos|projects|experience|about)(?:\/|$)/.test(localizedPath)
 const languageHref = en ? path.replace(/^\/en(?=\/|$)/, '') || '/' : mirrored ? `/en${localizedPath}` : '/en'
-const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
-const recent = getRecentUpdates(posts, projects, en).slice(0, 4)
 const moreLinks = [
   { path: '/projects', title: en ? 'Projects' : '项目', desc: en ? 'Research and things I’ve built' : '研究与作品' },
   { path: '/photos', title: en ? 'Photos' : '照片', desc: en ? 'An archive of everyday photographs' : '日常影像与相册' },
@@ -20,7 +16,7 @@ const moreLinks = [
   { path: '/experience', title: en ? 'Experience' : '实践经历', desc: en ? 'Work and research experience' : '工作与研究经历' },
 ]
 const current = (url: string) => (path === url || path.startsWith(`${url}/`) ? 'page' : undefined)
-const moreCurrent = moreLinks.find((link) => current(prefix + link.path))
+const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && current(prefix + link.path))
 ---
 
 <space-navigation class="space-header" transition:name="space-header" transition:animate="none">
@@ -35,24 +31,9 @@ const moreCurrent = moreLinks.find((link) => current(prefix + link.path))
           <a class="dropdown-last" href={`${prefix}/blog`}>{en ? 'All posts' : '浏览全部文章'} →</a>
         </div>
       </details>
+      <a href={prefix + '/projects'} aria-current={current(prefix + '/projects')} data-astro-prefetch="hover">{en ? 'Projects' : '项目'}</a>
       <details name="site-menu">
-        <summary data-current={current(prefix + '/timeline')}>{en ? 'Timeline' : '时间线'}</summary>
-        <div class="space-dropdown dropdown-timeline">
-          {
-            recent.map((item) => (
-              <a href={item.href}>
-                <>
-                  <time datetime={item.date}>{item.date.slice(5)}</time>
-                  <span lang={item.language}>{item.title}</span>
-                </>
-              </a>
-            ))
-          }
-          <a class="dropdown-last" href={`${prefix}/timeline`}>{en ? 'View timeline' : '查看时间线'} →</a>
-        </div>
-      </details>
-      <details name="site-menu">
-        <summary data-current={moreCurrent ? 'page' : undefined}>{moreCurrent?.title || (en ? 'More' : '更多')}</summary>
+        <summary data-current={moreCurrent ? 'page' : undefined}>{en ? 'More' : '更多'}</summary>
         <div class="space-dropdown">
           {
             moreLinks.map((link) => (
@@ -77,10 +58,50 @@ const moreCurrent = moreLinks.find((link) => current(prefix + link.path))
 <script>
   class SpaceNavigation extends HTMLElement {
     controller?: AbortController
+    closeTimer?: number
     connectedCallback() {
       this.controller = new AbortController()
       const { signal } = this.controller
       const close = () => this.querySelectorAll('details[open]').forEach((menu) => menu.removeAttribute('open'))
+      const desktop = matchMedia('(hover: hover) and (pointer: fine)')
+      for (const menu of this.querySelectorAll<HTMLDetailsElement>('details')) {
+        menu.addEventListener(
+          'pointerenter',
+          (event) => {
+            if (!desktop.matches || event.pointerType === 'touch') return
+            clearTimeout(this.closeTimer)
+            menu.open = true
+          },
+          { signal }
+        )
+        menu.addEventListener(
+          'pointerleave',
+          (event) => {
+            if (!desktop.matches || event.pointerType === 'touch' || menu.contains(document.activeElement)) return
+            this.closeTimer = window.setTimeout(() => {
+              menu.open = false
+            }, 150)
+          },
+          { signal }
+        )
+        menu.addEventListener(
+          'focusout',
+          (event) => {
+            if (event.relatedTarget instanceof Node && !menu.contains(event.relatedTarget) && !menu.matches(':hover')) menu.open = false
+          },
+          { signal }
+        )
+        menu.querySelector('summary')?.addEventListener(
+          'click',
+          (event) => {
+            if (event instanceof PointerEvent && event.detail > 0 && desktop.matches && event.pointerType === 'mouse' && menu.open) {
+              event.preventDefault()
+            }
+          },
+          { signal }
+        )
+      }
+
       document.addEventListener(
         'pointerdown',
         (event) => {
@@ -117,6 +138,7 @@ const moreCurrent = moreLinks.find((link) => current(prefix + link.path))
       )
     }
     disconnectedCallback() {
+      clearTimeout(this.closeTimer)
       this.controller?.abort()
     }
   }

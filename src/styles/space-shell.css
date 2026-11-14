@@ -1,7 +1,8 @@
 :root {
   --layout-width: 1120px;
   --paper-panel: #fbf9f3;
-  --space-serif: 'Songti SC', 'Noto Serif CJK SC', 'STSong', Georgia, serif;
+  --space-serif: 'American Typewriter', 'Songti SC', 'Noto Serif CJK SC', 'STSong', Georgia, serif;
+  --space-typewriter: 'American Typewriter', 'Courier Prime', 'Courier New', monospace;
   --signal: #85501f;
   --line: #ded8ce;
   --soft-ink: #68625a;
@@ -16,14 +17,14 @@
   --signal: #dfae79;
   --line: #403b35;
   --soft-ink: #b2a99d;
-  --background: 30 6% 10%;
+  --background: 30 3% 13%;
   --foreground: 36 22% 92%;
   --muted-foreground: 36 10% 67%;
   --primary: 32 62% 73%;
   --border: 31 10% 29%;
 }
 html[lang='en'] {
-  --space-serif: Georgia, 'Times New Roman', serif;
+  --space-serif: 'American Typewriter', 'Bookman Old Style', Georgia, serif;
 }
 html {
   scroll-padding-top: 90px;
@@ -54,40 +55,46 @@ body.personal-space {
   top: 10px;
 }
 
+/* Fine grain, randomly laid fibers, and diffuse light stay independent of the moving leaves. */
 .season-background {
   position: fixed;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 25%, color-mix(in srgb, var(--signal) 6%, transparent), transparent 58%),
-    repeating-linear-gradient(115deg, transparent 0 5px, color-mix(in srgb, var(--soft-ink) 3%, transparent) 6px 7px);
-  opacity: 0.85;
+    radial-gradient(ellipse at 47% 25%, #fff5db4d, transparent 53%), radial-gradient(ellipse at 88% 64%, #ae85451a, transparent 62%),
+    radial-gradient(ellipse at 50% 52%, transparent 31%, #75645223 100%), #f4f0e8;
 }
-.season-background i {
+.dark .season-background {
+  background:
+    radial-gradient(ellipse at 48% 25%, #6b57301e, transparent 51%), radial-gradient(ellipse at 80% 68%, #5642291b, transparent 56%),
+    radial-gradient(ellipse at 50% 57%, transparent 22%, #0e101140 100%), #222120;
+}
+.season-background::before,
+.season-background::after {
+  content: '';
   position: absolute;
-  top: -25px;
-  left: var(--x);
-  width: var(--size);
-  height: var(--size);
-  background: #b96f33;
-  border-radius: 45% 5% 50% 12%;
-  opacity: 0.3;
-  animation: leaf-drift var(--time) var(--delay) linear infinite;
+  inset: 0;
 }
-.season-background i:nth-child(3n + 1) {
-  background: #a3a052;
+.season-background::before {
+  background: url('../assets/atmosphere/paper-grain.webp') repeat;
+  background-size: 470px;
+  mix-blend-mode: soft-light;
+  opacity: 0.47;
 }
-.season-background i:nth-child(3n + 2) {
-  background: #d09957;
+.season-background::after {
+  background: url('../assets/atmosphere/paper-fibers.webp') repeat;
+  background-size: 840px;
+  opacity: 0.34;
 }
-@keyframes leaf-drift {
-  from {
-    transform: translate3d(0, -2vh, 0) rotate(var(--angle));
-  }
-  to {
-    transform: translate3d(var(--sway), 108vh, 0) rotate(calc(var(--angle) + 285deg));
-  }
+.dark .season-background::after {
+  opacity: 0.42;
+}
+.season-background canvas {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 [data-effects='off'] .season-background {
   display: none;
@@ -109,8 +116,8 @@ body.personal-space {
   top: 0;
   z-index: 20;
   display: block;
-  background: color-mix(in srgb, var(--color-background) 82%, transparent);
-  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--color-background) 68%, transparent);
+  backdrop-filter: blur(11px);
 }
 .space-header-inner {
   position: relative;
@@ -192,9 +199,12 @@ body.personal-space {
   padding: 14px;
   background: var(--paper-panel);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  box-shadow: 0 12px 28px #0002;
-  animation: space-page-in 180ms ease-out both;
+  border-radius: 9px;
+  box-shadow:
+    0 5px 14px #0001,
+    0 17px 42px #0002;
+  transform-origin: 85% 0;
+  animation: menu-enter 155ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
 }
 .space-dropdown a {
   display: block;
@@ -215,24 +225,6 @@ body.personal-space {
   border-top: 1px solid var(--line);
   border-radius: 0;
 }
-.dropdown-timeline {
-  width: min(465px, 100%);
-}
-.dropdown-timeline a:has(time) {
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr);
-  align-items: baseline;
-}
-.dropdown-timeline a span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.dropdown-timeline time {
-  color: var(--soft-ink);
-  font: 0.75rem var(--font-mono);
-}
-
 .space-footer {
   width: min(100% - 48px, 1120px);
   margin-inline: auto;
@@ -419,9 +411,6 @@ body.personal-space {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .season-background i {
-    display: none;
-  }
   .personal-space *,
   .personal-space *::before,
   .personal-space *::after {
@@ -466,7 +455,7 @@ body.personal-space {
 .archive-search label {
   flex: 1 1 180px;
 }
-:is(.archive-search, .timeline-tools) input {
+.archive-search input {
   width: 100%;
   padding: 7px 10px;
   border: 1px solid var(--line);
@@ -479,29 +468,19 @@ body.personal-space {
   margin-top: 15px;
 }
 
-.season-background i:nth-child(9n + 1) {
-  border-radius: 0;
-  clip-path: polygon(
-    49% 0,
-    61% 22%,
-    75% 14%,
-    75% 38%,
-    100% 40%,
-    90% 63%,
-    64% 77%,
-    62% 100%,
-    50% 86%,
-    36% 88%,
-    32% 73%,
-    9% 67%,
-    0 44%,
-    25% 39%,
-    24% 16%,
-    39% 25%
-  );
-}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+@keyframes menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

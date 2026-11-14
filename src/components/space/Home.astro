@@ -1,13 +1,14 @@
 ---
 import { Image } from 'astro:assets'
 import Layout from '~/layouts/Layout.astro'
-import { getAllPosts } from '~/lib/data'
+import { getAllPosts, getAllProjects } from '~/lib/data'
 import { getBlogCategory } from '~/lib/blog-categories'
 import { photoAlbums } from '~/lib/photos'
 import '~/styles/space-home.css'
 const { en = false } = Astro.props
 const prefix = en ? '/en' : ''
-const posts = await getAllPosts()
+const [posts, projects] = await Promise.all([getAllPosts(), getAllProjects()])
+const featured = ['holdem', 'ragfuzz', 'ncc-bus'].flatMap((id) => projects.filter((project) => project.id === id))
 const [latest, ...otherPosts] = posts.slice(0, 5)
 const [album] = photoAlbums
 const date = new Intl.DateTimeFormat(en ? 'en-GB' : 'zh-CN', { month: 'short', day: 'numeric', timeZone: 'UTC' })
@@ -26,24 +27,11 @@ const socials = [
     <section class="space-hero" aria-labelledby="space-title">
       <div class="space-hello">
         <img src="/favicon.svg" alt="" width="96" height="96" class="hero-avatar" />
-        <h1 id="space-title">
-          {en ? 'Hi, I’m ' : '你好，我是'}<em>{en ? 'Chen Peihua' : '陈佩桦'}</em>
-          <span
-            >{en ? 'I study ' : '我研究'}<em>{en ? 'markets' : '市场'}</em>{en ? ' and build things with ' : '，也用'}<code
-              >{en ? 'code' : '代码'}</code
-            >{en ? '' : '把想法做出来'}</span
-          >
-        </h1>
-        <p>
-          {
-            en
-              ? 'Business analytics at HKU · Finance, engineering, and everyday observations'
-              : '香港大学商业分析 · 记录金融、工程与生活里的观察'
-          }
-        </p>
+        <p class="hero-byline">{en ? 'Chen Peihua' : '陈佩桦'}</p>
+        <h1 id="space-title">{en ? 'Things worth ' : '多看一眼'}<em>{en ? 'a closer look.' : '的事。'}</em></h1>
+        <p class="hero-context">{en ? 'Market research, software projects, and photographs.' : '市场研究、软件项目与日常照片。'}</p>
       </div>
       <div class="space-hero-foot">
-        <p>{description}</p>
         <div class="hero-stats">
           <a href={prefix + '/blog'}>{posts.length} {en ? 'posts' : '篇文章'}</a>
           <span aria-hidden="true">·</span>
@@ -121,33 +109,39 @@ const socials = [
       </aside>
     </div>
 
-    <section class="home-seasons" aria-labelledby="home-seasons-title">
-      <div class="home-section-heading"><h2 id="home-seasons-title">{en ? 'Through the Seasons' : '写过的四季'}</h2></div>
-      <div class="home-months">
-        {
-          Array.from({ length: 12 }, (_, i) => {
-            const month = String(i + 1).padStart(2, '0')
-            const count = posts.filter((post) => post.data.pubDate.toISOString().slice(5, 7) === month).length
-            return (
-              <span class:list={{ 'has-posts': count > 0 }} title={en ? `${count} posts` : `${count} 篇文章`}>
-                {i + 1}
-              </span>
-            )
-          })
-        }
-      </div>
-      <a class="text-link" href={prefix + '/timeline'}>{en ? 'Explore the timeline' : '沿时间线回看'} →</a>
-    </section>
+    {
+      featured.length > 0 && (
+        <section class="home-projects" aria-labelledby="home-projects-title">
+          <div class="home-section-heading">
+            <h2 id="home-projects-title">{en ? 'Projects' : '项目'}</h2>
+            <a href={prefix + '/projects'}>{en ? 'All projects' : '全部项目'} ↗</a>
+          </div>
+          <div class="home-project-list">
+            {featured.map(({ id, data }) => (
+              <a href={`${prefix}/projects/${id}`}>
+                <div>
+                  <h3>{en ? data.nameEn : data.name}</h3>
+                  <p>{en ? data.descriptionEn : data.description}</p>
+                </div>
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
 
     <section class="home-goodbye">
       <h2>{en ? 'You’re welcome to write' : '欢迎来信'}</h2>
       <div class="home-actions">
         <a href="mailto:1146816430@qq.com">{en ? 'Say hello' : '写一封信'} ↗</a><a href="/rss.xml"
-          >{en ? 'Subscribe via RSS' : '订阅 RSS'} ↗</a>
+          >{en ? 'Subscribe via RSS' : '订阅 RSS'} ↗</a
+        >
       </div>
       <div class="home-shortcuts">
         <a href={prefix + '/projects'}>{en ? 'Projects' : '项目'}</a><a href={prefix + '/photos'}>{en ? 'Photos' : '照片'}</a><a
-          href={prefix + '/about'}>{en ? 'About' : '关于'}</a>
+          href={prefix + '/about'}>{en ? 'About' : '关于'}</a
+        >
       </div>
     </section>
   </div>
