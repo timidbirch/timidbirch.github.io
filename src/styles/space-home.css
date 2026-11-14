@@ -12,22 +12,11 @@
   grid-row: 2;
 }
 .hero-avatar {
-  display: block;
-  position: relative;
-  overflow: hidden;
   width: 96px;
   height: 96px;
   border-radius: 50%;
   margin: 0 auto 28px;
   box-shadow: 0 0 32px color-mix(in srgb, var(--signal) 16%, transparent);
-}
-.hero-avatar img {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: 330%;
-  max-width: none;
-  height: auto;
-  transform: translate(-74%, -45%);
 }
 .hero-byline {
   font: 400 clamp(1rem, 2vw, 1.3rem)/1.5 var(--space-serif);

@@ -1,4 +1,5 @@
 ---
+import Avatar from '~/components/space/Avatar.astro'
 import ThemeToggle from '~/components/theme/ThemeToggle'
 import { BLOG_CATEGORIES } from '~/lib/blog-categories'
 
@@ -21,7 +22,7 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
 
 <space-navigation class="space-header" transition:name="space-header" transition:animate="none">
   <header class="space-header-inner">
-    <a href={home} class="space-brand"><img src="/favicon.svg" width="30" height="30" alt="" />{en ? 'Chen Peihua' : '陈佩桦'}</a>
+    <a href={home} class="space-brand"><Avatar class="brand-avatar" small />{en ? 'Chen Peihua' : '陈佩桦'}</a>
     <nav class="space-nav" aria-label={en ? 'Main navigation' : '主导航'}>
       <a href={home} aria-current={path === home ? 'page' : undefined}>{en ? 'Home' : '首页'}</a>
       <details name="site-menu">

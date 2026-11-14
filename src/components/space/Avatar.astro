@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets'
+import portrait from '~/assets/home-avatar.png'
+
+interface Props {
+  class?: string
+  small?: boolean
+}
+
+const { class: className, small = false } = Astro.props
+---
+
+<span class:list={['site-avatar', className]}>
+  <Image
+    src={portrait}
+    alt=""
+    width={small ? 198 : 317}
+    height={small ? 198 : 317}
+    widths={small ? [100, 198, 297] : [384, 640, 960]}
+    sizes={small ? '99px' : '(max-width: 720px) 251px, 317px'}
+    loading="eager"
+  />
+</span>
+
+<style>
+  .site-avatar {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    flex: none;
+  }
+
+  .site-avatar img {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 330%;
+    max-width: none;
+    height: auto;
+    transform: translate(-74%, -45%);
+  }
+</style>
