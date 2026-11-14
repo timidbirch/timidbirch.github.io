@@ -30,7 +30,7 @@ const socials = [
       <div class="space-hello">
         <Avatar class="hero-avatar" />
         <p class="hero-byline">{SITE.title}</p>
-        <h1 id="space-title" lang="en">A Life in <em>Draft</em></h1>
+        <h1 id="space-title">{en ? 'A Life in ' : '浮生'}<em>{en ? 'Draft' : '未定稿'}</em></h1>
         <p class="hero-context">{description}</p>
       </div>
       <div class="space-hero-foot">
