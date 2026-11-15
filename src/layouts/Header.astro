@@ -25,17 +25,41 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
     <a href={home} class="space-brand"><Avatar class="brand-avatar" small />{SITE.title}</a>
     <nav class="space-nav" aria-label={en ? 'Main navigation' : '主导航'}>
       <a href={home} aria-current={path === home ? 'page' : undefined}>{en ? 'Home' : '首页'}</a>
-      <details name="site-menu">
-        <summary data-current={current(prefix + '/blog')}>{en ? 'Posts' : '文章'}</summary>
-        <div class="space-dropdown">
-          {BLOG_CATEGORIES.map((category) => <a href={`${prefix}/blog/category/${category.id}`}>{en ? category.nameEn : category.name}</a>)}
-          <a class="dropdown-last" href={`${prefix}/blog`}>{en ? 'All posts' : '浏览全部文章'} →</a>
-        </div>
-      </details>
+      <div class="space-nav-group" data-nav-group="posts">
+        <a href={prefix + '/blog'} aria-current={current(prefix + '/blog')} data-astro-prefetch="hover">{en ? 'Posts' : '文章'}</a>
+        <button
+          type="button"
+          class="space-nav-disclosure"
+          data-nav-trigger="posts"
+          aria-label={en ? 'Post categories' : '文章分类'}
+          aria-expanded="false"
+          aria-controls="site-nav-posts"
+          hidden><span class="icon-[ri--arrow-down-s-line]" aria-hidden="true"></span></button
+        >
+      </div>
       <a href={prefix + '/projects'} aria-current={current(prefix + '/projects')} data-astro-prefetch="hover">{en ? 'Projects' : '项目'}</a>
-      <details name="site-menu">
-        <summary data-current={moreCurrent ? 'page' : undefined}>{en ? 'More' : '更多'}</summary>
-        <div class="space-dropdown">
+      <div class="space-nav-group" data-nav-group="more">
+        <button
+          type="button"
+          data-nav-trigger="more"
+          data-current={moreCurrent ? 'page' : undefined}
+          aria-expanded="false"
+          aria-controls="site-nav-more"
+          hidden>{en ? 'More' : '更多'}</button
+        >
+        <noscript><a href={prefix + '/about'}>{en ? 'About' : '关于'}</a></noscript>
+      </div>
+      <div class="space-dropdown" data-nav-panel>
+        <div class="space-dropdown-content" id="site-nav-posts" data-nav-content="posts" inert>
+          {
+            BLOG_CATEGORIES.map((category) => (
+              <a href={`${prefix}/blog/category/${category.id}`} aria-current={current(`${prefix}/blog/category/${category.id}`)}>
+                {en ? category.nameEn : category.name}
+              </a>
+            ))
+          }
+        </div>
+        <div class="space-dropdown-content" id="site-nav-more" data-nav-content="more" inert>
           {
             moreLinks.map((link) => (
               <a href={prefix + link.path} aria-current={current(prefix + link.path)}>
@@ -45,7 +69,7 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
             ))
           }
         </div>
-      </details>
+      </div>
     </nav>
     <div class="space-tools">
       <a id="language-toggle" href={languageHref} data-language={en ? 'zh' : 'en'} aria-label={en ? '切换为中文' : 'Switch to English'}
@@ -63,59 +87,112 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
     connectedCallback() {
       this.controller = new AbortController()
       const { signal } = this.controller
-      const close = () => this.querySelectorAll('details[open]').forEach((menu) => menu.removeAttribute('open'))
-      const desktop = matchMedia('(hover: hover) and (pointer: fine)')
-      for (const menu of this.querySelectorAll<HTMLDetailsElement>('details')) {
-        menu.addEventListener(
+      const nav = this.querySelector<HTMLElement>('.space-nav')
+      const panel = nav?.querySelector<HTMLElement>('[data-nav-panel]')
+      if (!nav || !panel) return
+      const triggers = Array.from(nav.querySelectorAll<HTMLButtonElement>('[data-nav-trigger]'))
+      const contents = Array.from(panel.querySelectorAll<HTMLElement>('[data-nav-content]'))
+      let active: string | undefined
+      const setMenu = (next?: string) => {
+        clearTimeout(this.closeTimer)
+        if (active === next) return
+        active = next
+        panel.toggleAttribute('data-open', Boolean(next))
+        for (const trigger of triggers) {
+          trigger.setAttribute('aria-expanded', String(trigger.dataset.navTrigger === next))
+        }
+        for (const content of contents) {
+          const selected = content.dataset.navContent === next
+          content.inert = !selected
+          content.toggleAttribute('data-active', selected)
+        }
+      }
+      const focusFirst = (name?: string) =>
+        contents
+          .find((content) => content.dataset.navContent === name)
+          ?.querySelector('a')
+          ?.focus()
+      const closeSoon = () => {
+        clearTimeout(this.closeTimer)
+        this.closeTimer = window.setTimeout(() => {
+          if (!panel.contains(document.activeElement)) setMenu()
+        }, 140)
+      }
+      const desktop = matchMedia('(any-hover: hover) and (any-pointer: fine)')
+      for (const group of nav.querySelectorAll<HTMLElement>('[data-nav-group]')) {
+        group.addEventListener(
           'pointerenter',
           (event) => {
-            if (!desktop.matches || event.pointerType === 'touch') return
-            clearTimeout(this.closeTimer)
-            menu.open = true
+            if (desktop.matches && event.pointerType !== 'touch' && !panel.contains(document.activeElement)) {
+              setMenu(group.dataset.navGroup)
+            }
           },
           { signal }
         )
-        menu.addEventListener(
+        group.addEventListener(
           'pointerleave',
           (event) => {
-            if (!desktop.matches || event.pointerType === 'touch' || menu.contains(document.activeElement)) return
-            this.closeTimer = window.setTimeout(() => {
-              menu.open = false
-            }, 150)
+            if (event.pointerType !== 'touch') closeSoon()
           },
           { signal }
         )
-        menu.addEventListener(
-          'focusout',
-          (event) => {
-            if (event.relatedTarget instanceof Node && !menu.contains(event.relatedTarget) && !menu.matches(':hover')) menu.open = false
-          },
-          { signal }
-        )
-        menu.querySelector('summary')?.addEventListener(
+      }
+      panel.addEventListener('pointerenter', () => clearTimeout(this.closeTimer), { signal })
+      panel.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (event.pointerType !== 'touch') closeSoon()
+        },
+        { signal }
+      )
+      for (const trigger of triggers) {
+        trigger.hidden = false
+        trigger.addEventListener(
           'click',
           (event) => {
-            if (event instanceof PointerEvent && event.detail > 0 && desktop.matches && event.pointerType === 'mouse' && menu.open) {
-              event.preventDefault()
+            const name = trigger.dataset.navTrigger
+            // A keyboard activation moves focus into the disclosure.
+            if (event.detail === 0 && active === name) {
+              focusFirst(name)
+            } else {
+              setMenu(active === name ? undefined : name)
+              if (event.detail === 0 && active) focusFirst(active)
             }
           },
           { signal }
         )
       }
-
+      nav.querySelector('[data-nav-group="posts"] a')?.addEventListener(
+        'keydown',
+        (event) => {
+          if (!(event instanceof KeyboardEvent) || event.key !== 'ArrowDown') return
+          event.preventDefault()
+          setMenu('posts')
+          focusFirst('posts')
+        },
+        { signal }
+      )
+      nav.addEventListener(
+        'focusout',
+        (event) => {
+          if (event.relatedTarget instanceof Node && !nav.contains(event.relatedTarget)) setMenu()
+        },
+        { signal }
+      )
       document.addEventListener(
         'pointerdown',
         (event) => {
-          if (event.target instanceof Node && !this.contains(event.target)) close()
+          if (event.target instanceof Node && !nav.contains(event.target)) setMenu()
         },
         { signal }
       )
       this.addEventListener(
         'keydown',
         (event) => {
-          if (event.key !== 'Escape') return
-          this.querySelector<HTMLElement>('details[open] > summary')?.focus()
-          close()
+          if (event.key !== 'Escape' || !active) return
+          const trigger = triggers.find((item) => item.dataset.navTrigger === active)
+          if (nav.contains(document.activeElement)) trigger?.focus()
+          setMenu()
         },
         { signal }
       )
@@ -133,7 +210,7 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
       this.addEventListener(
         'click',
         (event) => {
-          if (event.target instanceof Element && event.target.closest('.space-dropdown a')) close()
+          if (event.target instanceof Element && event.target.closest('.space-nav a')) setMenu()
         },
         { signal }
       )

@@ -109,7 +109,7 @@ body.personal-space {
   padding: clamp(44px, 7vw, 94px) 0 90px;
 }
 .space-main:has(.guest-home) {
-  width: min(100% - 48px, 1300px);
+  width: min(100% - 48px, 1070px);
   padding-top: 0;
 }
 .space-header {
@@ -150,20 +150,41 @@ body.personal-space {
   gap: clamp(14px, 2vw, 25px);
   font-size: 0.9rem;
 }
+.space-nav-group {
+  display: flex;
+  align-items: center;
+}
+.space-nav :is(a, button) {
+  transition: color var(--space-hover-duration) ease;
+}
 .space-nav > a,
-.space-nav summary {
-  display: block;
+.space-nav-group > :is(a, button) {
   position: relative;
   padding-block: 13px;
   white-space: nowrap;
-  cursor: pointer;
-  list-style: none;
 }
-.space-nav summary::-webkit-details-marker {
+.space-nav button {
+  cursor: pointer;
+}
+.space-nav-disclosure {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  color: var(--soft-ink);
+}
+.space-nav [hidden] {
   display: none;
 }
+.space-nav-disclosure span {
+  width: 14px;
+  height: 14px;
+  transition: transform 180ms ease;
+}
+.space-nav-disclosure[aria-expanded='true'] span {
+  transform: rotate(180deg);
+}
 .space-nav > a[aria-current]::after,
-.space-nav summary[data-current]::after {
+.space-nav-group > :is([aria-current], [data-current])::after {
   content: '';
   position: absolute;
   inset: auto -2px 5px;
@@ -173,13 +194,13 @@ body.personal-space {
   border-radius: 60% 40% 50% 48%;
   transform: rotate(-3deg);
 }
-.space-header :is(a, summary),
+.space-header a,
 .space-footer a,
 .text-link {
   transition: color var(--space-hover-duration) ease;
 }
 .space-header a:hover,
-.space-header summary:hover,
+.space-nav button:is(:hover, [aria-expanded='true']),
 .space-footer a:hover,
 .text-link:hover {
   color: var(--signal);
@@ -204,7 +225,7 @@ body.personal-space {
   z-index: 2;
   display: grid;
   width: min(340px, 100%);
-  padding: 14px;
+  padding: 12px;
   background: var(--paper-panel);
   border: 1px solid var(--line);
   border-radius: 9px;
@@ -212,36 +233,44 @@ body.personal-space {
     0 5px 14px #0001,
     0 17px 42px #0002;
   transform-origin: 85% 0;
-  animation: menu-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.99);
+  transition:
+    opacity 190ms ease,
+    transform 230ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 190ms;
 }
-/* Keep closing menus visible just long enough to fade out. */
-@supports selector(details::details-content) and (transition-behavior: allow-discrete) {
-  .space-nav details::details-content {
-    transition: content-visibility 180ms allow-discrete;
-  }
-  .space-nav details[open]::details-content {
-    transition-duration: 0ms;
-  }
-  .space-nav .space-dropdown {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.985);
-    pointer-events: none;
-    animation: none;
-    transition: opacity 180ms ease, transform 180ms ease;
-  }
-  .space-nav details[open] .space-dropdown {
-    z-index: 3;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-    transition: opacity 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+.space-dropdown[data-open] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition-property: opacity, transform;
+}
+.space-dropdown-content {
+  grid-area: 1 / 1;
+  align-self: start;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity 150ms ease,
+    transform 210ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.space-dropdown-content[data-active] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
 }
 .space-dropdown a {
   display: block;
   padding: 9px 12px;
   border-radius: 4px;
-  transition: color var(--space-hover-duration) ease, background-color var(--space-hover-duration) ease;
+  transition:
+    color var(--space-hover-duration) ease,
+    background-color var(--space-hover-duration) ease;
 }
 .space-dropdown a:hover,
 .space-dropdown a:focus-visible {
@@ -251,11 +280,6 @@ body.personal-space {
   display: block;
   color: var(--soft-ink);
   margin-top: 3px;
-}
-.space-dropdown .dropdown-last {
-  margin-top: 6px;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
 }
 .space-footer {
   width: min(100% - 48px, 1120px);
@@ -450,9 +474,6 @@ body.personal-space {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-  .space-nav details::details-content {
-    transition-duration: 0.01ms !important;
-  }
 }
 
 .paper-chips {
@@ -507,16 +528,5 @@ body.personal-space {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-}
-
-@keyframes menu-enter {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.99);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
   }
 }
