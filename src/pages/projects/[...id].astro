@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets'
+import VesperTrailer from '~/components/portfolio/VesperTrailer.astro'
 import { render } from 'astro:content'
 import Layout from '~/layouts/Layout.astro'
 import Prose from '~/components/posts/base/Prose.astro'
@@ -38,11 +38,7 @@ const meta = project.data
         </div>
       )}
     </header>
-    {meta.cover && project.id === 'holdem' && (
-      <div class="px-6 sm:px-8 pb-10">
-        <div class="overflow-hidden rounded-xl border border-border/50 bg-muted"><Image src={meta.cover} alt={`${meta.name} 项目封面`} class="w-full h-auto" /></div>
-      </div>
-    )}
+    {project.id === 'holdem' && <VesperTrailer />}
     <ProjectShowcase project={project.id} />
     <ProjectGallery images={meta.gallery} />
     <SectionDivider />

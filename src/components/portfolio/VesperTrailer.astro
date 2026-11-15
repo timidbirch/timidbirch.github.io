@@ -1,0 +1,24 @@
+---
+interface Props {
+  en?: boolean
+}
+
+const { en = false } = Astro.props
+const src = '/media/projects/vesper/trailer.mp4'
+---
+
+<div class="px-6 sm:px-8 pb-10">
+  <video
+    class="block w-full aspect-video rounded-xl border border-border/50 bg-muted"
+    width="1280"
+    height="720"
+    poster="/media/projects/vesper/trailer-poster.jpg"
+    aria-label={en ? 'Vesper promotional trailer' : 'Vesper 宣传片'}
+    controls
+    playsinline
+    preload="none"
+  >
+    <source {src} type="video/mp4" />
+    <a href={src}>{en ? 'Download the Vesper trailer' : '下载 Vesper 宣传片'}</a>
+  </video>
+</div>
