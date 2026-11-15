@@ -6,7 +6,7 @@ const prefix = en ? '/en' : ''
 const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Hong_Kong' }).format(new Date())
 ---
 
-<footer class="space-footer">
+<footer class="space-footer" transition:name="space-footer" transition:animate="none">
   <div class="footer-directory">
     <div class="footer-signature">
       <a href={prefix || '/'} class="space-brand">{SITE.title}</a>

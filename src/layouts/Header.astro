@@ -92,11 +92,67 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
       if (!nav || !panel) return
       const triggers = Array.from(nav.querySelectorAll<HTMLButtonElement>('[data-nav-trigger]'))
       const contents = Array.from(panel.querySelectorAll<HTMLElement>('[data-nav-content]'))
+      const inner = this.querySelector<HTMLElement>('.space-header-inner')
+      const contentFor = (name?: string) => contents.find((content) => content.dataset.navContent === name)
+      const triggerFor = (name?: string) => triggers.find((trigger) => trigger.dataset.navTrigger === name)
       let active: string | undefined
+
+      const layout = (name: string, instant: boolean) => {
+        const content = contentFor(name)
+        const trigger = triggerFor(name)
+        if (!content || !trigger || !inner) return
+
+        const styles = getComputedStyle(panel)
+        const chrome =
+          parseFloat(styles.paddingTop) +
+          parseFloat(styles.paddingBottom) +
+          parseFloat(styles.borderTopWidth) +
+          parseFloat(styles.borderBottomWidth)
+        const boxExtra = styles.boxSizing === 'border-box' ? chrome : 0
+        panel.style.height = `${Math.ceil(content.getBoundingClientRect().height + boxExtra)}px`
+
+        const innerRect = inner.getBoundingClientRect()
+        const anchor = trigger.closest<HTMLElement>('[data-nav-group]') ?? trigger
+        const anchorRect = anchor.getBoundingClientRect()
+        const panelWidth = panel.getBoundingClientRect().width || Math.min(340, innerRect.width - 16)
+        const center = anchorRect.left + anchorRect.width / 2 - innerRect.left
+        const maxLeft = Math.max(8, innerRect.width - panelWidth - 8)
+        const left = Math.min(Math.max(8, center - panelWidth / 2), maxLeft)
+        const origin = Math.min(Math.max(18, center - left), panelWidth - 18)
+
+        panel.style.left = `${Math.round(left)}px`
+        panel.style.right = 'auto'
+        panel.style.transformOrigin = `${Math.round(origin)}px 0`
+
+        if (instant) {
+          panel.setAttribute('data-instant', '')
+          requestAnimationFrame(() => requestAnimationFrame(() => panel.removeAttribute('data-instant')))
+        } else {
+          panel.removeAttribute('data-instant')
+        }
+      }
+
       const setMenu = (next?: string) => {
         clearTimeout(this.closeTimer)
         if (active === next) return
+        const previous = active
+        const previousTrigger = triggerFor(previous)
+        const nextTrigger = triggerFor(next)
         active = next
+
+        if (next) {
+          const wasOpen = Boolean(previous)
+          panel.dataset.slide =
+            previousTrigger && nextTrigger
+              ? nextTrigger.getBoundingClientRect().left >= previousTrigger.getBoundingClientRect().left
+                ? 'right'
+                : 'left'
+              : 'down'
+          layout(next, !wasOpen)
+        } else {
+          panel.removeAttribute('data-slide')
+        }
+
         panel.toggleAttribute('data-open', Boolean(next))
         for (const trigger of triggers) {
           trigger.setAttribute('aria-expanded', String(trigger.dataset.navTrigger === next))
@@ -112,11 +168,16 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
           .find((content) => content.dataset.navContent === name)
           ?.querySelector('a')
           ?.focus()
+      const relayout = () => {
+        if (this.isConnected && active) layout(active, true)
+      }
+      window.addEventListener('resize', relayout, { signal })
+      document.fonts?.ready.then(relayout)
       const closeSoon = () => {
         clearTimeout(this.closeTimer)
         this.closeTimer = window.setTimeout(() => {
           if (!panel.contains(document.activeElement)) setMenu()
-        }, 140)
+        }, 180)
       }
       const desktop = matchMedia('(any-hover: hover) and (any-pointer: fine)')
       for (const group of nav.querySelectorAll<HTMLElement>('[data-nav-group]')) {
@@ -129,10 +190,19 @@ const moreCurrent = moreLinks.some((link) => link.path !== '/projects' && curren
           },
           { signal }
         )
-        group.addEventListener(
-          'pointerleave',
+      }
+      nav.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (event.pointerType !== 'touch') closeSoon()
+        },
+        { signal }
+      )
+      for (const link of nav.querySelectorAll<HTMLElement>(':scope > a')) {
+        link.addEventListener(
+          'pointerenter',
           (event) => {
-            if (event.pointerType !== 'touch') closeSoon()
+            if (desktop.matches && event.pointerType !== 'touch' && active) setMenu()
           },
           { signal }
         )

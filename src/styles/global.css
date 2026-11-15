@@ -9,7 +9,7 @@
 /* ===== 主题变量 ===== */
 @theme {
   /* 字体系统 */
-  --font-serif: var(--font-lexend);
+  --font-serif: var(--space-serif);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -60,8 +60,11 @@
 @layer base {
   :root {
     /* 字体族 */
-    --font-lexend: 'Lexend', 'Geist', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
-    --font-sans: 'Geist', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
+    --font-lexend:
+      'Lexend', 'Geist', 'ShangguSansSC-VF', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif, system-ui, sans-serif;
+    --font-sans:
+      'Geist', 'ShangguSansSC-VF', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', ui-sans-serif, system-ui,
+      sans-serif;
     --font-geist-mono: 'GeistMono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
 
     /* 基础色调 */

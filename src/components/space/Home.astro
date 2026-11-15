@@ -22,6 +22,22 @@ const socials = [
 ---
 
 <Layout title={en ? 'Home' : '首页'} {description}>
+  <script is:inline>
+    ;(() => {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      const root = document.documentElement
+      const replay = new URLSearchParams(location.search).get('motion') === 'replay'
+      let entrancePlayed = false
+      try {
+        entrancePlayed = !replay && sessionStorage.getItem('home-entrance') === 'played'
+      } catch {}
+      root.classList.add('reveal-pending')
+      if (!entrancePlayed) root.classList.add('motion-pending')
+      window.setTimeout(() => {
+        if (!root.dataset.homeMotion) root.classList.remove('motion-pending', 'reveal-pending')
+      }, 3000)
+    })()
+  </script>
   <div class="guest-home">
     <section class="space-hero" aria-labelledby="space-title">
       <div class="space-hello">
@@ -48,12 +64,16 @@ const socials = [
 
     <div class="home-digest" id="home-reading">
       <section aria-labelledby="writing-title">
-        <div class="home-section-heading">
-          <h2 id="writing-title">{en ? 'Recent Writing' : '近期笔墨'}</h2><a href={prefix + '/blog'}>{en ? 'All posts' : '全部文章'} ↗</a>
+        <div class="home-section-heading" data-reveal>
+          <div class="home-section-title">
+            <span class="home-section-index" aria-hidden="true">01</span>
+            <h2 id="writing-title">{en ? 'Recent Writing' : '近期笔墨'}</h2>
+          </div>
+          <a href={prefix + '/blog'}>{en ? 'All posts' : '全部文章'} ↗</a>
         </div>
         {
           latest && (
-            <a class="lead-writing" href={`${prefix}/blog/${latest.id}`}>
+            <a class="lead-writing" href={`${prefix}/blog/${latest.id}`} data-reveal>
               <span>
                 {en ? 'Post' : '文章'} · <time datetime={latest.data.pubDate.toISOString()}>{date.format(latest.data.pubDate)}</time>
               </span>
@@ -64,7 +84,7 @@ const socials = [
         }
         {
           otherPosts.map((post) => (
-            <a class="digest-row" href={`${prefix}/blog/${post.id}`}>
+            <a class="digest-row" href={`${prefix}/blog/${post.id}`} data-reveal>
               <div>
                 <>
                   <strong lang={post.data.language === 'zh' ? 'zh-CN' : 'en'}>{post.data.title}</strong>
@@ -77,7 +97,7 @@ const socials = [
         }
         {!latest && <p>{en ? 'No posts yet.' : '暂时还没有文章。'}</p>}
       </section>
-      <aside class="home-aside">
+      <aside class="home-aside" data-reveal>
         <section aria-labelledby="home-letter-title">
           <div class="home-section-heading"><h2 id="home-letter-title">{en ? 'Letters' : '来信'}</h2></div>
           <p>{en ? 'Have something to share? Write to me.' : '有想交流的事，欢迎写信。'}</p>
@@ -89,13 +109,18 @@ const socials = [
     {
       featured.length > 0 && (
         <section class="home-projects" aria-labelledby="home-projects-title">
-          <div class="home-section-heading">
-            <h2 id="home-projects-title">{en ? 'Projects' : '项目'}</h2>
+          <div class="home-section-heading" data-reveal>
+            <div class="home-section-title">
+              <span class="home-section-index" aria-hidden="true">
+                {'02'}
+              </span>
+              <h2 id="home-projects-title">{en ? 'Projects' : '项目'}</h2>
+            </div>
             <a href={prefix + '/projects'}>{en ? 'All projects' : '全部项目'} ↗</a>
           </div>
           <div class="home-project-list">
             {featured.map(({ id, data }) => (
-              <a href={`${prefix}/projects/${id}`}>
+              <a href={`${prefix}/projects/${id}`} data-reveal>
                 <div>
                   <h3>{en ? data.nameEn : data.name}</h3>
                   <p>{en ? data.descriptionEn : data.description}</p>
@@ -109,16 +134,19 @@ const socials = [
     }
 
     <section class="home-goodbye">
-      <h2>{en ? 'You’re welcome to write' : '欢迎来信'}</h2>
-      <div class="home-actions">
+      <h2 data-reveal>{en ? 'You’re welcome to write' : '欢迎来信'}</h2>
+      <div class="home-actions" data-reveal>
         <a href="mailto:1146816430@qq.com">{en ? 'Say hello' : '写一封信'} ↗</a><a href="/rss.xml"
           >{en ? 'Subscribe via RSS' : '订阅 RSS'} ↗</a
         >
       </div>
-      <div class="home-shortcuts">
+      <div class="home-shortcuts" data-reveal>
         <a href={prefix + '/projects'}>{en ? 'Projects' : '项目'}</a>
         <a href={prefix + '/about'}>{en ? 'About' : '关于'}</a>
       </div>
     </section>
   </div>
+  <script>
+    import '~/scripts/home-motion'
+  </script>
 </Layout>

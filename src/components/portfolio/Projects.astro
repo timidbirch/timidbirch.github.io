@@ -10,7 +10,7 @@ const prefix = en ? '/en' : ''
 <Layout {title} description={en ? 'Research and projects by timidbirch.' : 'timidbirch的研究与项目。'}>
   <section class="project-index">
     <div class="project-index-heading">
-      <h1 class="eyebrow">{title}</h1><a class="text-link" href="https://github.com/timidbirch">github.com/timidbirch ↗</a>
+      <h1 class="paper-title">{title}</h1><a class="text-link" href="https://github.com/timidbirch">github.com/timidbirch ↗</a>
     </div>
     <div class="project-index-grid">
       {
@@ -32,7 +32,7 @@ const prefix = en ? '/en' : ''
   .project-index {
     max-width: 940px;
     margin-inline: auto;
-    font-family: var(--space-typewriter), var(--font-sans);
+    font-family: var(--font-sans);
   }
   .project-index-heading {
     display: flex;

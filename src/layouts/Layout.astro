@@ -4,7 +4,7 @@ import '~/styles/markdown.css'
 import '~/styles/lqip.css'
 import '~/styles/github-card.css'
 import '~/styles/space-shell.css'
-import type { TransitionDirectionalAnimations } from 'astro'
+import '~/styles/page-transitions.css'
 import { SITE } from '~/config'
 import Head from '~/components/base/Head.astro'
 import Header from './Header.astro'
@@ -15,18 +15,11 @@ type Props = {
   title: string
   description: string
   image?: string
-  disableViewTransition?: boolean
 }
 
-const { title, description, image, disableViewTransition }: Props = Astro.props
+const { title, description, image }: Props = Astro.props
 const isEnglish = Astro.url.pathname === '/en' || Astro.url.pathname.startsWith('/en/')
 const pageLanguage = isEnglish ? 'en' : 'zh-CN'
-const enter = { name: 'space-page-in', duration: '240ms', easing: 'cubic-bezier(.2,.7,.25,1)', fillMode: 'both' }
-const exit = { name: 'space-page-out', duration: '130ms', easing: 'ease-out', fillMode: 'both' }
-const pageTransition: TransitionDirectionalAnimations = {
-  forwards: { old: exit, new: enter },
-  backwards: { old: exit, new: { ...enter, name: 'space-page-back' } },
-}
 ---
 
 <!doctype html>
@@ -53,11 +46,7 @@ const pageTransition: TransitionDirectionalAnimations = {
     <a class="skip-link" href="#main-content">{isEnglish ? 'Skip to content' : '跳转到正文'}</a>
     <SeasonBackground />
     <Header />
-    <div
-      class="site-content grow flex"
-      transition:name="space-content"
-      transition:animate={disableViewTransition ? 'none' : pageTransition}
-    >
+    <div class="site-content grow flex" transition:name="space-content" transition:animate="none">
       <main id="main-content" class="space-main mx-auto min-w-0" tabindex="-1">
         <slot />
       </main>

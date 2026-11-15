@@ -1,0 +1,81 @@
+/* The root snapshot would capture the full document; the content group handles
+   the transition, so hide the root snapshots entirely. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  display: none;
+}
+
+/* View-transition timing for the page content. */
+::view-transition-group(space-content) {
+  /* Keep the content box from morphing between page heights. */
+  animation: none;
+}
+::view-transition-old(space-content),
+::view-transition-new(space-content) {
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+::view-transition-old(space-content) {
+  animation-name: page-content-out;
+  animation-duration: 280ms;
+}
+::view-transition-new(space-content) {
+  animation-name: page-content-in;
+  animation-duration: 340ms;
+}
+html[data-astro-transition='back']::view-transition-old(space-content) {
+  animation-name: page-content-out-back;
+}
+html[data-astro-transition='back']::view-transition-new(space-content) {
+  animation-name: page-content-in-back;
+}
+
+@keyframes page-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes page-content-in-back {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes page-content-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@keyframes page-content-out-back {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(space-content),
+  ::view-transition-new(space-content) {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}

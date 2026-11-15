@@ -157,13 +157,16 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
     display: grid;
     grid-template-columns: minmax(0, 1fr) 175px;
     gap: 28px 48px;
-    max-width: 1100px;
+    max-width: 940px;
     margin-inline: auto;
   }
   .reading-breadcrumb {
     display: flex;
     flex-wrap: wrap;
     gap: 6px 14px;
+    color: var(--soft-ink);
+    font: 400 var(--type-label) / 1.5 var(--font-sans);
+    letter-spacing: 0.02em;
   }
   .reading-breadcrumb a + a {
     padding-inline-start: 14px;
@@ -179,10 +182,12 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
   .reading-header h1 {
     margin-top: 18px;
     text-align: center;
-    font-size: clamp(1.9rem, 4vw, 3rem);
-    font-weight: 670;
+    font-family: var(--space-serif);
+    font-size: clamp(2rem, 3.6vw, 2.6rem);
+    font-weight: 500;
+    font-synthesis: none;
     line-height: 1.2;
-    letter-spacing: -0.034em;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
   .reading-meta {
@@ -192,7 +197,9 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
     gap: 5px 12px;
     margin-top: 14px;
     color: var(--soft-ink);
-    font-size: 0.76rem;
+    font: 400 var(--type-label) / 1.5 var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.03em;
   }
   .reading-aside {
     grid-column: 2;
@@ -200,12 +207,14 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
     position: sticky;
     align-self: start;
     top: 89px;
-    font-size: 0.8rem;
     color: var(--soft-ink);
+    font: 400 var(--type-label) / 1.6 var(--font-sans);
   }
   .reading-aside summary {
     cursor: pointer;
     margin-bottom: 8px;
+    color: var(--color-foreground);
+    font-weight: 500;
   }
   .reading-aside nav {
     max-height: min(55vh, 450px);
@@ -250,10 +259,10 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
     border: 1px solid var(--line);
     border-inline-start: 3px solid var(--signal);
     background: var(--paper-panel);
-    padding: 15px 18px;
-    margin-bottom: 27px;
-    font-size: 0.9rem;
-    line-height: 1.7;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font: 400 var(--type-copy) / 1.8 var(--font-sans);
+    letter-spacing: 0.01em;
   }
   .reading-neighbors {
     display: flex;
@@ -267,6 +276,12 @@ const date = (value: Date) => value.toISOString().slice(0, 10)
   .reading-neighbors small {
     display: block;
     color: var(--soft-ink);
+    font: 400 var(--type-label) / 1.5 var(--font-sans);
+    letter-spacing: 0.04em;
+  }
+  .reading-neighbors a {
+    font-size: var(--type-copy);
+    line-height: 1.6;
   }
   .reading-neighbors a:hover {
     color: var(--signal);
